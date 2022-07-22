@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon-32x32-next.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux入门详细笔记 - ElaineLv | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://elainelv.com/Linux/linuxdr-1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/building.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>Linux入门详细笔记</h1>
+                        <h2 class="subheading">Linux达人养成计划I</h2>
+                        <span class="meta">
+                            Posted by Yina Lv on
+                            2018-08-29
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ElaineLv</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/recommend/">Recommend</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cv/">Yina&#39;s HomePage</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>本系列博文是听了课程<a href="https://www.imooc.com/video/3235" target="_blank" rel="noopener">Linux达人养成计划I</a>后的个人学习笔记整理，较为详细，供大家学习参考。</p>
+<a id="more"></a>
+<h1 id="第1章-linux简介">第1章 Linux简介</h1>
+<h2 id="11linux发展史">1.1Linux发展史</h2>
+<blockquote>
+<p>Unix——Minix——Linux</p>
+</blockquote>
+<ul>
+<li>内核版本<br>
+Linux内核官网：<a href="http://www.kernel.org" target="_blank" rel="noopener">www.kernel.org</a><br>
+内核版本说明：2.6.18（主版本.次版本.末版本）<br>
+目前最新的内核版本:3.16</li>
+<li>发行版本<br>
+主要的发行版本：<code>debian</code>、<code>Ubuntu</code>（图形界面）、<code>redhat</code>（用的最多）、<code>CentOS</code>（服务器）、<code>fedora</code>（redhat的个人版）等<br>
+不同的版本使用的内核基本是一致的，主要是版本不同。其中，<code>CentOS</code>和<code>redhat</code>完全一样，但<code>CentOS</code>完全免费，而<code>redhat</code>是收费的。</li>
+</ul>
+<h2 id="12-开源软件简介">1.2 开源软件简介</h2>
+<p>Linux最大的特点就是它是开源软件，所谓开源软件是呈现出来的源代码，不是二进制，而是完全英文。</p>
+<ul>
+<li>
+<p>常用的开源软件（<strong>开源≠免费</strong>）：<br>
+<code>Apache</code>：网站搭建软件，可发布已写好的网站到互联网。<br>
+<code>nginx</code>：占用资源少，提供更多的访问量<br>
+<code>linux</code>、<code>PHP</code>、<code>MySQL</code><br>
+<code>monggoDB</code>、<code>sumba</code>、<code>ruby</code>、<code>Python</code>（脚本语言）</p>
+</li>
+<li>
+<p>开源软件的优点：<br>
+1.使用自由：绝大多数的开源软件免费<br>
+2.研究的自由：可以获得软件源代码<br>
+3.散步及改良自由：可以自由传播、改良及销售</p>
+</li>
+</ul>
+<h2 id="13-linux应用领域">1.3 Linux应用领域</h2>
+<ul>
+<li>基于Linux的应用服务器<br>
+查看现在互联网发展报告和各个网站的详细信息：<a href="https://www.netcraft.com/" target="_blank" rel="noopener">Go</a><br>
+<img src="/img/article/linuxdr-1/1.png" alt="网站"><br>
+<img src="/img/article/linuxdr-1/2.png" alt="各版本的Linux发展趋势"></li>
+</ul>
+<ul>
+<li>嵌入式应用<br>
+远程管理ssh，手机与Linux之间远程管理。在手机上安装ssh应用（<code>QuickSSHd</code>），使用<code>SecureCRT</code>应用连接手机。我的手机是iOS系统，在APP商城找的一个评分比较高的ssh应用，叫做<code>Termius</code>，非常好用！需要注意的是安卓系统的底层是Linux，而苹果iOS系统的底层是Unix。</li>
+</ul>
+<h2 id="14-linux与windows的不同">1.4 Linux与Windows的不同</h2>
+<ol>
+<li>Linux严格区分大小写</li>
+<li>Linux中所有的内容均以文件形式保存，包括硬件、用户等</li>
+<li>Linux不靠扩展名来区分文件类型，它仅靠权限来区分文件</li>
+<li>Windows下的程序不能直接在Linux下安装和运行</li>
+<li>Linux不靠扩展名来区分文件类型</li>
+</ol>
+<h2 id="15-字符界面的优势">1.5 字符界面的优势</h2>
+<ul>
+<li><strong>优势一</strong>：<code>字符界面占用的系统资源更少</code>。字符界面远比图形界面占用的资源要少得多，图形界面需要服务器来分担更多的系统资源，无论是CPU、内存占有还是运行空间等，从而会拿出更少的资源供客户端访问。</li>
+<li><strong>优势二</strong>：正因为其占用的资源更少，所以字符界面<code>减少了错误的可能性和被攻击的可能性</code>。</li>
+</ul>
+<p>Windows主要针对个人用户，所以重视应用性、可操作性；而Linux主要针对服务器操作人员，所以更为注重稳定性和安全性。</p>
+<h1 id="第2章-linux分区与安装">第2章 Linux分区与安装</h1>
+<h2 id="21系统分区">2.1系统分区</h2>
+<p>1、分区：把大硬盘分为小的逻辑分区<br>
+逻辑分区一定是从5开始的，1-4是给主分区的。<br>
+<img src="/img/article/linuxdr-1/3.png" alt="这里写图片描述"><br>
+2、格式化：写入文件系统<br>
+3、分区设备文件名：给每个分区定义设备文件名<br>
+<img src="/img/article/linuxdr-1/4.png" alt="这里写图片描述"><br>
+4、挂载<br>
+把盘符和分区连接在一起的过程称作挂载，把目录（也就是Windows下所说的盘符）称作挂载点</p>
+<ul>
+<li>必须分区</li>
+<li>/ 根分区</li>
+<li>swap分区：交换分区，也就是虚拟内存，建议分内存的2倍，但实际内存超过4G，和实际内存一样大即可</li>
+<li>推荐分区</li>
+<li>/boot ：启动分区，200M</li>
+</ul>
+<h2 id="22-linux安装">2.2 Linux安装</h2>
+<p>我安装的是Ubuntu16.04，首先是制作U盘启动盘，使用universal USB Installer工具，然后从官网下载映像文件。可参考此博文<a href="https://blog.csdn.net/qq_37657081/article/details/78533164" target="_blank" rel="noopener">简单的使用Universal_USB_Installer_1.9.7.7安装系统</a></p>
+<h1 id="第3章-命令基本格式及文件处理命令">第3章 命令基本格式及文件处理命令</h1>
+<h2 id="31-linux命令格式">3.1 Linux命令格式</h2>
+<p><img src="/img/article/linuxdr-1/5.png" alt="这里写图片描述"><br>
+上述是我Ubuntu终端，lyn是用户名，lyn-Linux是我的主机名，～表示根目录，也就是当前所在根目录下，表示超级用户，$表示普通用户<br>
+在课程中，使用的环境是VM虚拟机+CentOS操作系统。</p>
+<ul>
+<li><strong>命令 [选项] [参数]</strong><br>
+注意：个别的命令使用不遵循此格式；当有多个选项时，可以写在一起；简化选项与完整选项 -a 等同于–all</li>
+<li><strong>查询目录中的内容：ls [选项] [文件或目录]</strong><br>
+ls -l  (别名为ll) 可查看详细信息<br>
+<img src="/img/article/linuxdr-1/6.png" alt="这里写图片描述"><br>
+-rw-r–r--<br>
+第一个字符表示文件类型（-文件，d目录，l软链接文件），后面9个字符，每3个为一组，分别表示u所有者、g所属组、o其他人的权限问题。<br>
+<strong>三种权限：</strong> <code>r</code> 是否可读，<code>w</code> 是否可写，<code>x</code> 是否为可执行。</li>
+</ul>
+<blockquote>
+<p><strong>ls中的其他选项:</strong><br>
+<code>-a</code>显示所有文件，包括隐藏文件<br>
+<code>-d</code> 查看目录属性<br>
+<code>-h</code> 人性化显示文件大小<br>
+<code>-i</code> 显示inode，即文件的id</p>
+</blockquote>
+<h2 id="32-文件处理命令">3.2 文件处理命令</h2>
+<h3 id="321目录处理命令">3.2.1目录处理命令</h3>
+<ul>
+<li><strong>mkdir  -p  [目录名]</strong><br>
+建立目录(make directories)，其中，<code>-p</code>表示递归创建</li>
+<li><strong>cd [目录]</strong><br>
+切换所在目录(change directory)</li>
+</ul>
+<blockquote>
+<p><code>cd ~</code> 进入当前用户的家目录<br>
+<code>cd</code>   进入家目录<br>
+<code>cd -</code> 进入上次目录<br>
+<code>cd ..</code> 进入上一级目录<br>
+<code>cd .</code> 进入当前目录</p>
+</blockquote>
+<ul>
+<li><strong>pwd</strong><br>
+查询所在目录位置(print work directory)</li>
+<li><strong>rmdir</strong><br>
+删除空目录(remove empty directory)</li>
+<li><strong>rm  -rf  [文件或目录]</strong><br>
+删除文件或目录(remove)，-r  删除目录     -f 强制</li>
+<li><strong>cp</strong><br>
+复制命令(copy)</li>
+</ul>
+<blockquote>
+<p>选项：<br>
+<code>-r</code> 复制目录<br>
+<code>-p</code>  连带文件属性复制<br>
+<code>-d</code>若源文件是链接文件，则复制链接属性<br>
+<code>-a</code> 相当于 -pdr   目标文件和源文件就会一模一样！</p>
+</blockquote>
+<ul>
+<li><strong>mv  [原文件或目录]  [目标目录]</strong><br>
+剪切或改名命令(move)，不需要加-r</li>
+</ul>
+<h3 id="322-linux常见目录作用">3.2.2 Linux常见目录作用</h3>
+<blockquote>
+<p><code>/bin</code> 用于保存命令的目录（普通用户就可以读取）<br>
+<code>/sbin</code> 用于保存命令的目录（只有root能用）<br>
+<code>/usr/bin</code> 用于保存命令的目录<br>
+<code>/usr/sbin</code> 用于保存命令的目录（只有root能用）<br>
+<code>/boot</code>启动目录，系统启动的文件都放这里，一般不动该目录<br>
+<code>/dev</code> 该目录下存放的都是设备相关的文件，一般也不要去动<br>
+<code>/etc</code> 主要存放配置文件的目录<br>
+<code>/home</code> 是普通用户目录 (普通用户对应目录下可以随便放文件)<br>
+<code>/root</code> 是超级用户目录（root用户对应目录下可以随便放文件）<br>
+<code>/lib</code> 存放linux系统函数库<br>
+<code>/mnt</code>空目录，用于挂在外接存储设备<br>
+<code>/media</code> 空目录，用于挂在外接存储设备(在原来的linux系统中没有)<br>
+<code>/misc</code> 空目录，用于挂在外接存储设备(在原来的linux系统中没有)<br>
+<code>/proc</code> 是内存过载点；这两个目录的内容直接写在内存，因此不能直接操作<br>
+<code>/sys</code> 是内存过载点；这两个目录的内容直接写在内存，因此不能直接操作<br>
+<code>/temp</code> 临时目录（随便放文件）<br>
+<code>/usr</code> 系统软件资源目录<br>
+<code>/var</code> 系统相关文档内容</p>
+</blockquote>
+<h3 id="323-链接命令-ln">3.2.3 链接命令  ln</h3>
+<p>（1）ln [原文件] [目标文件]<br>
+<img src="/img/article/linuxdr-1/xl1.PNG" alt=""><br>
+硬链接特征：</p>
+<ol>
+<li>拥有相同的i节点和存储block，对应到的目标文件都是同一个</li>
+<li>可通过i节点识别</li>
+<li>不能跨分区；</li>
+<li>不能针对目录；</li>
+</ol>
+<p>（2）ln -s  [原文件]  [目标文件]</p>
+<p><img src="/img/article/linuxdr-1/xl2.PNG" alt=""></p>
+<p>这里需要注意的是第二步，目标文件中存的是原文件的文件信息，而不是其内容，所以需要先找到原文件，通过原文件中存放的信息索引真正的文件数据。</p>
+<p>软链接的特征：</p>
+<ol>
+<li>类似于Windows快捷方式；</li>
+<li>软链接拥有自己的I节点和Block块，但是数据块中只保存原文件的文件名和I节点号，并没有实际的文件数据；</li>
+<li>lrwxrwxrwx 软链接文件的<code>权限都是rwxrwxrwx</code></li>
+<li>修改任意文件，另一个都改变</li>
+<li>删除原文件，软链接不能使用</li>
+<li>做软链接，修改原文件<code>一定要写绝对路径</code>，否则会报错；硬链接没有这个要求</li>
+</ol>
+<p>虽然创建软链接后，文件类型是l，文件权限是777，但还是要根据原先文件的权限来的。<br>
+推荐大家使用软链接。</p>
+<p><strong>总结</strong>：</p>
+<ul>
+<li><code>硬链接</code>指的是原文件和目标文件访问和搜索的是同一个i节点，然后搜索的数据是同一个block。所以删除任何一个都可以正常使用。修改任何一个，另外一个也会跟着变化。但是它不能跨分区、不能链接目录，只能通过i节点来判断是否是硬链接。</li>
+<li><code>软链接</code>完全跟Windows下的快捷方式一样，创建软链接时，它会自动创建inode和block。block中保存的是原文件的信息，这时候修改两个文件中任何一个文件，两个文件都会变，删除原文件，软链接也就不能使用了。</li>
+</ul>
+<h1 id="第4章-文件搜索命令">第4章 文件搜索命令</h1>
+<h2 id="41文件搜索命令locate">4.1文件搜索命令locate</h2>
+<ul>
+<li>locate 文件名</li>
+</ul>
+<blockquote>
+<ul>
+<li>在后台数据库中按文件名搜索，搜索速度更快</li>
+</ul>
+</blockquote>
+<ul>
+<li>所搜索的后台数据库为 /var/lib/mlocate</li>
+<li>updatedb 更新数据库(正常情况下数据库一天更新一次)</li>
+</ul>
+<p>配置文件：<code>/etc/updatedb.conf</code> ，在locate中，是按照上述配置文件来搜索的。</p>
+<blockquote>
+<p><code>PRUNE_BIND_MOUNTS=&quot;yes&quot;</code>      开启搜索限制<br>
+<code>PRUNEFS=</code>     搜索时，不搜索的文件系统<br>
+<code>PRUNENAMES=</code>   搜索时，不搜索的文件类型<br>
+<code>PRUNEPATHS=</code>    搜索时，不搜索的路径</p>
+</blockquote>
+<h2 id="42-命令搜索命令">4.2 命令搜索命令</h2>
+<ul>
+<li>whereis  命令名<br>
+例如：<img src="/img/article/linuxdr-1/7.png" alt="这里写图片描述"><br>
+搜索命令所在的路径及帮助文档所在位置<br>
+不能操作linux自带的shell命令，如 cd</li>
+</ul>
+<blockquote>
+<p>选项：<br>
+<code>-b</code> 只查找可执行文件<br>
+<code>-m</code> 只查找帮助文档</p>
+</blockquote>
+<ul>
+<li>which 命令<br>
+例如：<img src="/img/article/linuxdr-1/8.png" alt="这里写图片描述"><br>
+能查看命令的可执行文件路径以及别名<br>
+不能操作linux自带的shell命令，如 cd</li>
+<li>echo $PATH<br>
+环境变量都用:分隔<br>
+PATH定义系统搜索命令的路径（或绝对路径执行）<br>
+<img src="/img/article/linuxdr-1/9.png" alt="这里写图片描述"></li>
+</ul>
+<h2 id="43-文件搜索命令find">4.3 文件搜索命令find</h2>
+<p>可以看出，以上locate、whereis、which 比较局限。locate用来搜索文件， whereis 和 which 用来搜索系统命令。那么find的功能非常的强大，下面我们来详细学习。</p>
+<ul>
+<li>find [搜索范围] [搜索条件]<br>
+find / - name install.log 从根目录开始，搜索文件名为install.log的文件<br>
+尽可能避免大范围搜索，会非常消耗系统资源</li>
+</ul>
+<blockquote>
+<ul>
+<li>可以使用的通配符<br>
+<code>*</code>匹配任意内容<br>
+<code>?</code> 匹配任意一个字符<br>
+<code>[]</code>匹配任意一个中括号内的字符</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><code>-iname</code> 不区分大小写<br>
+<code>-user</code> 按照所有者搜索<br>
+<code>-nouser</code>查找所有没有所有者的文件</p>
+</blockquote>
+<p>内核产生的文件可能没有所有者，外来文件可能没有所有者。剩下的Linux中的所有文件都应该有所有者！</p>
+<ul>
+<li>根据时间查找</li>
+</ul>
+<blockquote>
+<p><code>-mtime +10</code> 查找10天之前的修改文件（也可以是创建时间）<br>
+<code>-mtime 10</code> 查找10天前当天的修改文件<br>
+<code>-mtime -10</code> 查找10天内的修改文件<br>
+<code>-atime</code> 天数 文件访问时间（天数同上）<br>
+<code>-ctime</code> 天数 改变文件属性时间（天数同上）</p>
+</blockquote>
+<ul>
+<li>根据文件大小查找</li>
+</ul>
+<blockquote>
+<p><code>-size +10k</code>查找大于10k的文件（小写k）<br>
+<code>-size 10M</code> 查找等于10M的文件（大写M）<br>
+<code>-size -10G</code>查找小于10G的文件（大写G）<br>
+<code>-size 10</code> 不加单位表示搜索10个扇区，一个扇区512B（不推荐使用）</p>
+</blockquote>
+<ul>
+<li>根据i节点号查询<br>
+ls -i 可以查看i节点<br>
+-inum 262422 查找i节点是162422的文件</li>
+<li>组合查询<br>
+<code>-a</code> 逻辑与<br>
+<code>-o</code>逻辑或<br>
+<code>-exec/-ok</code> 命令 {} ; 对搜索结果进行操作<br>
+例：<br>
+find /etc -size +20k -a -mtime -10 -exec ls -lh {} ;<br>
+查找大于20k并且在10天之内操作过的文件，将结果展示出来；</li>
+</ul>
+<h2 id="44-grep命令">4.4 grep命令</h2>
+<ul>
+<li>grep [选项] 字符串 文件名<br>
+在文件当中匹配符合条件的字符串</li>
+</ul>
+<blockquote>
+<p>选项：<br>
+<code>-i</code>忽略大小写<br>
+<code>-v</code> 排除制定字符串</p>
+</blockquote>
+<p><img src="/img/article/linuxdr-1/10.png" alt="这里写图片描述"><br>
+<strong>与find命令的区别</strong></p>
+<ul>
+<li>find命令：在系统当中搜索符合条件的文件名，如果需要匹配，使用通配符能完全匹配</li>
+<li>grep命令：在文件当中搜索符合条件的字符串，如果需要匹配，使用正则表达式进行包含匹配。</li>
+</ul>
+<h1 id="第5章-帮助命令">第5章 帮助命令</h1>
+<ul>
+<li>man 命令<br>
+获取制定命令的帮助,如：man ls<br>
+打开帮助文档之后，快速查找可以先输入 / ，再输入要查找的内容。查到之后 n表示 往下查找，p或shift + n 往上查找。</li>
+</ul>
+<blockquote>
+<p>man的级别<br>
+1：查看命令的帮助<br>
+2：查看可悲内核调用的函数的帮助<br>
+3：查看函数和函数库的帮助<br>
+4： 查看特殊文件的帮助（主要是/dev目录下的文件）<br>
+5：查看配置文件的帮助<br>
+6：查看游戏的帮助<br>
+7：查看其它杂项的帮助<br>
+8：查看系统管理员可用命令的帮助<br>
+9：查看内核相关文件的帮助</p>
+</blockquote>
+<p><code>man -f</code> 命令 等同于<code>whatis</code>命令， whatis 能查看命令拥有哪个级别的帮助。<br>
+<img src="/img/article/linuxdr-1/11.png" alt="这里写图片描述"></p>
+<p>可以看出 ifconfig的级别是8，属于系统管理员可用命令。<br>
+man -k passwd 等同于 apropos passwd  <code>查看所有包含该命令的帮助文档</code>，可认为在帮助文档中用<code>字符串</code>搜索。<br>
+<img src="/img/article/linuxdr-1/12.png" alt="这里写图片描述"></p>
+<ul>
+<li>
+<p>命令 --help<br>
+获取选项的帮助</p>
+</li>
+<li>
+<p>help 命令<br>
+help 专门获取内部命令，若help ls将报错，因为ls不是内部命令。<br>
+<img src="/img/article/linuxdr-1/13.png" alt="这里写图片描述"></p>
+</li>
+<li>
+<p>info 命令<br>
+回车 进入子帮助页面（带有*号标记）</p>
+</li>
+</ul>
+<blockquote>
+<p><code>u</code> 进入上层页面<br>
+<code>n</code> 进入下一个帮助小节<br>
+<code>p</code>进入上一个帮助小节<br>
+<code>q</code> 退出</p>
+</blockquote>
+<h1 id="第6章-压缩命令">第6章 压缩命令</h1>
+<ul>
+<li>
+<p>常用的压缩格式<br>
+.zip   .gz   .bz2<br>
+.tar.gz   .tar.bz2</p>
+</li>
+<li>
+<p>.zip格式压缩<br>
+zip 压缩文件名 源文件      # 压缩文件<br>
+zip -r 压缩文件名 源目录      # 压缩目录<br>
+<img src="/img/article/linuxdr-1/14.png" alt="这里写图片描述"><br>
+<img src="/img/article/linuxdr-1/15.png" alt="这里写图片描述"></p>
+</li>
+<li>
+<p>.zip格式解压<br>
+unzip 压缩文件   #解压缩</p>
+</li>
+<li>
+<p>.gz格式压缩<br>
+gzip 源文件         #压缩为.gz格式的压缩文件，源文件会消失<br>
+gzip -c 源文件 &gt; 压缩文件     # 压缩为.gz格式，源文件保留<br>
+gzip -r 目录              # 压缩目录下所有的子文件，但是不能压缩目录<br>
+<img src="/img/article/linuxdr-1/16.png" alt="这里写图片描述"><br>
+<img src="/img/article/linuxdr-1/17.png" alt="这里写图片描述"></p>
+</li>
+<li>
+<p>.gz格式解压<br>
+gzip -d 压缩文件<br>
+gunzip 压缩文件</p>
+</li>
+<li>
+<p>.bz2格式压缩<br>
+bzip2 源文件 　　　　＃压缩为.bz2格式，不保留源文件<br>
+bzip2 -k 源文件 　   　＃压缩之后保留源文件<br>
+<code>注意：bzip2命令不能压缩目录</code></p>
+</li>
+<li>
+<p>.bz2格式解压<br>
+bzip2 -d 压缩文件         # -k 选项可保留源文件<br>
+bunzip2 压缩文件     　 # -k 选项可保留源文件</p>
+</li>
+</ul>
+<p>针对上述bzip2不能压缩目录，可通过如下方式解决：</p>
+<ul>
+<li>打包命令tar<br>
+tar -cvf 打包文件名 源文件<br>
+选项：<br>
+<code>-c</code>打包<br>
+<code>-v</code> 显示过程<br>
+<code>-f</code> 指定打包后的文件名<br>
+例：tar -cvf longzls.tar longzls<br>
+<img src="/img/article/linuxdr-1/18.png" alt="这里写图片描述"></li>
+<li>解打包命令tar<br>
+tar -xvf 打包文件名<br>
+选项：<br>
+<code>-x</code> 解打包<br>
+例：tar -xvf longzls.tar</li>
+<li>.tar.gz压缩格式<br>
+.tar.gz格式是先打包为.tar格式，再压缩为.gz格式<br>
+<strong>压缩：</strong><br>
+tar -<code>zc</code>vf 压缩包名.tar.gz 源文件<br>
+<strong>解压：</strong><br>
+tar -<code>zx</code>vf 压缩包名.tar.gz<br>
+只查看不解压：<br>
+tar -<code>zt</code>vf 压缩包名.tar.gz<br>
+<img src="/img/article/linuxdr-1/19.png" alt="这里写图片描述"></li>
+<li>.tar.bz2压缩格式<br>
+<strong>压缩：</strong><br>
+tar -jcvf 压缩包名.tar.bz2 源文件<br>
+<strong>解压：</strong><br>
+tar -jxvf 压缩包名.tar.bz2 源文件</li>
+</ul>
+<h1 id="第7章-关机和重启命令">第7章　关机和重启命令</h1>
+<ul>
+<li>shutdown [选项] 时间 &amp;<br>
+&amp;表示后台执行<br>
+选项：<br>
+<code>-c</code>取消前一个关机命令<br>
+<code>-h</code> 关机<br>
+<code>-r</code>重启<br>
+例：shutdown -r 05:30 &amp;　　＃5:30分重启<br>
+shutdown -r now   #立即重启</li>
+<li>其他关机命令（以下三条命令都不是太安全，不常用也不建议用）<br>
+halt<br>
+poweroff<br>
+init 0</li>
+<li>其他重启命令<br>
+reboot 相对较安全<br>
+init 6　　　＃尽量也别用，调用系统运行级别</li>
+<li>系统运行级别</li>
+</ul>
+<blockquote>
+<p>0 　关机<br>
+1 　单用户　　　（比如忘记密码了，可使用单用户修复）<br>
+2 　不完全多用户，不含NFS服务<br>
+3 　完全多用户　（字符界面）<br>
+4 　未分配<br>
+5 　图形界面<br>
+6 　重启</p>
+</blockquote>
+<ul>
+<li>cat /etc/inittab 查看运行级别配置文件</li>
+<li>id:3:initdefault 修改系统默认运行级别</li>
+<li>runlevel 查询系统运行级别</li>
+<li>logout 退出登录命令</li>
+</ul>
+<h1 id="第8章-其他常用命令">第８章　其他常用命令</h1>
+<h2 id="81-挂载命令">8.1 挂载命令</h2>
+<p>１、查询与自动挂载<br>
+<code>mount</code>　　＃查询系统中已经挂载好的设备<br>
+<code>mount -a</code>     # 依据配置文件/etc/fstab的内容，自动挂载<br>
+注：因为光盘或U盘不能保证每次都能开机挂载，因此不建议自动挂载，否则可能导致系统由于找不到挂载目录而启动崩溃</p>
+<p>2、挂载命令格式<br>
+mount [-t 文件系统] [-o 特殊选项] 设备文件名 挂载点<br>
+选项：<br>
+<code>-t</code> 文件系统：加入文件系统类型来指定挂载的类型，可以ext3、ext4、iso9660（光盘默认的文件系统）等文件系统<br>
+<code>-o</code>特殊选项：可以指定挂载的额外选项</p>
+<p>系统中的特殊权限：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>atime/noatime</td>
+<td>更新访问时间/不更新访问时间。访问分区文件时，是否更新文件的访问时间，默认为更新</td>
+</tr>
+<tr>
+<td>async/sync</td>
+<td>异步/同步，默认为异步</td>
+</tr>
+<tr>
+<td>auto/noauto</td>
+<td>自动/手动，mount -a命令执行时，是否会自动安装/etc/fstab文件内容挂载，默认为自动</td>
+</tr>
+<tr>
+<td>defaults</td>
+<td>定义默认值，相当于rw,suid,dev,exec,auto,nouser,async这七个选项</td>
+</tr>
+<tr>
+<td>exec/noexec</td>
+<td>执行/不执行，设定是否允许在文件系统中执行可执行文件，默认是exec允许</td>
+</tr>
+<tr>
+<td>remount</td>
+<td>重新挂载已经挂载的文件系统，一般用于指定修改特殊权限</td>
+</tr>
+<tr>
+<td>rw/ro</td>
+<td>读写/只读,文件系统挂载时，是否具有读写权限，默认是rw</td>
+</tr>
+<tr>
+<td>suid/nosuid</td>
+<td>具有/不具有SUID权限，设定文件系统是否具有SUID和SGID的权限，默认是具有</td>
+</tr>
+<tr>
+<td>user/nouser</td>
+<td>允许/不允许普通用户挂载，设定文件系统是否允许普通用户挂载，默认是不允许，只有root可以挂载分区</td>
+</tr>
+<tr>
+<td>usrquota</td>
+<td>写入代表文件系统支持用户磁盘配额，默认不支持</td>
+</tr>
+<tr>
+<td>grpquota</td>
+<td>写入代表文件系统支持组磁盘配额，默认不支持</td>
+</tr>
+</tbody>
+</table>
+<p>例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount -o remount,`noexec` /home/   #重新挂载/boot分区，并使用noexec权限，会导致/home目录下无法执行可执行文件</span><br><span class="line">mount -o remount,`exec` /home      #记得改回来！！！不然会影响系统启动</span><br></pre></td></tr></table></figure>
+<p>整个示例语句如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mount -o remount,noexec /home</span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">vi hello.sh</span><br><span class="line">cdmod 755 hello.sh</span><br><span class="line">./hello    <span class="comment">#采用./的形式来运行hello文件</span></span><br><span class="line">mount -o remount,<span class="built_in">exec</span> /home</span><br></pre></td></tr></table></figure>
+<p>３、如何挂载光盘（光盘默认是没有挂载的）</p>
+<ul>
+<li>挂载命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /mnt/cdrom/　　　　<span class="comment">#建立挂载点</span></span><br><span class="line">mount -t iso9660 /dev/cdrom /mnt/cdrom   <span class="comment">#挂载光盘</span></span><br><span class="line">mount /dev/sr0 /mnt/cdrom       <span class="comment">#sr0是Linux指定的CD目录,和上一条命令功能一样</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>卸载命令（不要忘记！用完之后必须卸载！）</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umount 设备文件名或挂载点　<span class="comment">#要拿出光盘，必须卸载，且需要退出光盘文件目录后再执行以上命令。</span></span><br></pre></td></tr></table></figure>
+<p>例:umount /mnt/cdrom　等同于　umount /dev/sr0  ，因为已经挂载好了，但注意只能卸载一次。</p>
+<p>４、挂载U盘</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l   <span class="comment">#查看U盘设备文件名</span></span><br><span class="line">mount -t vfat /dev/sdb1 /mnt/usb/    <span class="comment">#Linux默认不支持NTFS文件系统，此处的vfat指的是Windows中的fat32，fat32在硬盘中基本淘汰,而Ｕ盘用的是fat32。</span></span><br></pre></td></tr></table></figure>
+<h2 id="82-用户登录查看命令">8.2 用户登录查看命令</h2>
+<ul>
+<li><strong>查看登录用户信息</strong></li>
+<li>w 用户名<br>
+命令输出：<br>
+USER ：登录的用户名<br>
+TTY ：登录终端<br>
+FROM ：从哪个IP地址登录<br>
+LOGIN@ ： 登录时间<br>
+IDLE ：用户闲置时间<br>
+JCPU： 指的是和该终端连接的所有进程占用的时间。这个时间里并不包括过去的后台作业时间，但却包括当前正在运行的后台作业所占用的时间；<br>
+PCPU ：是指当前进程所占用的时间<br>
+WHAT ： 当前正在运行的命令</li>
+<li>who 用户名<br>
+命令输出 ：<br>
+用户名<br>
+登录终端<br>
+登录时间（登录来源IP地址）</li>
+</ul>
+<ul>
+<li><strong>查询当前登录和过去登录的用户信息</strong></li>
+<li>last<br>
+last 命令默认是读取/var/log/wtmp文件数据<br>
+命令输出：<br>
+用户名<br>
+登录终端<br>
+登录IP<br>
+登录时间<br>
+退出时间（在线时间）</li>
+<li><strong>查看所有用户的最后一次登录时间</strong></li>
+<li>lastlog<br>
+lastlog 命令默认读取/var/log/lastlog文件内容<br>
+命令输出：<br>
+用户名<br>
+登录终端<br>
+登录IP<br>
+最后一次登录时间</li>
+</ul>
+<h1 id="第9章-shell基础">第9章 shell基础</h1>
+<h2 id="91-shell概述">9.1 shell概述</h2>
+<p><strong>shell 是什么?</strong></p>
+<ul>
+<li>shell是一个<code>命令行解释器</code>，它为用户提供了一个向Linux内核发送请求以便运行程序的界面系统级程序，用户可以用shell来启动，挂起，停止甚至是编写一些程序。</li>
+<li>shell还是一个功能相当强大的编程语言，易编写，易调试，灵活性较强。shell是解释执行的脚本语言，在shell中可以直接调用Linux系统命令。</li>
+</ul>
+<p>通俗地讲，shell充当用户和内核之间的翻译器。</p>
+<p><strong>shell分类</strong><br>
+shell的两种主要语法类型是<code>Bourne</code>和<code>C</code>，这两种语法彼此不兼容。<br>
+<code>Bourne Shell</code>：sh、ksh、Bash、psh、zsh<br>
+<code>C Shell</code>：csh、tcsh，C Shell主要在BSD版的Unix中使用，其语法和C语言类似而得名。<br>
+当前linux中的标准shell是<code>Bash</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span>    <span class="comment"># 查看当前shell</span></span><br><span class="line">vi /etc/shells  <span class="comment">#查看支持的shell类型</span></span><br></pre></td></tr></table></figure>
+<h2 id="92-脚本执行方式">9.2 脚本执行方式</h2>
+<p><strong>1、echo输出命令</strong><br>
+echo [选项] [输出内容]<br>
+选项：<br>
+<code>-e</code>支持反斜线控制的字符转换</p>
+<table>
+<thead>
+<tr>
+<th>控制字符</th>
+<th>作 用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\a</td>
+<td>输出警告音</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>退格键，也就是向左删除键</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行符</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>回车键</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>制表符，也就是Tab键</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>垂直制表符</td>
+</tr>
+<tr>
+<td>\0nnn</td>
+<td>按照八进制ASCII码表输出字符。其中0为数字零，nnn是三位八进制数</td>
+</tr>
+<tr>
+<td>\xhh</td>
+<td>按照十六进制ASCII码表输出字符。其中hh是两位十六进制数</td>
+</tr>
+</tbody>
+</table>
+<p>常规用法 :<br>
+echo -e &quot;h\te\tl\nl\to\t&quot;<br>
+echo -e \ �\x68\t\x\65\t\x\6c\n\x\6c\t\x6f\t�</p>
+<p><strong>2、echo输出颜色</strong><br>
+echo -e �\e[1;31m 嫁人就要嫁凤姐 \e[0m�<br>
+\e[1;31m   #开启颜色显示<br>
+\e[0m    #取消颜色显示</p>
+<blockquote>
+<p>30m=黑色,31m=红色,32m=绿色,33m=黄色<br>
+34m=蓝色,35m=洋红,36m=青色,37m=白色</p>
+</blockquote>
+<p><strong>3、第一个脚本</strong><br>
+vi <a href="http://hello.sh" target="_blank" rel="noopener">hello.sh</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\e[1;34m hello world! \e[0m"</span></span><br></pre></td></tr></table></figure>
+<p><strong>脚本执行方法：</strong></p>
+<ul>
+<li>方法一：赋予执行权限，直接执行<br>
+chmod 755 <a href="http://hello.sh" target="_blank" rel="noopener">hello.sh</a></li>
+<li>方法二：通过Bash调用的执行脚本<br>
+bash <a href="http://helloworld.sh" target="_blank" rel="noopener">helloworld.sh</a></li>
+</ul>
+<h2 id="93-bash的基本功能">9.3 Bash的基本功能</h2>
+<h3 id="931-命令别名与快捷键">9.3.1 命令别名与快捷键</h3>
+<ul>
+<li>别名永久生效与删除别名</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.bashrc        <span class="comment">#写入环境变量配置文件</span></span><br><span class="line"><span class="built_in">source</span> .bashrc      <span class="comment"># 环境变量直接生效</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看与设定别名</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span>                   <span class="comment"># 查看系统中所有的命令别名</span></span><br><span class="line"><span class="built_in">alias</span> 别名= <span class="string">'原命令'</span>      <span class="comment"># 设定命令别名</span></span><br><span class="line"><span class="built_in">unalias</span> 别名             <span class="comment"># 删除别名</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>命令生效顺序<br>
+1.执行用绝对路径或相对路径执行的命令<br>
+2.执行别名<br>
+3.执行 Bash 的内部命令<br>
+4.执行按照 $PATH 环境变量定义的目录查找顺序找到第一个命令</li>
+<li>常用快捷键(非常有用，记住！！）<br>
+<code>ctrl+c</code>强制终止当前命令<br>
+<code>ctrl+l</code> 清屏 同命令clear<br>
+<code>ctrl+a</code>光标移动到命令行首<br>
+<code>ctrl+e</code> 光标移动到命令行尾<br>
+<code>ctrl+u</code>从光标所在位置删除到首行<br>
+<code>ctrl+z</code>把命令放入后台<br>
+<code>ctrl+r</code>在历史命令中搜索 上下滚动</li>
+</ul>
+<h3 id="932-历史命令">9.3.2 历史命令</h3>
+<ul>
+<li>历史命令<br>
+history [选项] [历史命令保存文件]<br>
+选项：<br>
+<code>-c</code> 清空历史命令<br>
+<code>-w</code>把缓存中的历史命令写入历史命令保存文件 ~/.bash_history<br>
+/etc/profile  HISTSIZE属性可设置保存历史命令条数，默认1000条</li>
+<li>历史命令的调用<br>
+↑↓ 调用以前的历史命令（常用）<br>
+!n 重复执行第n条历史命令<br>
+!! 重复执行上一条命令<br>
+!字符串 重复执行最后一条以该字符串开头的命令（常用）</li>
+</ul>
+<h3 id="933-输出重定向">9.3.3 输出重定向</h3>
+<ul>
+<li>标准输入输出</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>设备文件名</th>
+<th>文件描述符</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>键盘</td>
+<td>/dev/stdin</td>
+<td>0</td>
+<td>标准输入</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>/dev/sdtout</td>
+<td>1</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>/dev/sdterr</td>
+<td>2</td>
+<td>标准错误输出</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>输出重定向</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标准输出重定向</td>
+<td>命令&gt;文件</td>
+<td>以覆盖的方式，把命令的正确输出到制定的文件或设备当中</td>
+</tr>
+<tr>
+<td>标准输出重定向</td>
+<td>命令&gt;&gt;文件</td>
+<td>以追加的方式，把命令的正确输出到制定的文件或设备当中</td>
+</tr>
+<tr>
+<td>标准错误输出重定向</td>
+<td>命令2&gt;文件</td>
+<td>以覆盖的方式，把命令的错误输出到制定的文件或设备当中</td>
+</tr>
+<tr>
+<td>标准错误输出重定向</td>
+<td>命令2&gt;&gt;文件</td>
+<td>以追加的方式，把命令的错误输出到制定的文件或设备当中</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>正确输出和错误输出同时保存</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>命令&gt;文件 2&gt;&amp;1</td>
+<td>以覆盖的方式，把正确输出和错误输出都保存到一个文件当中</td>
+</tr>
+<tr>
+<td>命令&gt;&gt;文件 2&gt;&amp;1</td>
+<td>以追加的方式，把正确输出和错误输出都保存到一个文件当中</td>
+</tr>
+<tr>
+<td>命令 &amp;&gt; 文件</td>
+<td>以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中</td>
+</tr>
+<tr>
+<td>命令 &amp;&gt;&gt; 文件</td>
+<td>以追加的方式，把正确输出和错误输出都保存在同一个文件当中</td>
+</tr>
+<tr>
+<td>命令&gt;&gt;文件1 2&gt;&gt;文件2</td>
+<td>把正确的输出追加到文件1中，吧错误的输出追加到文件2中</td>
+</tr>
+</tbody>
+</table>
+<p>ls &amp;&gt;/dev/null把输出结果直接丢了</p>
+<ul>
+<li>输入重定向<br>
+wc 直接输入字符 ctrl + d 停止输入<br>
+wc [选项][文件名]<br>
+<code>-c</code> 统计字节数<br>
+<code>-w</code> 共计单词书<br>
+<code>-l</code> 统计行数</li>
+</ul>
+<h3 id="934-管道符">9.3.4 管道符</h3>
+<ul>
+<li>多命令顺序执行</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>多命令执行符</th>
+<th>格式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>;</td>
+<td>命令1;命令2</td>
+<td>多个命令顺序执行，命令之间没有任何逻辑联系</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>命令1&amp;&amp;命令2</td>
+<td>逻辑与。当命令1正确执行，则命令2才会执行；当命令1执行不正确，则命令2不会执行</td>
+</tr>
+<tr>
+<td>ll</td>
+<td>命令ll命令2</td>
+<td>逻辑或。当命令1执行不正确，则命令2才会执行；当命令1正确执行，则命令2不会执行</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>管道符<br>
+命令1 | 命令2</li>
+</ul>
+<blockquote>
+<p>命令1的整除输出作为命令2的操作对象<br>
+more 分页显示<br>
+ls -l /etc | more</p>
+</blockquote>
+<p>查询结果翻页：<br>
+<code>空格</code>表示向下翻一页<br>
+<code>回车</code>表示向下滚动一行<br>
+<code>/</code>字符串表示查询字符串<br>
+<code>q</code>离开more界面</p>
+<h3 id="935-通配符">9.3.5 通配符</h3>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>?</td>
+<td>匹配一个任意字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0个或人一多个任意字符，也就是可以匹配任何内容</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配括号中任意一个字符。例如：[abc]代表一定匹配a,b,c中的一个字符</td>
+</tr>
+<tr>
+<td>[-]</td>
+<td>匹配中括号中任意一个字符，-代表一个范围。例如：[a-z]代表匹配一个小写字母。</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>逻辑非，表示匹配不是中括号内的一个字符。例如：[^0-9] 代表匹配一个不是数字的字符</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Bash中其他特殊符号</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>”</td>
+<td>单引号。在单引号中所有的特殊符号，如“$”和 “`”（反引号）没有特殊含义</td>
+</tr>
+<tr>
+<td>“”</td>
+<td>双引号。在双引号中特殊符号都没有特殊含义，但是 “$”、“`”和“\”是例外，拥有“调用变量的值”、“引用命令”和“转义符”的特殊含义</td>
+</tr>
+<tr>
+<td>`</td>
+<td>反引号。反引号括起来的内容是系统命令，在Bash中会先执行它。和$()作用一样，不过推荐使用$(),因为反引号非常容易看错。</td>
+</tr>
+<tr>
+<td>$()</td>
+<td>和反引号作用一样，用来引用系统命令。</td>
+</tr>
+<tr>
+<td>＃</td>
+<td>在Shell脚本中，#开头的行代表注释</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>用户调用变量的值，如果需要调用变量name的值时，需要用$named 的方式得到变量的值。</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转义符，跟在\之后的特殊符号将失去特殊含义，变为普通字符。如$将输出“$”符号，而不当做是变量引用。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>上面的所有的笔记在我的csdn博客上已经发过，这里对其进行了汇总整理。希望对大家有用！这次的整理让我对markdown用法有些许的掌握。原来还是很好用的嘛^^，之前写csdn基本上用的都是HTML编辑器，看来以后得好好学学md啊φ(゜▽゜*)♪</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/Edge-Computing/EdgeComputing_Zenith/" data-toggle="tooltip" data-placement="top" title="Zenith">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/alipay.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/wechatpay.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">good luck!</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="2668662377"
+                    data-server="netease"
+                    data-type="playlist"
+                    data-fixed="true" >
+                </div>
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+                    <!-- disqus 评论框 start -->
+                    <div class="comment">
+                        <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTE4NS8xNTcxMg"></div>
+                    </div>
+                    <!-- disqus 评论框 end -->
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第1章-linux简介"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x7B2C;1&#x7AE0; Linux&#x7B80;&#x4ECB;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#11linux发展史"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.1Linux&#x53D1;&#x5C55;&#x53F2;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#12-开源软件简介"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">1.2 &#x5F00;&#x6E90;&#x8F6F;&#x4EF6;&#x7B80;&#x4ECB;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#13-linux应用领域"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">1.3 Linux&#x5E94;&#x7528;&#x9886;&#x57DF;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#14-linux与windows的不同"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">1.4 Linux&#x4E0E;Windows&#x7684;&#x4E0D;&#x540C;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#15-字符界面的优势"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">1.5 &#x5B57;&#x7B26;&#x754C;&#x9762;&#x7684;&#x4F18;&#x52BF;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第2章-linux分区与安装"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x7B2C;2&#x7AE0; Linux&#x5206;&#x533A;&#x4E0E;&#x5B89;&#x88C5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#21系统分区"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">2.1&#x7CFB;&#x7EDF;&#x5206;&#x533A;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#22-linux安装"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">2.2 Linux&#x5B89;&#x88C5;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第3章-命令基本格式及文件处理命令"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x7B2C;3&#x7AE0; &#x547D;&#x4EE4;&#x57FA;&#x672C;&#x683C;&#x5F0F;&#x53CA;&#x6587;&#x4EF6;&#x5904;&#x7406;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#31-linux命令格式"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">3.1 Linux&#x547D;&#x4EE4;&#x683C;&#x5F0F;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#32-文件处理命令"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">3.2 &#x6587;&#x4EF6;&#x5904;&#x7406;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#321目录处理命令"><span class="toc-nav-number">3.2.1.</span> <span class="toc-nav-text">3.2.1&#x76EE;&#x5F55;&#x5904;&#x7406;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#322-linux常见目录作用"><span class="toc-nav-number">3.2.2.</span> <span class="toc-nav-text">3.2.2 Linux&#x5E38;&#x89C1;&#x76EE;&#x5F55;&#x4F5C;&#x7528;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#323-链接命令-ln"><span class="toc-nav-number">3.2.3.</span> <span class="toc-nav-text">3.2.3 &#x94FE;&#x63A5;&#x547D;&#x4EE4;  ln</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第4章-文件搜索命令"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x7B2C;4&#x7AE0; &#x6587;&#x4EF6;&#x641C;&#x7D22;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#41文件搜索命令locate"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">4.1&#x6587;&#x4EF6;&#x641C;&#x7D22;&#x547D;&#x4EE4;locate</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#42-命令搜索命令"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">4.2 &#x547D;&#x4EE4;&#x641C;&#x7D22;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#43-文件搜索命令find"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">4.3 &#x6587;&#x4EF6;&#x641C;&#x7D22;&#x547D;&#x4EE4;find</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#44-grep命令"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">4.4 grep&#x547D;&#x4EE4;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第5章-帮助命令"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">&#x7B2C;5&#x7AE0; &#x5E2E;&#x52A9;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第6章-压缩命令"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">&#x7B2C;6&#x7AE0; &#x538B;&#x7F29;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第7章-关机和重启命令"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">&#x7B2C;7&#x7AE0;&#x3000;&#x5173;&#x673A;&#x548C;&#x91CD;&#x542F;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第8章-其他常用命令"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">&#x7B2C;&#xFF18;&#x7AE0;&#x3000;&#x5176;&#x4ED6;&#x5E38;&#x7528;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#81-挂载命令"><span class="toc-nav-number">8.1.</span> <span class="toc-nav-text">8.1 &#x6302;&#x8F7D;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#82-用户登录查看命令"><span class="toc-nav-number">8.2.</span> <span class="toc-nav-text">8.2 &#x7528;&#x6237;&#x767B;&#x5F55;&#x67E5;&#x770B;&#x547D;&#x4EE4;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#第9章-shell基础"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">&#x7B2C;9&#x7AE0; shell&#x57FA;&#x7840;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#91-shell概述"><span class="toc-nav-number">9.1.</span> <span class="toc-nav-text">9.1 shell&#x6982;&#x8FF0;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#92-脚本执行方式"><span class="toc-nav-number">9.2.</span> <span class="toc-nav-text">9.2 &#x811A;&#x672C;&#x6267;&#x884C;&#x65B9;&#x5F0F;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#93-bash的基本功能"><span class="toc-nav-number">9.3.</span> <span class="toc-nav-text">9.3 Bash&#x7684;&#x57FA;&#x672C;&#x529F;&#x80FD;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#931-命令别名与快捷键"><span class="toc-nav-number">9.3.1.</span> <span class="toc-nav-text">9.3.1 &#x547D;&#x4EE4;&#x522B;&#x540D;&#x4E0E;&#x5FEB;&#x6377;&#x952E;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#932-历史命令"><span class="toc-nav-number">9.3.2.</span> <span class="toc-nav-text">9.3.2 &#x5386;&#x53F2;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#933-输出重定向"><span class="toc-nav-number">9.3.3.</span> <span class="toc-nav-text">9.3.3 &#x8F93;&#x51FA;&#x91CD;&#x5B9A;&#x5411;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#934-管道符"><span class="toc-nav-number">9.3.4.</span> <span class="toc-nav-text">9.3.4 &#x7BA1;&#x9053;&#x7B26;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#935-通配符"><span class="toc-nav-number">9.3.5.</span> <span class="toc-nav-text">9.3.5 &#x901A;&#x914D;&#x7B26;</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://godweiyang.com/" target="_blank">godweiyang</a></li>
+                    
+                        <li><a href="https://www.researchgate.net/profile/Yina_Lv" target="_blank">ResearchGate</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+    <!-- 来必力City版公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+    
+           if (typeof LivereTower === 'function') { return; }
+    
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+    
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    <!-- 来必力City版 公共JS代码 end -->
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mi-tang-gua">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/elainelv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+   
+                <li>
+                    <a target="_blank"  href="https://blog.csdn.net/sunshine_lyn">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-book fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+                
+
+                </ul>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+                <p class="copyright text-muted">
+                    Copyright &copy;  Yina Lv <i class="fa fa-heartbeat"> </i>2022 
+                    <br>
+
+
+<span class="post-count">102.5k words altogether</span>
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors: <span id="busuanzi_value_site_uv"></span>
+</span>
+
+	
+                  <!--   Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+-->
+
+
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://elainelv.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://elainelv.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+
+</html>

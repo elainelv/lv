@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon-32x32-next.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Multilevel Parallelism - ElaineLv | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://elainelv.com/Parallelism/ssd_for_improved_performace_and_endurance/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/ssdparallel.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Parallelism" title="Parallelism">Parallelism</a>
+                            
+                        </div>
+                        <h1>Multilevel Parallelism</h1>
+                        <h2 class="subheading">Exploring and Exploiting the Multilevel Parallelism Inside SSDs for Improved Performance and Endurance</h2>
+                        <span class="meta">
+                            Posted by Yina Lv on
+                            2018-11-18
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ElaineLv</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/recommend/">Recommend</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cv/">Yina&#39;s HomePage</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <ol>
+<li>讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响</li>
+<li>评估了使用与开发四层并行性密切相关的不同分配方案对performance和endurance的影响</li>
+<li>研究了利用SSD中并行性的最优先级<br>
+<a href="http://www-users.cselabs.umn.edu/classes/Spring-2017/csci5980/files/SSD/SSD-Multi-Channel-Parallelism.pdf" target="_blank" rel="noopener">原文链接</a></li>
+</ol>
+<a id="more"></a>
+<blockquote>
+<p>最近看的paper都是关于SSD结构啦，性能研究啦之类的，仔细去读的话，还是感觉蛮有意思的，不过这块内容涉及到底层系统，需要一定的知识储备。比如channel，chip，die，plane等的层层嵌套关系。<br>
+在本文中对于这些基础概念作了详细的说明，这篇文章是发表在国际顶级A类期刊TOC上的文章，昨天看了一个下午加晚上，今天继续坚持将它看完，下面一起来了解下吧~</p>
+</blockquote>
+<h3 id="要点">要点</h3>
+<p><strong>Motivation</strong></p>
+<ol>
+<li>advanced commands 在plane-level并发和die-level并发中使用，我们需要考虑哪些问题？</li>
+<li>如果考虑advanced commands 和多级并发，如何设计静态分配和动态分配方案？这两种方案的performance和endurance区别？如何选择合适的分配方案？</li>
+<li>在ssd中使用四级并发，最好的优先级顺序？</li>
+</ol>
+<hr>
+<ul>
+<li>
+<p>近年来，ssd发展迅速，但其价格昂贵，采用了很多种方法来降低价格，主要在</p>
+<ol>
+<li>increase the per-unit capacity</li>
+<li>improve the reliability</li>
+<li>address the random-write performance penalty for enterprise quality Flash memory storage</li>
+</ol>
+</li>
+<li>
+<p>根据文章题目，我们要研究的ssd的performance和endurance，那么影响这两个参数的有三个内在的因素：</p>
+<ol>
+<li>advanced commands （高级命令）</li>
+<li>allocation schemes（分配策略）</li>
+<li>priority order of ssd parallelism levels（优先级）</li>
+</ol>
+</li>
+</ul>
+<p>在这篇文章中，研究表明前两项的因素和第三项因素密切相关</p>
+<h4 id="advanced-commands"><strong>Advanced commands</strong></h4>
+<ul>
+<li>操作：read ，write ， erase</li>
+<li>commands： copyback ， multiplane ，interleave</li>
+<li>要合理的使用commands，比如不合理的使用copyback命令会显著增加擦除计数和平均响应时间</li>
+</ul>
+<h4 id="allocation-schemes"><strong>allocation schemes</strong></h4>
+<ul>
+<li>动态分配和静态分配<br>
+动态分配：更为灵活，更适应并发<br>
+静态分配：逻辑页和物理页之间可以通过公式计算<br>
+在所有工作负载下，静态分配在处理读请求方面始终表现最佳，而在大多数工作负载下，动态分配在写、总体性能和耐力方面都优于其他分配。</li>
+</ul>
+<h4 id="priority-order-of-ssd-parallelism-levels"><strong>priority order of ssd parallelism levels</strong></h4>
+<p>可以并发执行的四层：channel-level，chip-level，die-level，plane-level</p>
+<p><code>高级命令</code>利用最后两个级别的并行性；<code>分配方案</code>可以有效地利用多个级别的并行性，并确定它们的优先级顺序。评价结果表明，在四层并行性中，往往存在一个最优先级顺序。不正确的优先级顺序会导致高达60%的性能下降</p>
+<hr>
+<h3 id="关于闪存">关于闪存</h3>
+<h4 id="闪存类型">闪存类型</h4>
+<p>闪存分为两种类型：NOR-Flash Memory和NAND-Flash Memory</p>
+<ul>
+<li>区别：<br>
+NOR-Flash Memory：字节级随机访问，用于只读型应用，比如存储固件代码<br>
+NAND-Flash Memory：页面级随机访问；高存储密度，大容量，低开销；用于通用型应用，比如用户信息存储</li>
+</ul>
+<h4 id="ssd控制器逻辑架构">ssd控制器逻辑架构</h4>
+<p>为了增加存储密度，Flash制造商将几个Flash chips聚合到一个名为Package的模块中。在package中的所有chips共享相同的8/16-bit-I/O总线，但将chip enable(CE)和ready/busy(R/B)控制信号分开</p>
+<ul>
+<li>每个<code>chips</code> 有很多个dies组成</li>
+<li>每个<code>die</code>有很多个planes组成，每个die有一个R/B信号，只在advanced commands中起作用</li>
+<li>每个<code>plane</code>包含成千上万的blocks和一个data register</li>
+<li>一个<code>block</code>包含64个或者128个pages，一个page又被划分为很多个512-byte的subpages，相当于典型的扇区大小</li>
+<li>每个<code>subpage</code>包含16-byte的空闲区域用来存储metadata</li>
+</ul>
+<p><strong>区分chip和die？</strong></p>
+<ul>
+<li>chip是具有独立CE和R/B信号的基本服务单元</li>
+<li>die是chip的组成组件，只有R/B信号</li>
+</ul>
+<h4 id="flash典型的物理特征">flash典型的物理特征</h4>
+<p>1.<code>write-after-erase</code></p>
+<ul>
+<li>在一个写操作之后，这个页必须被先擦除才能再次使用，也即写操作不能就地更新</li>
+</ul>
+<p>2.<code>limited erase cycle</code></p>
+<ul>
+<li>每个Flash block的erase操作是有限的，若worn out，那么这个块就不能再使用</li>
+<li>一个典型的erase操作上线大概为10k-100k</li>
+</ul>
+<hr>
+<h3 id="关于ssd">关于SSD</h3>
+<p>Flash memory SSD是一个嵌入式系统，主要是由存储部件（Flash memory chips）和控制部件（embedded CPU）组成，称之为SSD控制器，如下图<br>
+<img src="/img/article/ssd_for_improved_performace_and_endurance/1.png" alt=""></p>
+<p>SSD控制器必须提供主机接口和Flash通道接口之间的连接。一般来说，对于一个SSD，只有一个主机接口可以与主机连接，例如PATA，SATA、SAS、PCI-E等；<br>
+相比之下，有多个Flash通道接口可以连接SSD控制器内的多个独立通道，以提高SSD的容量并提高其I/O性能<br>
+基于Flash chip控制信号和数据信号的不同共享方式，有多种实现Flash存储通道接口的方法。<br>
+下图设计的SSD控制器致力于高性能，称为<code>独立信道</code><br>
+<img src="/img/article/ssd_for_improved_performace_and_endurance/2.png" alt=""></p>
+<p><img src="/img/article/ssd_for_improved_performace_and_endurance/3.png" alt=""></p>
+<p>Flash通道控制器不仅消耗逻辑单元资源，而且消耗用户I/O引脚资源。</p>
+<p>在表1中列出了Flash channel所需的所有信号。如果我们在一个channel中使用四个chip，每个channel将消耗21个用户I/O引脚。<br>
+因此，独立的Flash通道号受到有限的逻辑单元和用户I/O引脚资源的限制。</p>
+<h4 id="ssd的并行性">SSD的并行性</h4>
+<p>在SSD中有四级并行性：</p>
+<ol>
+<li>channel level（among channels）</li>
+<li>chip level(among chips in a channel)</li>
+<li>die level(among dies in a chip)</li>
+<li>plane level(among planes in a die)</li>
+</ol>
+<p><img src="/img/article/ssd_for_improved_performace_and_endurance/4.png" alt=""></p>
+<p>如果一个请求同时被channel0和channel1服务，那么要求channel-level的并行性，其他三个level同理。</p>
+<p>事实上，除了channel-level parallelism外，其他三个层次的并行性可以提高独立信道的利用率。<br>
+同时，由于目前异步Flash I/O总线的技术限制，最大带宽为40 MB/秒。因此，通过利用<code>chip-level</code>、<code>die-level</code>和<code>plane-level</code>并行，就有可能实现这一最大带宽。</p>
+<hr>
+<h3 id="基本命令和高级命令">基本命令和高级命令</h3>
+<h4 id="基本命令">基本命令</h4>
+<p>三种basic Command：read、write、erase</p>
+<ul>
+<li>一个<code>read</code>命令主要是从一个target page中抓取数据</li>
+<li>一个<code>write</code>命令写数据到一个target page</li>
+<li>一个<code>erase</code>命令将目标块的所有位重置为“1”</li>
+</ul>
+<p>每个读/写命令操作由两个步骤组成</p>
+<ol>
+<li>数据传输</li>
+<li>在target page上读数据到plane data register或者从plane data register写数据到target page</li>
+</ol>
+<p>通过将命令代码写入命令寄存器以及将请求的地址写入地址寄存器来启动所有命令。<br>
+<img src="/img/article/ssd_for_improved_performace_and_endurance/5.png" alt=""></p>
+<p>地址是指请求的target data在chip内的位置。如图4所示，A Flash chip地址分为五部分：die、plane、block、page、in-page。在block中，页面必须按照页面地址的升序连续写入。Random-page-address是禁止的，我们称此限制为<code>Ra</code></p>
+<h4 id="高级命令">高级命令</h4>
+<p>大多数Flash制造商提供高级命令，如copyback，multiplane，interleave，以进一步提高SSD的性能。<br>
+高级命令是basic read, program 和 erase commands的扩展，但有一些使用限制</p>
+<ol>
+<li><code>Copyback(Internal Data Move)</code></li>
+</ol>
+<ul>
+<li>此命令是在相同的plane之间将数据从一个page复制到另一个page，不需要占用I/O bus</li>
+<li>该命令可节省两次数据传输时间</li>
+<li>源页和目标页必须具有相同的die和plane地址，它们的地址必须是奇数或偶数。如图3所示，copyback命令操作只能将数据从第0页到第2页，或从第1页到第3页，以此类推。禁止将数据从0页移动到第1页或第3页。我们称之为限制<code>Rb</code></li>
+</ul>
+<ol start="2">
+<li><code>Multiplane</code></li>
+</ol>
+<ul>
+<li>此命令在同一die的所有plane上激活多个读取、编程或擦除操作</li>
+<li>该命令使用plane-level parallelism</li>
+<li>仅花费多个数据的传输和一个read、write或者erase来实现多个read、write、erase，如图5a</li>
+<li>执行multiplane读/写操作的pages必须具有相同的die、block和page地址</li>
+<li>blocks执行一个multiplane erase操作必须有相同的die和block地址，如图3，只有来自plane0的page1和来自相同的die的plane1的page1才能通过使用multiplane 的读/写操作同时读写。读/写来自plane0的page1和来自plane1的page3，使用multiplane 读/写操作是禁止的，称为限制<code>Rc</code></li>
+</ul>
+<p><img src="/img/article/ssd_for_improved_performace_and_endurance/6.png" alt=""></p>
+<ol start="3">
+<li><code>Interleave</code></li>
+</ol>
+<ul>
+<li>此命令在相同chip下的不同dies同时执行一些read、write、erase和multiplane read/write/erase操作</li>
+<li>使用die-level并行</li>
+<li>注意interleave command和interleave operation不一样，interleave command是闪存命令，在相同的chip上的不同dies执行；interleave operation 在相同的channel上的不同chips上执行</li>
+<li>interleave write command如图5b所示</li>
+</ul>
+<hr>
+<h3 id="allocation-schemes">Allocation Schemes</h3>
+<p>——分配方案确定如何选择空闲物理页以适应要写入SSD的逻辑页</p>
+<p>为了定位特定的物理页，除了知道die address，plane address，block address和page address外，必须知道channel address和chip address，如图4展示的格式<br>
+SSD的完整地址的格式如图6所示<br>
+<img src="/img/article/ssd_for_improved_performace_and_endurance/7.png" alt=""></p>
+<ul>
+<li>
+<p>静态分配</p>
+<ol>
+<li>首先按照公式计算逻辑页对应于哪个channel、chip和plane，若已占有则分配给plane的任何空闲物理页面</li>
+</ol>
+</li>
+<li>
+<p>动态分配</p>
+<ol>
+<li>将逻辑页分配给整个ssd的任何空闲物理页</li>
+<li>当写入请求到达时，动态分配方案通过考虑几个因素来选择空闲的物理页面，例如channels和chips的空闲/繁忙状态、blocks的擦除计数、 并行级的优先级顺序等等</li>
+</ol>
+</li>
+</ul>
+<hr>
+<p><strong><strong><em>platform和experiment，可以参看论文，此处省略3千字……</em></strong></strong></p>
+<hr>
+<h3 id="总结">总结</h3>
+<p>SSD中有四种并行级，分别是<code>channel-level parallelism</code>, <code>chip-level parallelism</code>, <code>die-level parallelism</code>, <code>plane-level parallelism</code></p>
+<ol>
+<li>
+<p>讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响</p>
+</li>
+<li>
+<p>评估了使用与开发四层并行性密切相关的不同分配方案对performance和endurance的影响</p>
+</li>
+<li>
+<p>研究了利用SSD中并行性的最优先级，实验分析如下：</p>
+<ul>
+<li>有两种使用高级命令的推荐方法，使用Copyback、mpw和interleave命令与使用Copyback命令wisely，MPW指挥blindly，interleave命令 ubiquitously效果一样</li>
+<li>静态分配算法在读方面性能是最好的；在大多数工作负载下，动态分配在写和总体性能以及耐力方面表现最好</li>
+<li>利用SSD中并行性的最优先级顺序是：channel-level并行——die-level并行——plane-level平行——chip-level并行</li>
+<li>基于这些,深入探讨了高性能SSD的设计准则，并给出了一个设计实例</li>
+</ul>
+</li>
+</ol>
+<h3 id="i-want-to-say">�I want to say�</h3>
+<blockquote>
+<p>临近期中，事情比较多，不过坚持看paper写博文转眼已经快两个月辣，坚持这件小事说难也不难嘛！fighting✌</p>
+</blockquote>
+<p>看完啦，送您一首歌！</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=2872197&auto=0&height=66"></iframe>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/SSDsim/三篇SSD+整理/" data-toggle="tooltip" data-placement="top" title="最新SSD Paper">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/SSD/Design_Tradeoffs_for_SSD_Performance/" data-toggle="tooltip" data-placement="top" title="Design Tradeoffs for SSD Performance">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/alipay.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/wechatpay.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">good luck!</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="2668662377"
+                    data-server="netease"
+                    data-type="playlist"
+                    data-fixed="true" >
+                </div>
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+                    <!-- disqus 评论框 start -->
+                    <div class="comment">
+                        <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTE4NS8xNTcxMg"></div>
+                    </div>
+                    <!-- disqus 评论框 end -->
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#要点"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x8981;&#x70B9;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#advanced-commands"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><strong>Advanced commands</strong></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#allocation-schemes"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><strong>allocation schemes</strong></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#priority-order-of-ssd-parallelism-levels"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><strong>priority order of ssd parallelism levels</strong></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于闪存"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x5173;&#x4E8E;&#x95EA;&#x5B58;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存类型"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">&#x95EA;&#x5B58;&#x7C7B;&#x578B;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd控制器逻辑架构"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">ssd&#x63A7;&#x5236;&#x5668;&#x903B;&#x8F91;&#x67B6;&#x6784;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#flash典型的物理特征"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">flash&#x5178;&#x578B;&#x7684;&#x7269;&#x7406;&#x7279;&#x5F81;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于ssd"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x5173;&#x4E8E;SSD</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd的并行性"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">SSD&#x7684;&#x5E76;&#x884C;&#x6027;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基本命令和高级命令"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x57FA;&#x672C;&#x547D;&#x4EE4;&#x548C;&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#基本命令"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">&#x57FA;&#x672C;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#高级命令"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#allocation-schemes"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">Allocation Schemes</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">&#x603B;&#x7ED3;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">&#xFFFD;I want to say&#xFFFD;</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Parallelism" title="Parallelism">Parallelism</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://godweiyang.com/" target="_blank">godweiyang</a></li>
+                    
+                        <li><a href="https://www.researchgate.net/profile/Yina_Lv" target="_blank">ResearchGate</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+    <!-- 来必力City版公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+    
+           if (typeof LivereTower === 'function') { return; }
+    
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+    
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    <!-- 来必力City版 公共JS代码 end -->
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mi-tang-gua">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/elainelv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+   
+                <li>
+                    <a target="_blank"  href="https://blog.csdn.net/sunshine_lyn">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-book fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+                
+
+                </ul>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+                <p class="copyright text-muted">
+                    Copyright &copy;  Yina Lv <i class="fa fa-heartbeat"> </i>2022 
+                    <br>
+
+
+<span class="post-count">102.5k words altogether</span>
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors: <span id="busuanzi_value_site_uv"></span>
+</span>
+
+	
+                  <!--   Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+-->
+
+
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://elainelv.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://elainelv.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+
+</html>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon-32x32-next.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          MittOS - ElaineLv | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://elainelv.com/Tail-Latency/MittOS/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/building.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Tail Latency" title="Tail Latency">Tail Latency</a>
+                            
+                        </div>
+                        <h1>MittOS</h1>
+                        <h2 class="subheading">Supporting Millisecond Tail Tolerance with Fast Rejecting SLO-Aware OS Interface</h2>
+                        <span class="meta">
+                            Posted by Yina Lv on
+                            2019-05-07
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ElaineLv</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/recommend/">Recommend</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cv/">Yina&#39;s HomePage</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p>这是一篇2017年SOSP上的会议文章 <a href="https://ucare.cs.uchicago.edu/pdf/sosp17-mittos.pdf" target="_blank" rel="noopener">paper</a></p>
+</blockquote>
+<h3 id="问题引入">问题引入</h3>
+<blockquote>
+<p>解决OS在集群上的QoS问题<br>
+当一个节点的资源竞争激烈无法满足当前请求时，转而竞争其他不太激烈的节点资源。因此用于解决由于竞争资源导致的等待所带来的尾端延迟问题。</p>
+</blockquote>
+<p>确切地说，当一个application发出I/O请求之后，如果OS的I/O处于繁忙状态，那么此时APP就很有可能需要等待较长的一段时间才能被处理。这篇paper讨论的背景是在分布式架构下，一般数据中心对于此类问题，采取tail-tolerant来应对个别节点的<strong>延迟突刺</strong></p>
+<h3 id="策略">策略</h3>
+<p>通常的做法是<strong>wait-then-speculate</strong>，也即app主动去判断节点运行的OS是否处于资源竞争激烈状态，这需要花费一定的时间。而每个APP本身具有SLO（service-level object）的要求，对于粗粒度的请求来说是可行的，但是对于那些milliseconds的请求来说，这很难满足。</p>
+<p><strong>那怎么办呢？</strong><br>
+这关键在于APP能否<strong>以较快的速度</strong>发觉OS处于繁忙状态，进而决定继续等待下去还是转到其他OS上去处理。而经典的os采用封闭式的设计，上层app是不知道OS的状态信息的，OS也不会暗示这个请求将被等待多久。虽然这种设计可以简化上层APP的设计，但是本文情况下，反而不好。</p>
+<p>当然针对上述milliseconds的小请求，先前也提出了一些解决办法：</p>
+<ul>
+<li><code>Cloning</code>：采用副本方法，比如将一个请求分发到多个OS上，最先响应的那个反馈给APP，但是这有个问题就是会导致I/O密集。稍许改进的方法就是适当延迟创建duplicate request的时机，并且在同一个I/O请求已经有结果返回时，要能够快速地撤销其余duplicate request。（为了实现这种方法，必须在应用层中进行创建和撤销队列的管理）</li>
+<li><code>hedged requests</code>: 在一个请求超过一定时长之后还未返回，那么发送一个重复的请求，与上述方法对比，此方法的优势是不给整个系统带来过多的负载压力。举一个典型的尾端延迟的例子，可以将请求超过预期95%延迟的时长，就发送重复的请求</li>
+<li><code>snitching</code>：APP持续监控并选用最快的节点副本来响应服务，但是这种做法容易受到突发噪声的干扰，从而难以选取到最优的节点。</li>
+</ul>
+<p>上述方法虽然在一定程度上有所改进，但是上述方法均未能对底层有更好的信息掌握，如果OS的状态信息可以expose给APP，那岂不是可以很好的去掌控tail-tolerant的设计啦</p>
+<hr>
+<h3 id="mittos">MittOS</h3>
+<p>—— an OS that employs a fast rejecting SLO-aware interface to support millisecond tail tolerance</p>
+<ol>
+<li>OS能够感知到APP的SLOs</li>
+<li>由于资源繁忙而不能够满足其SLOs的I/O，快速地将其reject</li>
+</ol>
+<p>既然APP不知道OS的信息，那么只能OS主动反馈给app。因为OS对自身的资源情况非常了解，而APP如果能够了解到OS的情况，就能更好的处理tail-tolerant问题了。</p>
+<p>MittOS分为几个子系统：</p>
+<ul>
+<li>MittNOOP：集成在了Linux的Noop I/O scheduler中</li>
+<li>MittCFQ：集成在了Linux的CFQ I/O scheduler中</li>
+<li>MittSSD：集成在了Linux的SSD driver中</li>
+<li>MittCACHE：集成在了Linux的block buffer cache实现中</li>
+</ul>
+<p>文中对每个子系统都进行了详细的解释和分析。</p>
+<p>四个策略：</p>
+<ul>
+<li><code>Fast rejection</code>： 在PC级的应用当中，因为繁忙而被拒绝时，PC APP不能够再retry别处，只能等待；但是在数据中心，应用程序本质上运行在冗余机器上，所以reject方式很合理。</li>
+<li><code>SLO aware</code>：APP需要告诉OS，它的SLOs是什么？因此，OS只需要reject那些不能够满足其SLOs 的I/Os</li>
+<li><code>Instant feedback/failover</code>：feedback指的是fast rejection（小于5微妙）；failover指的是reject后转向另外一个节点，通常就是一个network hop的时间。feedback和failover都要求尽可能瞬时完成，以增强系统的tail-tolerant。<br>
+<img src="/img/article/MittOS/1.png" alt=""><br>
+此图中第一步表明APP预期处理时间为20ms，第二、三步发送syscall给OS，第四步OS reject，第五步表示failover，转向另一个副本进行处理。</li>
+<li><code>Keep existing OS policies</code>：MittOS仅仅是简单地扩展原OS的接口，并不涉及到对原有的OS的策略的修改。OS本身有自己的QoS策略，这些策略和MittOS引入的QoS策略是不冲突的。</li>
+<li><code>Keep application simple</code>：APP layer不再需要实现撤销tied I/O request机制，它被推入了OS layer，这一部分代码可以被App layer复用。</li>
+</ul>
+<p>主要是架构方面有点复杂，整体思路是非常清晰的，下面介绍下各参数的设计和计算。</p>
+<p>T_wait：一个I/O请求预期的，从到达到完成的时长<br>
+T_deadline：I/O syscall传入的参数，表明App希望此I/O请求在多长时间内完成<br>
+T_hop：两个节点之间网络传输的时间<br>
+T_nextFree：磁盘下一次处于free的时刻<br>
+T_processNewIO：预期处理此I/O请求的时长<br>
+T_processActual：实际处理此I/O请求的时长</p>
+<p>如果T_wait &gt; T_deadline + T_hop，那么说明此I/O在本节点上无法及时完成，需要快速返回EBUSY<br>
+T_wait = T_nextFree – T_now</p>
+<p>T_nextFree是持续追踪的，如果磁盘一直处于繁忙状态，那么就是每一次来一个I/O请求就将它的预期处理时间累加到T_nextFree上：T_nextFree += T_processNewIO。一旦磁盘处于空闲状态，那么这个累加就不再是在T_nextFree上累加，而是在当前时刻T_now上累加：T_nextFree = T_now + T_processNewIO。</p>
+<p>由于T_processNewIO的值是一个预估的值，所以每一个I/O完成时，都需要校准T_nextFree的值：T_nextFree += T_processActual – T_processNewIO</p>
+<h3 id="i-want-to-say">“I want to say”</h3>
+<blockquote>
+<p>这篇paper讲解的处理尾端延迟的方式主要是在分布式架构，多副本节点下，因此可以实现reject后快速精准的转向另一个节点进行处理。这是个在可能情况下选择最优解的问题。而且这篇文章提出idea的设计并未改变原有OS的机制，只是可以通过OS向APP发送信息来告知，这种在改进APP和OS之间交互的paper好像还是第一次阅读，当然里面很多概念也是第一次碰到，比如SLO以及与之很接近的SLA。这篇文章的想法是很不错的，系统的设计思路也很清晰。<br>
+最近在阅读一些关于tail latency 的 paper，最后有时间的话也会整理一个系统的总结！</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/Tail-Latency/TinyTailFlash/" data-toggle="tooltip" data-placement="top" title="Tiny-Tail Flash">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/SSD/FastGC/" data-toggle="tooltip" data-placement="top" title="FastGC">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/alipay.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/wechatpay.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">good luck!</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="2668662377"
+                    data-server="netease"
+                    data-type="playlist"
+                    data-fixed="true" >
+                </div>
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+                    <!-- disqus 评论框 start -->
+                    <div class="comment">
+                        <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTE4NS8xNTcxMg"></div>
+                    </div>
+                    <!-- disqus 评论框 end -->
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题引入"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x95EE;&#x9898;&#x5F15;&#x5165;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#策略"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x7B56;&#x7565;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mittos"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">MittOS</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Tail Latency" title="Tail Latency">Tail Latency</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://godweiyang.com/" target="_blank">godweiyang</a></li>
+                    
+                        <li><a href="https://www.researchgate.net/profile/Yina_Lv" target="_blank">ResearchGate</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+    <!-- 来必力City版公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+    
+           if (typeof LivereTower === 'function') { return; }
+    
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+    
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    <!-- 来必力City版 公共JS代码 end -->
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mi-tang-gua">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/elainelv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+   
+                <li>
+                    <a target="_blank"  href="https://blog.csdn.net/sunshine_lyn">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-book fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+                
+
+                </ul>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+                <p class="copyright text-muted">
+                    Copyright &copy;  Yina Lv <i class="fa fa-heartbeat"> </i>2022 
+                    <br>
+
+
+<span class="post-count">102.5k words altogether</span>
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors: <span id="busuanzi_value_site_uv"></span>
+</span>
+
+	
+                  <!--   Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+-->
+
+
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://elainelv.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://elainelv.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+
+</html>

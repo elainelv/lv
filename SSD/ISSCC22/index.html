@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon-32x32-next.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          解读ISSCC 2022，NAND芯片厂商最新技术 - ElaineLv | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://elainelv.com/SSD/ISSCC22/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/passd_bg.png')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Flash Memory" title="Flash Memory">Flash Memory</a>
+                            
+                              <a class="tag" href="/tags/#TLC" title="TLC">TLC</a>
+                            
+                              <a class="tag" href="/tags/#QLC" title="QLC">QLC</a>
+                            
+                        </div>
+                        <h1>解读ISSCC 2022，NAND芯片厂商最新技术</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Yina Lv on
+                            2022-03-29
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ElaineLv</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/recommend/">Recommend</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cv/">Yina&#39;s HomePage</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="引子">引子</h2>
+<p>随着数据大小呈指数级增长，对具有更小单元尺寸和更高接口速度的高密度闪存的需求也在增加。TLC NAND已在非易失性存储器市场占据主导地位，但QLC NAND正在成为低成本和高密度存储的合适替代品。然而，尽管QLC具有成本效益，但其市场份额并没有迅速增加，这不仅是因为其可靠性较差，而且还因为其缓慢的顺序和随机读取性能。而高性能是QLC NAND闪存进入主流系统的关键推动因素。当然，随着发展，3D-NAND闪存技术在其性能和可靠性方面有了显著的提高，使一个高密度的QLC器件的设计成为可能。<br>
+<code>随之而来的技术问题包括以下几方面：</code><br>
+1）WL堆叠层数增加导致感测电路尺寸以及WL间距减小，这增加了晶体管差异和存储元间干扰；<br>
+2）随着WL数量的增加，BL负载很重；<br>
+3）为了节省芯片面积，采用CUA技术。为了提高随机读取性能，提出支持多plane独立读取，这会导致噪声功率增加；<br>
+4）随着接口速度的扩大，功率降低变得更加重要；<br>
+5）运行并发操作的不同裸片的高峰值电流事件；<br>
+6）缩小芯片尺寸和提高I/O速度（由独立平面读取或缓存读取中的高速I/O操作引起的）都会削弱配电网络 (PDN) 并增加电源噪声。这些会导致读取偏差出现波动，从而导致位故障率增加。具体来说，接地电压不均匀会导致严重的偏置失真。进一步引起重读导致的读性能下降问题。</p>
+<p>总的来说，2022年的论文进一步提升了WL的堆叠层数。KIOXIA和SK hynix在2021年提出了176层TLC，2022年实现了更高层QLC。可以看到，未来的QLC闪存的广泛部署使用依然是可能的。<br>
+技术上主要探讨如何进一步优化电路结构，来改善高I/O速度带来的高功率问题；怎么降低多plane读取时的噪声干扰问题；如何实现快速读取以及快速编程（双重验证模式）。其中，KIOXIA侧重电路优化，Micron和SK hynix侧重提升QLC的可靠性和读写性能，Micron在2022年提出了基于16-16的快速编程算法（双重验证来减少编程时间）。从编程可靠性角度来看，随着堆叠的WL数不断上升，采用两步编程依然不能很好地实现阈值电压分布，高电压状态受到干扰严重。另外，Samsung依然致力于TLC研究，以实现更高层数的TLC闪存（220层）。</p>
+<blockquote>
+<p>【WD，KIOXIA】A 1-Tb 4b/Cell 4-Plane 162-Layer 3D Flash Memory with a 2.4-Gb/s I/O Speed Interface<br>
+【Micron】A 1-Tb Density 4b/Cell 3D-NAND Flash on 176-Tier Technology with 4-Independent Planes for Read using CMOS-Under-the-Array<br>
+【SK hynix】A 1-Tb, 4b/Cell, 176-Stacked-WL 3D-NAND Flash Memory with Improved Read Latency and a 14.8Gb/mm2 Density<br>
+【Samsung】A 1Tb 3b/Cell 8th-Generation 3D-NAND Flash Memory with 164MB/s Write Throughput and a 2.4Gb/s Interface</p>
+</blockquote>
+<p><strong>【WD，KIOXIA】A 1-Tb 4b/Cell 4-Plane 162-Layer 3D Flash Memory with a 2.4-Gb/s I/O Speed Interface</strong><br>
+1Tb 162层3D-NAND QLC闪存的面积密度为15Gb/mm2，比之前的工作[1]高出8.7%。Die采用4个plane排列在2×2矩阵中。相关的字线驱动器、感测放大器（S/A）、电荷泵、电压发生器和控制逻辑电路放置在每个存储垫下面。</p>
+<ul>
+<li>编程吞吐量 = 60MB/s，tR = 65μs，具有8KB central WL stair架构和contact-through-WL (CTW)区域；</li>
+<li><strong>I/O带宽：</strong> 使用LTT和CTT组合驱动程序，可以实现2.4Gb/s的I/O速度；</li>
+<li><strong>能耗：</strong> 采用VCCQ domain设计，读写数据传输能量降低45%；</li>
+<li><strong>功耗：</strong> 时分峰值功率管理(TD-PPM)可以有效降低系统峰值功率，同时最大化系统性能；</li>
+<li><strong>测试方法：</strong> Cache DFT和I/O DFT功能支持在晶圆级(wafer level)的高速测试方法。</li>
+</ul>
+<p><img src="/img/article/ISSCC22/ISSCC22KIOXIA_1.png" alt=""></p>
+<p>【更新电路架构，提高性能】<br>
+介绍了circuit-under-array(CUA)的阵列结构接触Contact-through-WL(CTW)区域来连接过阵列和阵列下金属线。<br>
+<strong>CUA：</strong> 用于页面缓冲区和源代码线驱动器的电源开关(power switches)分布在整个CTW区域，以提高性能；<br>
+<strong>CNA：</strong> 而在CNA的情况下，这些电路被放置在页面缓冲区的两侧。</p>
+<p><img src="/img/article/ISSCC22/ISSCC22KIOXIA_2.png" alt=""></p>
+<p><strong>【Micron】A 1-Tb Density 4b/Cell 3D-NAND Flash on 176-Tier Technology with 4-Independent Planes for Read using CMOS-Under-the-Array</strong></p>
+<p>1Tb 176层 3D-NAND QLC 闪存。Die采用4-plane结构，页面大小为16KB。1×4 plane架构提高了编程和读取吞吐量，而不增加Die大小。使用第五代CMOS under array(CuA)技术，将外围电路和页面缓冲器放置在阵列下。CMOS under array (CuA)已作为3D NAND的重要技术创新被引入。零外围架构(zero-periphery architecture)是CuA的演变，其中整个外围都移动到阵列下方，但与焊盘和串驱动器相关的电路除外。与以前的架构相比，节省了10-20%的面积。</p>
+<ul>
+<li><strong>读性能：</strong> 为了提高随机读取性能，提供了快速读取并发读取特性：允许四个独立的多plane页面读取地址；</li>
+<li>4b/cell的能力是通过负电压区域和正SRC偏置来达到的，这两者都有助于扩展可靠性；</li>
+<li>探索可动态配置的节能和区域高效的泵；</li>
+<li><strong>编程性能：</strong> 编程操作基于16-16编程算法，通过减少QLC验证的数量而实现的快速编程算法；</li>
+<li><strong>功耗：</strong> 多Die峰值功率管理模式，使最大吞吐量在功率预算；</li>
+<li>I/O占空比校准模式，在高频I/O速率下显著，优化占空比；</li>
+<li><strong>I/O带宽：</strong> 在ONFI 4.2中，I/O传输速度为1600MT/s。</li>
+</ul>
+<p><img src="/img/article/ISSCC22/ISSCC22Micron_1.png" alt=""></p>
+<p><strong>【SK hynix】A 1-Tb, 4b/Cell, 176-Stacked-WL 3D-NAND Flash Memory with Improved Read Latency and a 14.8Gb/mm2 Density</strong></p>
+<p>1Tb 176层 QLC 3D-NAND闪存。Die采用 4-plane架构，页面大小为16KB，页面编程时间为1.6ms，编程吞吐量为40MB/s。使用单元阵列技术下的外围电路实现了14.8Gb/mm2 的位密度；</p>
+<ul>
+<li><strong>编程性能：</strong> 并行编程感测concurrent program sensing(CPS)实现了更短的编程时间(tPROG)，并应用upper-state-reprogram (USR)算法来克服垂直(z轴)中的字线间干扰；</li>
+<li><strong>噪声：</strong> 接地噪声补偿ground-noise-compensation(GNC)方案可最大限度地减少独立plane和高速缓存读取操作期间的读取偏置电压波动。因此，Vth偏移被最小化，并且转移到错误缓解（即重读）的概率降低。</li>
+<li><strong>读性能：</strong> 设计了一种快速读取swift-read(SWR)算法来搜索最佳读取参考电压。GNC和SWR都减少了整体读操作延迟。</li>
+</ul>
+<p><img src="/img/article/ISSCC22/ISSCC22SK_1.png" alt=""></p>
+<p><strong>【Samsung】A 1Tb 3b/Cell 8th-Generation 3D-NAND Flash Memory with 164MB/s Write Throughput and a 2.4Gb/s Interface</strong></p>
+<p>1Tb 3D-NAND TLC闪存(第8代)，在88.6mm2的裸片上制造了超过220个WL。Die采用4-plane(256Gb/plane)架构，页面大小为16KB，读写性能分别为1.64GB/s和164Mb/s（BL比之前的512Gb第七代闪存长1.6倍，对比可以看到，读写性能下降很多）；</p>
+<ul>
+<li><strong>I/O带宽：</strong> Toggle 5.0 接口功耗低，支持高达2.4Gb/s的I/O速度；在高速I/O带宽方面，还提出了接收电路和内部参考电压发生器，以提高I/O速度，降低待机功耗，减少芯片使能时的建立时间；</li>
+<li><strong>噪声：</strong> 提出偏移消除感应锁存器(OCSL)方案、四组无干扰读取(Q-IFR)方案和共源线(CSL)噪声跟踪方案；</li>
+</ul>
+<p><img src="/img/article/ISSCC22/ISSCC22Samsung_1.png" alt=""></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/SSD/WOM系列解读/" data-toggle="tooltip" data-placement="top" title="WOM编码系列解读">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/SSD/GuardedErase-FAST22/" data-toggle="tooltip" data-placement="top" title="GuardedErase Extending SSD Lifetimes by Protecting Weak Wordlines">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/alipay.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/wechatpay.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">good luck!</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="2668662377"
+                    data-server="netease"
+                    data-type="playlist"
+                    data-fixed="true" >
+                </div>
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+                    <!-- disqus 评论框 start -->
+                    <div class="comment">
+                        <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTE4NS8xNTcxMg"></div>
+                    </div>
+                    <!-- disqus 评论框 end -->
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5F15;&#x5B50;</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Flash Memory" title="Flash Memory">Flash Memory</a>
+                        
+                          <a class="tag" href="/tags/#TLC" title="TLC">TLC</a>
+                        
+                          <a class="tag" href="/tags/#QLC" title="QLC">QLC</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://godweiyang.com/" target="_blank">godweiyang</a></li>
+                    
+                        <li><a href="https://www.researchgate.net/profile/Yina_Lv" target="_blank">ResearchGate</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+    <!-- 来必力City版公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+    
+           if (typeof LivereTower === 'function') { return; }
+    
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+    
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    <!-- 来必力City版 公共JS代码 end -->
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mi-tang-gua">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/elainelv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+   
+                <li>
+                    <a target="_blank"  href="https://blog.csdn.net/sunshine_lyn">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-book fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+                
+
+                </ul>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+                <p class="copyright text-muted">
+                    Copyright &copy;  Yina Lv <i class="fa fa-heartbeat"> </i>2022 
+                    <br>
+
+
+<span class="post-count">102.5k words altogether</span>
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors: <span id="busuanzi_value_site_uv"></span>
+</span>
+
+	
+                  <!--   Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+-->
+
+
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://elainelv.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://elainelv.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+
+</html>

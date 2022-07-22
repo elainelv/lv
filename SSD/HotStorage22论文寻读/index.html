@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon-32x32-next.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          HotStorage &#39;22 论文寻读 - ElaineLv | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://elainelv.com/SSD/HotStorage22论文寻读/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/passd_bg.png')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#HotStorage" title="HotStorage">HotStorage</a>
+                            
+                        </div>
+                        <h1>HotStorage &#39;22 论文寻读</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Yina Lv on
+                            2022-07-02
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ElaineLv</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/recommend/">Recommend</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cv/">Yina&#39;s HomePage</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>1.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539739" target="_blank" rel="noopener">Infusing Pub-Sub Storage with Transactions</a><br>
+Liana V. Rodriguez, Florida International University; John Bent, Tim Shaffer, Seagate Technology; Raju Rangaswami, Florida International University<br>
+开发新插件来扩展主机存储系统的功能集。</p>
+<p>2.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539740" target="_blank" rel="noopener">ScalaRAID: Optimizing Linux Software RAID System for Next-Generation Storage</a><br>
+Shushu Yi, Nanjing University; Yanning Yang, Beijing University of Posts and Telecommunications; Yunxiao Tang, Zixuan Zhou, Junzhe Li, Peking University; Yue Chen, Beijing University of Posts and Telecommunications; Myoungsoo Jung, KAIST; Jie Zhang, Peking University<br>
+RAID用于改善现有存储系统的性能、容量和可靠性。 但是，我们观察到 Linux 软件 RAID (mdraid) 的锁定机制实施不佳。 为了解决这个问题，我们提出了ScalaRAID，它细化了锁的角色域并设计了一种新的数据结构来防止不同的线程抢占RAID资源。 通过这样做，ScalaRAID 可以最大限度地提高线程级并行性并减少 I/O 请求处理的时间消耗。 我们的评估结果表明，与 mdraid 相比，ScalaRAID 可以将吞吐量提高 89.4%，同时将 99.99% 的延迟降低 85.4%。</p>
+<p>3.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539741" target="_blank" rel="noopener">Lifetime-Leveling LSM-Tree Compaction for ZNS SSD</a><br>
+Jeeyoon Jung, Dongkun Shin, Sungkyunkwan University<br>
+Log-Structured Merge (LSM) 树被认为ZNS存储设备，因为对 LSM-tree 的写入请求是顺序的。 但是，区域可能会在 LSM-tree 压缩期间部分失效和碎片化。 部分无效区域不能被利用，因此空间放大变得显着。 为了回收无效空间，需要主机管理的垃圾回收（GC），这会增加 ZNS 存储的写入放大并降低 I/O 性能。<br>
+本文引入了为 ZNS SSD 量身定制的生命周期压缩（LL-compaction），它可以通过使区域中的已排序字符串表具有相似的生命周期来缓解没有 GC 的空间放大。 在我们使用 LevelDB 的实验中，LL-compaction 通过删除 GC 实现了 1.7 倍的性能提升。</p>
+<p>4.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539742" target="_blank" rel="noopener">PiF: In-Flash Acceleration for Data-Intensive Applications</a><br>
+Myoungjun Chun, Jaeyong Lee, Sanggu Lee, Seoul National University; Myungsuk Kim, Kyungpook National University; Jihong Kim, Seoul National University<br>
+为了最大限度地减少从存储到主机的不必要的数据移动，已经提出了将计算单元移动到存储内以实现存内计算(PiS)技术。本文提出了一种极端版本的PiS解决方案，称为processing-in-flash(PiF)，该方案将计算移动到实际存储数据的闪存芯片内。并提出了一种新颖的闪存芯片架构CoX。使用基于CoX芯片的原型PiF SSD，证明了基于PiF的SSD在加速数据密集型应用方面很有前景。</p>
+<p>5.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539743" target="_blank" rel="noopener">Compaction-Aware Zone Allocation for LSM based Key-Value Store on ZNS SSDs</a><br>
+Hee-Rock Lee, Chang-Gyu Lee, Seungjin Lee, Youngjae Kim, Sogang University<br>
+ZNS SSD 下，设备内的GC功能交给了应用程序处理，从而提供高效GC。同时，RocksDB for ZNS SSD 使用基于 Lifetime 的区域分配算法（LIZA），通过 ZenFS（用户级文件系统）将失效时间（lifetimes）相近的数据放置在同一个 zone，降低GC期间的写放大。<br>
+然而，LIZA 通过根据 LSM-tree 的层次结构级别预测每个 SSTable 的生命周期来分配区域，由于对 SSTable 生命周期的预测不准确，因此在最小化写入放大问题方面效率非常低。<br>
+基于我们观察到 LSM-tree 中 SSTables 的删除时间完全由压缩过程决定，本文提出了一种新的 Compaction-Aware Zone Allocation algorithm (CAZA)，允许在合并后一起删除新创建的 SSTables。 CAZA 在 RocksDB 的 ZenFS 中实现，与 LIZA 相比，CAZA 显着降低了 WA 开销。</p>
+<p>6.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539744" target="_blank" rel="noopener">What You Can’t Forget: Exploiting Parallelism for Zoned Namespaces</a><br>
+Hanyeoreum Bae, Jiseon Kim, Miryeong Kwon, Myoungsoo Jung, KAIST<br>
+本文讨论了 ZNS 的主要优点，并说明了为什么 ZNS 在缩小其区域可写容量时会被剥夺内部并行性。 本文使用了两块量产的ZNS SSD，并定量分析了区间干扰导致的性能下降问题。提出一种IO调度方法来改善带宽和延迟。</p>
+<p>7.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539745" target="_blank" rel="noopener">Hello Bytes, Bye Blocks: PCIe Storage Meets Compute Express Link for Memory Expansion (CXL-SSD)</a><br>
+Myoungsoo Jung, KAIST<br>
+Compute express Link (CXL) 是第一个支持不同处理器、加速器和内存设备类型的高速缓存一致性互连的开放式多协议方法。 尽管 CXL 主要管理 CPU 内存空间和附加设备上的内存之间的数据一致性，但我们认为将现有的块存储改造为具有成本效益的大规模工作内存也是有用的。 具体来说，本文从内存扩展器的角度检查了 CXL 的三种不同子协议。 然后，它建议哪种设备类型可以成为 PCIe 存储的最佳选择，以将其块语义桥接到内存兼容的字节语义。 然后我们讨论如何将存储集成的内存扩展器集成到现有系统中，并推测它对系统性能的影响有多大。 最后，我们访问了各种 CXL 网络拓扑，并探索了有效管理存储集成、基于 CXL 的内存扩展的新机会</p>
+<p>8.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539746" target="_blank" rel="noopener">File Fragmentation from the Perspective of I/O Control</a><br>
+Jonggyu Park, Sungkyunkwan University; Young Ik Eom, Dept. of Electrical and Computer Engineering / College of Computing and Informatics, Sungkyunkwan University<br>
+关于文件碎片的文章。多个应用程序运行时，Linux 内核支持的所有基于权重的 I/O 控制机制在遇到碎片时均无法实现公平的 I/O 共享。本文表明碎片整理可以防止请求拆分和设备级资源冲突来迅速解决此类故障。</p>
+<p>9.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539747" target="_blank" rel="noopener">When Poll is More Energy Efficient than Interrupt</a><br>
+Bryan Harris, Nihat Altiparmak, University of Louisville<br>
+一篇探讨轮询比中断更节能的论文。</p>
+<p>10.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539748" target="_blank" rel="noopener">Rethinking Block Storage Encryption with Virtual Disks</a><br>
+Danny Harnik, IBM Research; Oded Naor, Technion; Effi Ofer, Or Ozeri, IBM Research<br>
+磁盘加密等数据安全性考虑。</p>
+<p>11.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539749" target="_blank" rel="noopener">Alohomora: Protecting Files from Ransomware Attacks Using Fine-Grained I/O Whitelisting</a><br>
+Sanggu Lee, Yoona Kim, Dusol Lee, Inhyuk Choi, Jihong Kim, Seoul National University<br>
+关于勒索软件修改SSD文件问题。</p>
+<p>12.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539750" target="_blank" rel="noopener">Wear Leveling in SSDs Considered Harmful</a><br>
+Ziyang Jiao, Syracuse University; Janki Bhimani, Florida International University; Bryan S. Kim, Syracuse University<br>
+这篇文章测试分析了现有几种均衡磨损算法的表现情况（写放大以及块擦除次数的累计分布），结果表明在某些场景下并不能完全保障闪存块之间的擦除计数趋于一致。采用均衡磨损反而会表现异常，即采用均衡磨损算法不仅仅带来较高的写放大而影响SSD寿命，还表现出不均衡的块擦除计数分布。基于此，作者提出一种不采用均衡磨损的容量差异的方法。</p>
+<p>13.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539751" target="_blank" rel="noopener">LambdaObjects: Re-aggregating storage and execution for cloud computing</a><br>
+Kai Mast, Andrea Arpaci-Dusseau, Remzi Arpaci-Dusseau, University of Wisconsin-Madison</p>
+<p>14.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539752" target="_blank" rel="noopener">Cache-coherent Accelerators for Persistent Memory Crash-consistency</a><br>
+Ankit Bhardwaj, Todd Thornley, Vinita Pawar, University of Utah; Reto Achermann, University of British Columbia; Gerd Zellweger, VMware Research; Ryan Stutsman, University of Utah</p>
+<p>15.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539753" target="_blank" rel="noopener">Fair I/O Scheduler for Alleviating Read/Write Interference by Forced Unit Access in Flash Memory</a><br>
+Jieun Kim, Dohyun Kim, Youjip Won, KAIST<br>
+在过去的几年里，采用 NVM Express 的企业级固态硬盘因其高性能而被广泛使用。 多个租户和进程共享一个 SSD 是很常见的。 为多种应用提供公平的 SSD 性能已成为一个重要问题。 我们观察到带有 FUA 标志的写请求由于 SSD 内部读/写干扰而延迟了读请求的处理。 为了减轻读取请求的性能下降，我们提出了 TABS，即 NVMe SSD 的 per-Type fAir 带宽 I/O 调度程序。</p>
+<p>16.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539754" target="_blank" rel="noopener">A Principled Approach for Selecting Block I/O Traces</a><br>
+Omkar Desai, Syracuse University; Seungmin Shin, Eunji Lee, Soongsil University; Bryan S. Kim, Syracuse University<br>
+目前SNIA网站上开源的负载非常多，但通常不清楚要运行哪些负载以进行实验评估。本文开发了一个负载分析工具IOTap。如果IOTap分析的两个负载是相似的，那么对它们进行基准测试不仅是多余的，而且还会强调负载的特定特征，从而扭曲整体评估。IOTap可以用于不偏不倚地选择I/O负载，以公平地评估存储系统。</p>
+<p>17.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539755" target="_blank" rel="noopener">When F2FS Meets Address Remapping</a><br>
+Yongmyung Lee, Jong-Hyeok Park, Jonggyu Park, Hyunho Gwak, Dongkun Shin, Sungkyunkwan University; Young Ik Eom, Dept. of Electrical and Computer Engineering / College of Computing and Informatics, Sungkyunkwan University; Sang-Won Lee, Sungkyunkwan University</p>
+<p>18.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539756" target="_blank" rel="noopener">Understanding Configuration Dependencies of File Systems</a><br>
+Tabassum Mahmud, Duo Zhang, Om Rameshwar Gatla, Mai Zheng, Iowa State University</p>
+<p>19.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539757" target="_blank" rel="noopener">Generating Realistic Wear Distributions for SSDs</a><br>
+Ziyang Jiao, Bryan S. Kim, Syracuse University<br>
+由于固态硬盘随着使用磨损等会出现老化现象，从而导致闪存数据错误率增加而影响性能。而现有的模拟器都没有很好地考虑这一现象。要么是通过预处理的方式来获取真实的磨损状态（耗时长），要么是预先设置统一的P/E值（不符合实际，现代SSD中即便采用均衡磨损，块之间的擦除次数也存在差异）。因此，本文提出Fast-Forwardable SSD(FF-SSD)，一种基于机器学习的SSD老化框架，可以产生具有代表性的未来磨损状态。在一个典型的SSD模型中，许多组件执行重复的工作。例如，GC可能会在一段时间内不断地选择几个热块作为victim块。同样，在SSD的生命周期内，定期计算WL的触发条件。因此，可以从过去的执行中学习到SSD内的行为，以预测未来的SSD的内部状态。<br>
+FF-SSD 已开源：<a href="https://github.com/ZiyangJiao/FF-SSD" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FF-SSD</a>.</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/SSD/高密度闪存中的功耗管理问题/" data-toggle="tooltip" data-placement="top" title="高密度闪存中的功耗管理问题">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/SSD/ClusterSimilarity/" data-toggle="tooltip" data-placement="top" title="Efficient Bad Block Management with Cluster Similarity">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/alipay.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/wechatpay.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">good luck!</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="2668662377"
+                    data-server="netease"
+                    data-type="playlist"
+                    data-fixed="true" >
+                </div>
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+                    <!-- disqus 评论框 start -->
+                    <div class="comment">
+                        <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTE4NS8xNTcxMg"></div>
+                    </div>
+                    <!-- disqus 评论框 end -->
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="nav">none</ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#HotStorage" title="HotStorage">HotStorage</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://godweiyang.com/" target="_blank">godweiyang</a></li>
+                    
+                        <li><a href="https://www.researchgate.net/profile/Yina_Lv" target="_blank">ResearchGate</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+    <!-- 来必力City版公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+    
+           if (typeof LivereTower === 'function') { return; }
+    
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+    
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    <!-- 来必力City版 公共JS代码 end -->
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mi-tang-gua">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/elainelv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+   
+                <li>
+                    <a target="_blank"  href="https://blog.csdn.net/sunshine_lyn">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-book fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+                
+
+                </ul>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+                <p class="copyright text-muted">
+                    Copyright &copy;  Yina Lv <i class="fa fa-heartbeat"> </i>2022 
+                    <br>
+
+
+<span class="post-count">102.5k words altogether</span>
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors: <span id="busuanzi_value_site_uv"></span>
+</span>
+
+	
+                  <!--   Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+-->
+
+
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://elainelv.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://elainelv.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work --><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+
+</html>
