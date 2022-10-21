@@ -8,7 +8,14 @@
     
     <url>
         <loc>http://elainelv.com/cv/</loc>
-        <lastmod>2022-07-22T14:44:45.458Z</lastmod>
+        <lastmod>2022-10-19T15:36:36.823Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>http://elainelv.com/recommend/</loc>
+        <lastmod>2022-07-31T08:15:33.222Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -16,13 +23,6 @@
     <url>
         <loc>http://elainelv.com/photos/</loc>
         <lastmod>2020-07-26T16:30:05.984Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://elainelv.com/recommend/</loc>
-        <lastmod>2020-07-24T14:06:42.047Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
