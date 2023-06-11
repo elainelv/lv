@@ -146,17 +146,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -165,6 +162,9 @@
                         <li>
                             <a href="/recommend/">Recommend</a>
                         </li>
+                        
+                    
+
                         
                     
                     
@@ -222,15 +222,20 @@
                 <p>2010年ACM国际会议文章。本文在前人提出的基于precomputed sketches的距离估计算法基础上，提出了一种快速、准确的最短路径逼近算法。实现误差小、查询时间短，并尽可能地多返回候选路径。<a href="http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=20122B65F8FABE09ABC2F9FEC868A48B?doi=10.1.1.434.8579&amp;rep=rep1&amp;type=pdf" target="_blank" rel="noopener">原文链接</a></p>
 <a id="more"></a>
 <hr>
-<p>@Authors：Andrey Gubichev, Srikanta Bedathur, Stephan Seufert, Gerhard Weikum<br>@Published in: ACM International Conference on Information and Knowledge Management, 2010 :499-508<br>@Presented by: Yina Lv , Time: Qct 26, 2018<br>@Action：October 22, 2018 11:08 AM</p>
+<p>@Authors：Andrey Gubichev, Srikanta Bedathur, Stephan Seufert, Gerhard Weikum<br>
+@Published in: ACM International Conference on Information and Knowledge Management, 2010 :499-508<br>
+@Presented by: Yina Lv , Time: Qct 26, 2018<br>
+@Action：October 22, 2018 11:08 AM</p>
 <hr>
-<h2 id="1工作概述"><a href="#1-工作概述" class="headerlink" title="1.工作概述"></a>1.工作概述</h2><ol>
+<h2 id="1工作概述">1.工作概述</h2>
+<ol>
 <li>提出a scalable sketch-based index structure，引入<code>path-sketches</code>，可以有效地用于小直径的large graphs（例如,大多数在线社交网络）。<code>path-sketches</code>保留每个节点与选定的一组<code>landmark nodes</code>之间的完整路径信息，作为图形预处理步骤的一部分</li>
 <li>开发了一套轻量级但高效的技术，这些技术使用<code>path-sketches</code>显著提高最短路径估计的质量</li>
 <li>随着对最短路径距离的估计，我们展示了如何在没有计算开销的情况下按照其长度的递增顺序生成<code>路径队列</code>，这是许多应用程序在社交和生物网络上的重要需求</li>
 <li>最后，我们在一个功能齐全的大规模图形处理引擎RDF-3X中实现所有提出的方法，并对许多真实世界的大规模图进行评估,实现查询响应时间比传统路径计算快几个数量级，同时将平均估计误差保持在0％和1％之间</li>
 </ol>
-<h2 id="2背景"><a href="#2-背景" class="headerlink" title="2.背景"></a>2.背景</h2><p>在现代数字世界中，图的广泛应用，比如在线社交网络中(LinkedIn,Facebook,MySpace)，大规模知识中的综合实体关系，边缘存储库，生物交互模型，交通网络，万维网文档之间巨大的超链接图，XML数据，等等</p>
+<h2 id="2背景">2.背景</h2>
+<p>在现代数字世界中，图的广泛应用，比如在线社交网络中(LinkedIn,Facebook,MySpace)，大规模知识中的综合实体关系，边缘存储库，生物交互模型，交通网络，万维网文档之间巨大的超链接图，XML数据，等等</p>
 <p>例如：</p>
 <ol>
 <li>社交网络中，一个人可以从他朋友那里得知他最喜欢的雇主的招聘经理。我们可以想到六度空间理论，你和任何一个陌生人之间所间隔的人不会超过六个，也就是说，最多通过五个中间人你就能够认识任何一个陌生人</li>
@@ -238,22 +243,33 @@
 </ol>
 <p>在许多情况下，图中节点数和边的数目达到了数百万个，出于可伸缩性的原因，为了让内存和处理器资源消耗最小化，每一个最短路径的查询实例必须要尽可能快。</p>
 <ul>
-<li>是什么让最短路径计算在大图上特别难？<ul>
+<li>是什么让最短路径计算在大图上特别难？
+<ul>
 <li>Dijkstra算法是计算图中两个节点间最短路径的经典方法，时间复杂度为O(m+nlog(n)),其中，n是节点数，m是边数</li>
 <li>对于节点数和边数非常多的情况计算时间很大。由于Dijkstra的算法必须构建和维护到图中所有节点的最短路径</li>
 </ul>
 </li>
 </ul>
-<h2 id="3算法描述"><a href="#3-算法描述" class="headerlink" title="3.算法描述"></a>3.算法描述</h2><h3 id="31-准备工作"><a href="#3-1-准备工作" class="headerlink" title="3.1 准备工作"></a>3.1 准备工作</h3><p>G = (V, E)是一个有向图，节点集V，边集E。一条路径p的长度为l，且l∈N，那么节点数为l+1。如果一条路径存在，那么可表示为如下形式：<br>p = (v<sub>1</sub>,v<sub>2</sub> ,…,v<sub>l+1</sub>),v<sub>i</sub>∈V,1≤i≤l+1;(v<sub>i</sub>,v<sub>i+1</sub>)∈E,1≤i≤l</p>
+<h2 id="3算法描述">3.算法描述</h2>
+<h3 id="31-准备工作">3.1 准备工作</h3>
+<p>G = (V, E)是一个有向图，节点集V，边集E。一条路径p的长度为l，且l∈N，那么节点数为l+1。如果一条路径存在，那么可表示为如下形式：<br>
+p = (v<sub>1</sub>,v<sub>2</sub> ,…,v<sub>l+1</sub>),v<sub>i</sub>∈V,1≤i≤l+1;(v<sub>i</sub>,v<sub>i+1</sub>)∈E,1≤i≤l</p>
 <p>对于一个节点v∈V，用S(v)表示v的后继节点集合，即具有(v,w)∈E的顶点集w∈V。其中(v,w)表示节点v指向节点w。因此，我们也可得到v<sub>i+1</sub>∈S(v<sub>i</sub>)</p>
-<p><code>|p|=l</code>表示路径p的长度。对于节点u,v∈V，<code>P(u,v)</code>表示从u到v的所有路径集合。<code>dist(u,v)</code>表示从u到v的距离,是最短路径中的边数，如果不能从u到达v，则为无穷大。<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/221.png" alt=""></p>
-<p><strong>路径估计</strong><br>设两个顶点u,v∈V，设p表示从u到v的最短路径(注意可以有多条)，即从u开始，以v结尾的路径，长度为<code>|p|=dist(u，v)</code>。此外，q作为从u到v的任意路径，通过将q看作最短路径p的逼近，我们可以定义这条路径的逼近误差为<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/222.PNG" alt=""></p>
-<p><strong>路径级联</strong><br>设p=(u<sub>1</sub>，u<sub>2</sub>，… ，u<sub>L1</sub>，u<sub>L<sub>1</sub>+1&lt;/sub&gt;)和q=(v<sub>1</sub>，v<sub>2</sub>，… ，v<sub>L<sub>2</sub>+1&lt;/sub&gt;)路径长分别是L<sub>1</sub>和L<sub>2</sub>。假设u<sub>L<sub>1</sub>+1&lt;/sub&gt;=v1，即路径p中的最后一个节点等于路径q中的第一个节点。然后，通过将路径p和q连接起来，可以创建长度为L1+L2的新路径(以p◦q表示)：<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/223.PNG" alt=""></sub></sub></sub></p>
-<h3 id="32-sketch-algorithm"><a href="#3-2-Sketch-Algorithm" class="headerlink" title="3.2 Sketch Algorithm"></a>3.2 Sketch Algorithm</h3><p><code>Sketch Algorithm</code>使用<code>landmark-based</code>的方法近似计算一般图中两个给定节点之间的最短路径长度</p>
+<p><code>|p|=l</code>表示路径p的长度。对于节点u,v∈V，<code>P(u,v)</code>表示从u到v的所有路径集合。<code>dist(u,v)</code>表示从u到v的距离,是最短路径中的边数，如果不能从u到达v，则为无穷大。<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/221.png" alt=""></p>
+<p><strong>路径估计</strong><br>
+设两个顶点u,v∈V，设p表示从u到v的最短路径(注意可以有多条)，即从u开始，以v结尾的路径，长度为<code>|p|=dist(u，v)</code>。此外，q作为从u到v的任意路径，通过将q看作最短路径p的逼近，我们可以定义这条路径的逼近误差为<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/222.PNG" alt=""></p>
+<p><strong>路径级联</strong><br>
+设p=(u<sub>1</sub>，u<sub>2</sub>，… ，u<sub>L1</sub>，u<sub>L<sub>1</sub>+1</sub>)和q=(v<sub>1</sub>，v<sub>2</sub>，… ，v<sub>L<sub>2</sub>+1</sub>)路径长分别是L<sub>1</sub>和L<sub>2</sub>。假设u<sub>L<sub>1</sub>+1</sub>=v1，即路径p中的最后一个节点等于路径q中的第一个节点。然后，通过将路径p和q连接起来，可以创建长度为L1+L2的新路径(以p◦q表示)：<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/223.PNG" alt=""></p>
+<h3 id="32-sketch-algorithm">3.2 Sketch Algorithm</h3>
+<p><code>Sketch Algorithm</code>使用<code>landmark-based</code>的方法近似计算一般图中两个给定节点之间的最短路径长度</p>
 <p>为了实时地回答一对节点的距离查询，该算法采用了两阶段的方法：</p>
 <ol>
 <li>预处理生成<code>Sketch</code>(从所有顶点到landmark节点的距离)</li>
-<li>使用这些预先计算的数据，在查询时可快速得到节点近似距离。通过查询的源节点s和目标节点t与landmark节点l之间的距离<code>dist(s,l)</code>、<code>dist(l,d)</code>。那么 <code>s→t</code> 近似距离为:<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/224.png" alt=""></li>
+<li>使用这些预先计算的数据，在查询时可快速得到节点近似距离。通过查询的源节点s和目标节点t与landmark节点l之间的距离<code>dist(s,l)</code>、<code>dist(l,d)</code>。那么 <code>s→t</code> 近似距离为:<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/224.png" alt=""></li>
 </ol>
 <p>在提出<code>Sketch Algorithm</code>的文章中，作者建议为每个节点v存储节点到某些landmark节点的距离<code>dist(v，·)</code>和<code>dist(·，v)</code>作为预处理的结果。这组<code>node-landmark</code>距离称为<code>sketch of a node</code></p>
 <p><strong>我们的做法（在原先算法基础上做了修改）：</strong></p>
@@ -261,11 +277,17 @@
 <li>在预处理阶段不仅计算距离还存储实际路径！</li>
 <li>查询节点之间距离的估计，返回的不仅仅是查询节点之间的一条近似路径，即这些路径的队列（按路径长度按照顺序排序）。是因为有时候必须满足对某些节点/边的约束。</li>
 </ul>
-<h4 id="321-预处理"><a href="#3-2-1-预处理" class="headerlink" title="3.2.1 预处理"></a>3.2.1 预处理</h4><p>预计算步骤涉及对一些节点集进行采样，为图中的每个节点计算进出该集合中成员的最短路径，并将获得的路径集存储在外部存储器上，这些路径将在稍后的近似步骤中使用。<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/225.png" alt=""></p>
+<h4 id="321-预处理">3.2.1 预处理</h4>
+<p>预计算步骤涉及对一些节点集进行采样，为图中的每个节点计算进出该集合中成员的最短路径，并将获得的路径集存储在外部存储器上，这些路径将在稍后的近似步骤中使用。<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/225.png" alt=""></p>
 <ol>
-<li><p>种子集抽样<br>r := ⌊log (n)⌋ ,n=|V|。我们抽取r+1个节点集样本（叫做<code>seed sets</code>），并且大小依此为1,2,2<sup>2</sup>,……,2<sup>r</sup>。标号S0，S1，…… ，Sr</p>
+<li>
+<p>种子集抽样<br>
+r := ⌊log (n)⌋ ,n=|V|。我们抽取r+1个节点集样本（叫做<code>seed sets</code>），并且大小依此为1,2,2<sup>2</sup>,……,2<sup>r</sup>。标号S0，S1，…… ，Sr</p>
 </li>
-<li><p>最短路径计算<br>对于每一个样本种子集和每一个节点v∈V，我们计算一条从Si到v的最短路径P<sub>S<sub>i</sub>→v&lt;/sub&gt;,也就是计算出了任何一个节点到种子集的路径（可能有多条）。接下来，我们从Si出发BFS，构造一颗完全最短路径树。因此，对于每个节点v，我们获得了最接近的种子节点，标记为l1。同理，我们可以计算P<sub>v→S<sub>i</sub>&lt;/sub&gt;得到一个l2。那么l1,l2就叫做节点v的关于Si的landmarks。</sub></sub></p>
+<li>
+<p>最短路径计算<br>
+对于每一个样本种子集和每一个节点v∈V，我们计算一条从Si到v的最短路径P<sub>S<sub>i</sub>→v</sub>,也就是计算出了任何一个节点到种子集的路径（可能有多条）。接下来，我们从Si出发BFS，构造一颗完全最短路径树。因此，对于每个节点v，我们获得了最接近的种子节点，标记为l1。同理，我们可以计算P<sub>v→S<sub>i</sub></sub>得到一个l2。那么l1,l2就叫做节点v的关于Si的landmarks。</p>
 </li>
 </ol>
 <ul>
@@ -273,38 +295,65 @@
 <li>每个节点的landmarks不一定相同</li>
 <li>2rk个landmarks和路径组成了Sketch(v)</li>
 </ul>
-<h4 id="322-近似最短路径"><a href="#3-2-2-近似最短路径" class="headerlink" title="3.2.2 近似最短路径"></a>3.2.2 近似最短路径</h4><p>输入(s,d)，输出p<sub>s→d</sub>良好的近似最短路径。</p>
+<h4 id="322-近似最短路径">3.2.2 近似最短路径</h4>
+<p>输入(s,d)，输出p<sub>s→d</sub>良好的近似最短路径。</p>
 <blockquote>
 <p>从磁盘导入Sketch(s)和Sketch(d)，并且计算两者的公共landmarks，如果不是公共landmarks去计算的话，要么路径不存在，要么误差相对大。</p>
 </blockquote>
 <p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/b2.png" alt=""></p>
 <p>在上述算法中，第五句p<sub>s→d</sub> := p<sub>s→l</sub> ◦ p<sub>l→d</sub> 存储在路径队列中(按路径长度升序排序)，返回回路径的优先级队列。</p>
-<h3 id="33-提高精度"><a href="#3-3-提高精度" class="headerlink" title="3.3 提高精度"></a>3.3 提高精度</h3><ul>
+<h3 id="33-提高精度">3.3 提高精度</h3>
+<ul>
 <li>Cycle Elimination</li>
 <li>Shortcutting</li>
 </ul>
-<h4 id="331-cycle-elimination"><a href="#3-3-1-Cycle-Elimination" class="headerlink" title="3.3.1 Cycle Elimination"></a>3.3.1 Cycle Elimination</h4><p>在Algorithm 1 提出的算法得到的路径可能是次优的，也就是比真实的最短路径更长,因为它们包含<code>环</code>。<br>p<sub>s→l</sub> ◦ p<sub>l→d</sub> = (s, v1, v2, l, v3, v1, d)<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/b1.png" alt=""></p>
-<h4 id="332-shortcutting"><a href="#3-3-2-Shortcutting" class="headerlink" title="3.3.2 Shortcutting"></a>3.3.2 Shortcutting</h4><p>假设算法返回的队列Q包含路径p<sub>s→l→d</sub>，从s到d经由landmark l。 路径中的两个节点u，v实际上可能比p<sub>s→l→d</sub>的相应子路径中包含的节点更紧密。 考虑下面描述的示例：当节点u和v通过长度为3的p<sub>s→l→d</sub>的子路径连接时，原始图形包含边缘（u，v）。 然后我们可以通过单边（u，v）轻松替换此子路径。<br><code>请注意，在此方式优化的所有情况下，landmark l 一定位于从u到v的子路径中。</code></p>
+<h4 id="331-cycle-elimination">3.3.1 Cycle Elimination</h4>
+<p>在Algorithm 1 提出的算法得到的路径可能是次优的，也就是比真实的最短路径更长,因为它们包含<code>环</code>。<br>
+p<sub>s→l</sub> ◦ p<sub>l→d</sub> = (s, v1, v2, l, v3, v1, d)<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/b1.png" alt=""></p>
+<h4 id="332-shortcutting">3.3.2 Shortcutting</h4>
+<p>假设算法返回的队列Q包含路径p<sub>s→l→d</sub>，从s到d经由landmark l。 路径中的两个节点u，v实际上可能比p<sub>s→l→d</sub>的相应子路径中包含的节点更紧密。 考虑下面描述的示例：当节点u和v通过长度为3的p<sub>s→l→d</sub>的子路径连接时，原始图形包含边缘（u，v）。 然后我们可以通过单边（u，v）轻松替换此子路径。<br>
+<code>请注意，在此方式优化的所有情况下，landmark l 一定位于从u到v的子路径中。</code></p>
 <p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/229.png" alt=""></p>
 <p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/b.png" alt=""></p>
-<h3 id="34-tree-algorithm"><a href="#3-4-Tree-Algorithm" class="headerlink" title="3.4 Tree Algorithm"></a>3.4 Tree Algorithm</h3><p>一种新的最短路径近似算法，它也利用了precomputed sketches。<br>节点v 的Sketch（v）包含两组路径：</p>
+<h3 id="34-tree-algorithm">3.4 Tree Algorithm</h3>
+<p>一种新的最短路径近似算法，它也利用了precomputed sketches。<br>
+节点v 的Sketch（v）包含两组路径：</p>
 <ol>
 <li>将v连接到landmarks的路径集（称为<code>forward-directed paths</code> , 前向路径）</li>
 <li>将landmarks连接到v的路径集（称为<code>backward-directed paths</code> , 后向路径）</li>
 </ol>
-<p>在无向设置中，两个集合将作为树的叶子和根节点（landmarks作为叶子，节点v作为根）。每棵树的每个内部节点都对应于sketch中一条路径中的一个节点。在有向设置中，只有sketch的forward-directed部分（从v到landmarks）形成一棵树，而backward-directed path产生一个带有“reversed edges”的树,例如，下图a和b：<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2210.png" alt=""></p>
-<p>我们提出的新算法，称为<code>TreeSketch</code>，将两个查询节点s，d作为输入，从磁盘加载sketch <code>Sketch（s）</code>，<code>Sketch（d）</code>并构造以s为根的树Ts，其中在Sketch(s)包含存储的所有前向路径。同样地，以d为根的“reversed tree” Td，包含从landmarks到d的所有后向路径。<br>然后，该算法同时在树上开始两个BFS：在Ts中以s为根节点的BFS(Ts，s)和Td中以d为根节点的RBFS(Td，d)。V<sub>BFS</sub>和V<sub>RBFS</sub>表示在各自BFS运行期间访问过的节点集。l<sub>shortest</sub>表示Q中最短路径的长度。</p>
-<p>对于在BFS(Ts,s)过程中遇到的每个顶点u∈V<sub>BFS</sub>，该算法在原图中加载其继承者的列表S(v)。然后，检查在RBFS期间发现的任何顶点(Td,d)存于S(u)。如果存在这样一个顶点v∈S(u)∩V<sub>BFS</sub>(见图c)，我们已经找到了从s到d的路径p，如下：<br>p = p<sub>s→u</sub> ◦ (u, v) ◦ p<sub>v→d</sub><br>其中p<sub>s→u</sub>和p<sub>v→d</sub>分别表示Ts中从s到u的路径和Td中从v到d的路径(图d)。</p>
+<p>在无向设置中，两个集合将作为树的叶子和根节点（landmarks作为叶子，节点v作为根）。每棵树的每个内部节点都对应于sketch中一条路径中的一个节点。在有向设置中，只有sketch的forward-directed部分（从v到landmarks）形成一棵树，而backward-directed path产生一个带有“reversed edges”的树,例如，下图a和b：<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2210.png" alt=""></p>
+<p>我们提出的新算法，称为<code>TreeSketch</code>，将两个查询节点s，d作为输入，从磁盘加载sketch <code>Sketch（s）</code>，<code>Sketch（d）</code>并构造以s为根的树Ts，其中在Sketch(s)包含存储的所有前向路径。同样地，以d为根的“reversed tree” Td，包含从landmarks到d的所有后向路径。<br>
+然后，该算法同时在树上开始两个BFS：在Ts中以s为根节点的BFS(Ts，s)和Td中以d为根节点的RBFS(Td，d)。V<sub>BFS</sub>和V<sub>RBFS</sub>表示在各自BFS运行期间访问过的节点集。l<sub>shortest</sub>表示Q中最短路径的长度。</p>
+<p>对于在BFS(Ts,s)过程中遇到的每个顶点u∈V<sub>BFS</sub>，该算法在原图中加载其继承者的列表S(v)。然后，检查在RBFS期间发现的任何顶点(Td,d)存于S(u)。如果存在这样一个顶点v∈S(u)∩V<sub>BFS</sub>(见图c)，我们已经找到了从s到d的路径p，如下：<br>
+p = p<sub>s→u</sub> ◦ (u, v) ◦ p<sub>v→d</sub><br>
+其中p<sub>s→u</sub>和p<sub>v→d</sub>分别表示Ts中从s到u的路径和Td中从v到d的路径(图d)。</p>
 <blockquote>
-<p>代码中10-16行，v——&gt;d路径确定的情况下,找Ts中已访问过的节点中是否有某个节点x的后继节点集包括了v，若包括，那么从x到v存在一条路径，即路径s—&gt;x—&gt;v—&gt;d存在。放入路径优先队列Q中，并与l<sub>shortest</sub>进行比较<br>代码17-23行，s—&gt;u确定的情况下，在RBFS已经访问过的节点集V<sub>RBFS</sub>中找。若存在某个节点x属于节点u的后继节点，那么存在路径s—&gt;u—&gt;x—&gt;d。放入路径优先队列Q，并与l<sub>shortest</sub>进行比较<br>代码24，如果没有找到比Q中当前最短路径更短的路径，则算法终止。当两个BFS运行的深度总和超过l<sub>shortest</sub>时就是这种情况。</p>
+<p>代码中10-16行，v——&gt;d路径确定的情况下,找Ts中已访问过的节点中是否有某个节点x的后继节点集包括了v，若包括，那么从x到v存在一条路径，即路径s–&gt;x–&gt;v–&gt;d存在。放入路径优先队列Q中，并与l<sub>shortest</sub>进行比较<br>
+代码17-23行，s–&gt;u确定的情况下，在RBFS已经访问过的节点集V<sub>RBFS</sub>中找。若存在某个节点x属于节点u的后继节点，那么存在路径s–&gt;u–&gt;x–&gt;d。放入路径优先队列Q，并与l<sub>shortest</sub>进行比较<br>
+代码24，如果没有找到比Q中当前最短路径更短的路径，则算法终止。当两个BFS运行的深度总和超过l<sub>shortest</sub>时就是这种情况。</p>
 </blockquote>
 <p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2211.png" alt=""></p>
-<h2 id="4实现"><a href="#4-实现" class="headerlink" title="4.实现"></a>4.实现</h2><p>我们实现了所有方法“Dijkstra”在线最短路径算法以及sketch-based的技术-在RDF-3X中，这是最近提出的用于存储和查询大型RDF图形存储库的高性能数据库系统。在介绍实现细节之前，我们简要介绍一下RDF-3X的背景，重点介绍它是否能够存储高度压缩的大图，同时易于查询。请注意，我们在RDF-3X中省略了查询处理和优化策略的详细信息，因为它们与我们的设置无关。</p>
-<h3 id="41-rdf-3x-rdf-graph-processor"><a href="#4-1-RDF-3X-RDF-Graph-Processor" class="headerlink" title="4.1 RDF-3X: RDF Graph Processor"></a>4.1 RDF-3X: RDF Graph Processor</h3><p>RDF-3X是一个功能齐全的高性能存储引擎和查询处理器，专门用于存储。它基本上将整个图保持为一个巨大的三元组表，这与最近流行的属性表方法形成了对比。<br>边的三元组形式<code>&lt;u, e, v&gt;</code><br>在RDF中，<code>&lt;Subject(S),Predicate(P),Object(O)&gt;</code>,六个关于S、P、O的组合存于6棵B+树索引中。<br>每个(SPO，SOP，OSP，OPS，PSO，POS)都有一个索引。通过使用三元组的delta-coding可以显着地压缩每个索引，这是将倒排列表索引中使用的类似压缩的概括推广到id三元组。此外，RDF-3X还构建了6个索引，以便有效地支持分析查询。相反，整个数据库大小包含12个不同的集群B+树索引，上面提到的所有压缩都比三元组形式的原始数据要小。<br>在我们的实现中，用RDF-3X边存储图，每个边表示为一个三元组<code>&lt;s，e，t&gt;</code>。我们不限制RDF-3X自动构建所有12个索引。我们只利用SPO和OPS顺序索引。</p>
+<h2 id="4实现">4.实现</h2>
+<p>我们实现了所有方法“Dijkstra”在线最短路径算法以及sketch-based的技术-在RDF-3X中，这是最近提出的用于存储和查询大型RDF图形存储库的高性能数据库系统。在介绍实现细节之前，我们简要介绍一下RDF-3X的背景，重点介绍它是否能够存储高度压缩的大图，同时易于查询。请注意，我们在RDF-3X中省略了查询处理和优化策略的详细信息，因为它们与我们的设置无关。</p>
+<h3 id="41-rdf-3x-rdf-graph-processor">4.1 RDF-3X: RDF Graph Processor</h3>
+<p>RDF-3X是一个功能齐全的高性能存储引擎和查询处理器，专门用于存储。它基本上将整个图保持为一个巨大的三元组表，这与最近流行的属性表方法形成了对比。<br>
+边的三元组形式<code>&lt;u, e, v&gt;</code><br>
+在RDF中，<code>&lt;Subject(S),Predicate(P),Object(O)&gt;</code>,六个关于S、P、O的组合存于6棵B+树索引中。<br>
+每个(SPO，SOP，OSP，OPS，PSO，POS)都有一个索引。通过使用三元组的delta-coding可以显着地压缩每个索引，这是将倒排列表索引中使用的类似压缩的概括推广到id三元组。此外，RDF-3X还构建了6个索引，以便有效地支持分析查询。相反，整个数据库大小包含12个不同的集群B+树索引，上面提到的所有压缩都比三元组形式的原始数据要小。<br>
+在我们的实现中，用RDF-3X边存储图，每个边表示为一个三元组<code>&lt;s，e，t&gt;</code>。我们不限制RDF-3X自动构建所有12个索引。我们只利用SPO和OPS顺序索引。</p>
 <p><strong>Dijkstra的算法</strong>：在RDF-3X上实现Dijkstra算法基本上涉及在SPO索引上打开扫描，以针对在算法的执行期间访问的每个节点确定所有后继节点。请注意，我们在计算草图时需要反向Dijkstra算法，主要是为了“简单地”打开OPS索引上的扫描，并让算法运行。Dijkstra算法期间所需的优先级队列使用GNU-C++ STL中可用的实现在内存中维护。</p>
-<h3 id="42-sketch-实现"><a href="#4-2-Sketch-实现" class="headerlink" title="4.2 Sketch 实现"></a>4.2 Sketch 实现</h3><p>为简单起见，我们将草图也作为RDF三元组存储在RDF-3X下的单独数据库中。由于sketch（距离和路径sketch）与有向路径相关联，因此我们将其格式设置如下：<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2213.png" alt=""><br>其中，vi是源节点的id，往返是指示路径方向的字符串文字，l<sub>ij</sub>是来自种子集Sj的节点vi的界标，d<sub>ij</sub>是到地标的相应最短距离。同样，路径草图也存储为以下形式的三元组：<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2214.png" alt=""><br>其中p<sub>ij</sub>指的是节点vi和地标节点l<sub>ij</sub>之间路径中节点ID的序列。</p>
+<h3 id="42-sketch-实现">4.2 Sketch 实现</h3>
+<p>为简单起见，我们将草图也作为RDF三元组存储在RDF-3X下的单独数据库中。由于sketch（距离和路径sketch）与有向路径相关联，因此我们将其格式设置如下：<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2213.png" alt=""><br>
+其中，vi是源节点的id，往返是指示路径方向的字符串文字，l<sub>ij</sub>是来自种子集Sj的节点vi的界标，d<sub>ij</sub>是到地标的相应最短距离。同样，路径草图也存储为以下形式的三元组：<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2214.png" alt=""><br>
+其中p<sub>ij</sub>指的是节点vi和地标节点l<sub>ij</sub>之间路径中节点ID的序列。</p>
 <p>应该再次注意的是，RDF-3X在这个三重草图数据库上建立了12个索引，但我们只需要其中一个索引用于我们的最短路径估计算法，即在置换SPO上的B+树。因此，我们在后面的实验部分提供的磁盘空间消耗可以进一步大大减少，尽管草图的相对大小保持不变。在我们所有的实验中默认设置k=2预计算回合。</p>
-<h2 id="5实验评估"><a href="#5-实验评估" class="headerlink" title="5.实验评估"></a>5.实验评估</h2><p><strong>步骤</strong>：</p>
+<h2 id="5实验评估">5.实验评估</h2>
+<p><strong>步骤</strong>：</p>
 <ul>
 <li>概述所使用的数据集</li>
 <li>描述在后续评估中使用的测试实例的生成</li>
@@ -313,19 +362,40 @@
 <li>简要讨论了路径多样性问题</li>
 <li>总结，量化了草图预计算的空间和时间要求</li>
 </ul>
-<h3 id="51-使用的数据集"><a href="#5-1-使用的数据集" class="headerlink" title="5.1 使用的数据集"></a>5.1 使用的数据集</h3><p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2215.png" alt=""></p>
-<h3 id="52-测试实例生成"><a href="#5-2-测试实例生成" class="headerlink" title="5.2 测试实例生成"></a>5.2 测试实例生成</h3><p>为了评估算法的逼近质量和运行次数，我们使用了一组表的测试三元组(x,y,dist(x,y)),其中，包括了一对节点x，y和x，y之间的距离dist(x,y)<br>我们使用Dijkstra的算法，通过均匀采样100个顶点并计算每个顶点的最短路径树(forward and backward direction)来生成这些三元组。作为输出，我们为每个采样顶点v获得一个将顶点连接到每个其他可到达节点的树和一个“反转”树，将存在采样顶点的路径的每个节点连接到v。<br>结果，我们获得了(x,y,dist(x,y))中所示结构的一组三元组。然后，我们将这些三元组分组为与距离dist（x，y）对应的类别。从每个这样的类别，我们最多采样50个三元组（测试）作为我们的测试集。每个网络的实际测试次数各不相同，因为组的数量以及所包含的三元组的数量可能不同。</p>
-<h3 id="53-结果"><a href="#5-3-结果" class="headerlink" title="5.3 结果"></a>5.3 结果</h3><h4 id="531-逼近质量"><a href="#5-3-1-逼近质量" class="headerlink" title="5.3.1 逼近质量"></a>5.3.1 逼近质量</h4><p>为了评估不同算法生成的路径的逼近质量，我们对每一个三元组(s,d,dist(s,d))用SKETCH，SKETCHCE，SKETCHCESC，TREESKETCH四种算法查询。对于每一个最短路径查询(s,d),我们将得到的路径长度l<sub>shortest</sub>与三元组中真实的最短距离进行比较，按照如下公式计算误差:<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2218.png" alt=""><br>对于每个算法，我们记录所有测试三元组的平均近似误差。所获得的误差值在表2中提供并绘制在图4中，使用对数刻度显示误差值<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2217.png" alt=""></p>
+<h3 id="51-使用的数据集">5.1 使用的数据集</h3>
+<p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2215.png" alt=""></p>
+<h3 id="52-测试实例生成">5.2 测试实例生成</h3>
+<p>为了评估算法的逼近质量和运行次数，我们使用了一组表的测试三元组(x,y,dist(x,y)),其中，包括了一对节点x，y和x，y之间的距离dist(x,y)<br>
+我们使用Dijkstra的算法，通过均匀采样100个顶点并计算每个顶点的最短路径树(forward and backward direction)来生成这些三元组。作为输出，我们为每个采样顶点v获得一个将顶点连接到每个其他可到达节点的树和一个“反转”树，将存在采样顶点的路径的每个节点连接到v。<br>
+结果，我们获得了(x,y,dist(x,y))中所示结构的一组三元组。然后，我们将这些三元组分组为与距离dist（x，y）对应的类别。从每个这样的类别，我们最多采样50个三元组（测试）作为我们的测试集。每个网络的实际测试次数各不相同，因为组的数量以及所包含的三元组的数量可能不同。</p>
+<h3 id="53-结果">5.3 结果</h3>
+<h4 id="531-逼近质量">5.3.1 逼近质量</h4>
+<p>为了评估不同算法生成的路径的逼近质量，我们对每一个三元组(s,d,dist(s,d))用SKETCH，SKETCHCE，SKETCHCESC，TREESKETCH四种算法查询。对于每一个最短路径查询(s,d),我们将得到的路径长度l<sub>shortest</sub>与三元组中真实的最短距离进行比较，按照如下公式计算误差:<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2218.png" alt=""><br>
+对于每个算法，我们记录所有测试三元组的平均近似误差。所获得的误差值在表2中提供并绘制在图4中，使用对数刻度显示误差值<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2217.png" alt=""></p>
 <p><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2216.png" alt=""></p>
 <p>结果显示，我们提出的TREESKETCH算法最优，对于正在考虑的所有数据集，我们的算法能够返回查询节点的最短路径，且在最坏的情况下，平均估计误差为1％，同时为Slashdot和WikiTalk网络提供几乎所有情况下的精确解决方案。</p>
-<h4 id="532-查询执行时间"><a href="#5-3-2-查询执行时间" class="headerlink" title="5.3.2 查询执行时间"></a>5.3.2 查询执行时间</h4><p>将我们的方法的结果与Dijkstra算法的平均运行时间进行了比较，如上表2</p>
-<p>描述了查询执行时间的半对数图：<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2219.png" alt=""></p>
+<h4 id="532-查询执行时间">5.3.2 查询执行时间</h4>
+<p>将我们的方法的结果与Dijkstra算法的平均运行时间进行了比较，如上表2</p>
+<p>描述了查询执行时间的半对数图：<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2219.png" alt=""></p>
 <p>观察到，使用算法SketchCESC，我们能够在最小的数据集（Slashdot）中平均190毫秒内以极高的准确度回答最短路径查询，大型Twitter数据集中4秒。使用TreeSketch，我们可以提供更好的路径估计，提供比Dijkstra算法快一到两个数量级的结果。注意，对于Slashdot和Wikitalk数据集，查询执行速度极快，同时实现0％的近似误差。</p>
-<h4 id="533-路径多样性"><a href="#5-3-3-路径多样性" class="headerlink" title="5.3.3 路径多样性"></a>5.3.3 路径多样性</h4><p>在许多应用程序设置中，不仅要快速生成最短路径的精确逼近，而且还必须尽可能多地返回候选路径。<br>我们的算法被设计成能够满足这个目标。返回一个有序的路径队列，例如，该队列可用于根据特定用户指定的约束筛选候选人。表4给出了生成的最短路径的平均数目。<br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2222.png" alt=""></p>
+<h4 id="533-路径多样性">5.3.3 路径多样性</h4>
+<p>在许多应用程序设置中，不仅要快速生成最短路径的精确逼近，而且还必须尽可能多地返回候选路径。<br>
+我们的算法被设计成能够满足这个目标。返回一个有序的路径队列，例如，该队列可用于根据特定用户指定的约束筛选候选人。表4给出了生成的最短路径的平均数目。<br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2222.png" alt=""></p>
 <p><code>TreeSketch</code>创建的候选路径数总是大于其他变量生成的路径数。对于twitter数据集，我们平均可以生成92条路径，是我们SketchCESC算法的两倍。</p>
-<h4 id="534-评估预处理空间和时间要求"><a href="#5-3-4-评估预处理空间和时间要求" class="headerlink" title="5.3.4 评估预处理空间和时间要求"></a>5.3.4 评估预处理空间和时间要求</h4><p>我们评估了预处理步骤(the sketch computation)的空间和时间要求。<br><strong>空间要求：</strong><br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2220.png" alt=""><br><img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2221.png" alt=""></p>
-<p><strong>预处理时间：</strong><br>我们测量所有数据集的预处理阶段的运行时间。表4提供了k = 2预处理迭代所需时间的概述。请注意，所需时间以k为线性增加。对于像Slashdot这样的小型数据集，可以在五分钟内获得sketch，而最大的数据集（Orkut）需要大约11个小时的预处理</p>
-<h2 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h2><p>这篇文章就是对原先的sketch算法进行了改进，比如消除环路的存在和shortcutting，以获得更短的路径。并且提出在相同的预先计算的数据上操作的一种全新的Tree sketch算法。此外，还可以生成多条候选路径，作为对一些真实世界数据集的实验评估的基础。<br>由于文中讨论的是有向图，那么对于上述改进之后，实验效果很可观，但是对于无向图的话，上述方法自然是不可行的。</p>
+<h4 id="534-评估预处理空间和时间要求">5.3.4 评估预处理空间和时间要求</h4>
+<p>我们评估了预处理步骤(the sketch computation)的空间和时间要求。<br>
+<strong>空间要求：</strong><br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2220.png" alt=""><br>
+<img src="/img/article/Fast_and_Accurate_Estimation_of_Shortest_Paths/2221.png" alt=""></p>
+<p><strong>预处理时间：</strong><br>
+我们测量所有数据集的预处理阶段的运行时间。表4提供了k = 2预处理迭代所需时间的概述。请注意，所需时间以k为线性增加。对于像Slashdot这样的小型数据集，可以在五分钟内获得sketch，而最大的数据集（Orkut）需要大约11个小时的预处理</p>
+<h2 id="i-want-to-say">“I want to say”</h2>
+<p>这篇文章就是对原先的sketch算法进行了改进，比如消除环路的存在和shortcutting，以获得更短的路径。并且提出在相同的预先计算的数据上操作的一种全新的Tree sketch算法。此外，还可以生成多条候选路径，作为对一些真实世界数据集的实验评估的基础。<br>
+由于文中讨论的是有向图，那么对于上述改进之后，实验效果很可观，但是对于无向图的话，上述方法自然是不可行的。</p>
 <blockquote>
 <p>码完了！！喜极而泣^^感想省略一百字哈</p>
 </blockquote>
@@ -417,7 +487,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1工作概述"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#1-&#x5DE5;&#x4F5C;&#x6982;&#x8FF0;" class="headerlink" title="1.&#x5DE5;&#x4F5C;&#x6982;&#x8FF0;"></a>1.&#x5DE5;&#x4F5C;&#x6982;&#x8FF0;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2背景"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#2-&#x80CC;&#x666F;" class="headerlink" title="2.&#x80CC;&#x666F;"></a>2.&#x80CC;&#x666F;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3算法描述"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#3-&#x7B97;&#x6CD5;&#x63CF;&#x8FF0;" class="headerlink" title="3.&#x7B97;&#x6CD5;&#x63CF;&#x8FF0;"></a>3.&#x7B97;&#x6CD5;&#x63CF;&#x8FF0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#31-准备工作"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text"><a href="#3-1-&#x51C6;&#x5907;&#x5DE5;&#x4F5C;" class="headerlink" title="3.1 &#x51C6;&#x5907;&#x5DE5;&#x4F5C;"></a>3.1 &#x51C6;&#x5907;&#x5DE5;&#x4F5C;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#32-sketch-algorithm"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text"><a href="#3-2-Sketch-Algorithm" class="headerlink" title="3.2 Sketch Algorithm"></a>3.2 Sketch Algorithm</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#321-预处理"><span class="toc-nav-number">3.2.1.</span> <span class="toc-nav-text"><a href="#3-2-1-&#x9884;&#x5904;&#x7406;" class="headerlink" title="3.2.1 &#x9884;&#x5904;&#x7406;"></a>3.2.1 &#x9884;&#x5904;&#x7406;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#322-近似最短路径"><span class="toc-nav-number">3.2.2.</span> <span class="toc-nav-text"><a href="#3-2-2-&#x8FD1;&#x4F3C;&#x6700;&#x77ED;&#x8DEF;&#x5F84;" class="headerlink" title="3.2.2 &#x8FD1;&#x4F3C;&#x6700;&#x77ED;&#x8DEF;&#x5F84;"></a>3.2.2 &#x8FD1;&#x4F3C;&#x6700;&#x77ED;&#x8DEF;&#x5F84;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#33-提高精度"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text"><a href="#3-3-&#x63D0;&#x9AD8;&#x7CBE;&#x5EA6;" class="headerlink" title="3.3 &#x63D0;&#x9AD8;&#x7CBE;&#x5EA6;"></a>3.3 &#x63D0;&#x9AD8;&#x7CBE;&#x5EA6;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#331-cycle-elimination"><span class="toc-nav-number">3.3.1.</span> <span class="toc-nav-text"><a href="#3-3-1-Cycle-Elimination" class="headerlink" title="3.3.1 Cycle Elimination"></a>3.3.1 Cycle Elimination</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#332-shortcutting"><span class="toc-nav-number">3.3.2.</span> <span class="toc-nav-text"><a href="#3-3-2-Shortcutting" class="headerlink" title="3.3.2 Shortcutting"></a>3.3.2 Shortcutting</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#34-tree-algorithm"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text"><a href="#3-4-Tree-Algorithm" class="headerlink" title="3.4 Tree Algorithm"></a>3.4 Tree Algorithm</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4实现"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#4-&#x5B9E;&#x73B0;" class="headerlink" title="4.&#x5B9E;&#x73B0;"></a>4.&#x5B9E;&#x73B0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#41-rdf-3x-rdf-graph-processor"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text"><a href="#4-1-RDF-3X-RDF-Graph-Processor" class="headerlink" title="4.1 RDF-3X: RDF Graph Processor"></a>4.1 RDF-3X: RDF Graph Processor</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#42-sketch-实现"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text"><a href="#4-2-Sketch-&#x5B9E;&#x73B0;" class="headerlink" title="4.2 Sketch &#x5B9E;&#x73B0;"></a>4.2 Sketch &#x5B9E;&#x73B0;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5实验评估"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#5-&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;" class="headerlink" title="5.&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;"></a>5.&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#51-使用的数据集"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text"><a href="#5-1-&#x4F7F;&#x7528;&#x7684;&#x6570;&#x636E;&#x96C6;" class="headerlink" title="5.1 &#x4F7F;&#x7528;&#x7684;&#x6570;&#x636E;&#x96C6;"></a>5.1 &#x4F7F;&#x7528;&#x7684;&#x6570;&#x636E;&#x96C6;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#52-测试实例生成"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text"><a href="#5-2-&#x6D4B;&#x8BD5;&#x5B9E;&#x4F8B;&#x751F;&#x6210;" class="headerlink" title="5.2 &#x6D4B;&#x8BD5;&#x5B9E;&#x4F8B;&#x751F;&#x6210;"></a>5.2 &#x6D4B;&#x8BD5;&#x5B9E;&#x4F8B;&#x751F;&#x6210;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#53-结果"><span class="toc-nav-number">5.3.</span> <span class="toc-nav-text"><a href="#5-3-&#x7ED3;&#x679C;" class="headerlink" title="5.3 &#x7ED3;&#x679C;"></a>5.3 &#x7ED3;&#x679C;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#531-逼近质量"><span class="toc-nav-number">5.3.1.</span> <span class="toc-nav-text"><a href="#5-3-1-&#x903C;&#x8FD1;&#x8D28;&#x91CF;" class="headerlink" title="5.3.1 &#x903C;&#x8FD1;&#x8D28;&#x91CF;"></a>5.3.1 &#x903C;&#x8FD1;&#x8D28;&#x91CF;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#532-查询执行时间"><span class="toc-nav-number">5.3.2.</span> <span class="toc-nav-text"><a href="#5-3-2-&#x67E5;&#x8BE2;&#x6267;&#x884C;&#x65F6;&#x95F4;" class="headerlink" title="5.3.2 &#x67E5;&#x8BE2;&#x6267;&#x884C;&#x65F6;&#x95F4;"></a>5.3.2 &#x67E5;&#x8BE2;&#x6267;&#x884C;&#x65F6;&#x95F4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#533-路径多样性"><span class="toc-nav-number">5.3.3.</span> <span class="toc-nav-text"><a href="#5-3-3-&#x8DEF;&#x5F84;&#x591A;&#x6837;&#x6027;" class="headerlink" title="5.3.3 &#x8DEF;&#x5F84;&#x591A;&#x6837;&#x6027;"></a>5.3.3 &#x8DEF;&#x5F84;&#x591A;&#x6837;&#x6027;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#534-评估预处理空间和时间要求"><span class="toc-nav-number">5.3.4.</span> <span class="toc-nav-text"><a href="#5-3-4-&#x8BC4;&#x4F30;&#x9884;&#x5904;&#x7406;&#x7A7A;&#x95F4;&#x548C;&#x65F6;&#x95F4;&#x8981;&#x6C42;" class="headerlink" title="5.3.4 &#x8BC4;&#x4F30;&#x9884;&#x5904;&#x7406;&#x7A7A;&#x95F4;&#x548C;&#x65F6;&#x95F4;&#x8981;&#x6C42;"></a>5.3.4 &#x8BC4;&#x4F30;&#x9884;&#x5904;&#x7406;&#x7A7A;&#x95F4;&#x548C;&#x65F6;&#x95F4;&#x8981;&#x6C42;</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">6.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1工作概述"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1.&#x5DE5;&#x4F5C;&#x6982;&#x8FF0;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2背景"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">2.&#x80CC;&#x666F;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3算法描述"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">3.&#x7B97;&#x6CD5;&#x63CF;&#x8FF0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#31-准备工作"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">3.1 &#x51C6;&#x5907;&#x5DE5;&#x4F5C;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#32-sketch-algorithm"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">3.2 Sketch Algorithm</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#321-预处理"><span class="toc-nav-number">3.2.1.</span> <span class="toc-nav-text">3.2.1 &#x9884;&#x5904;&#x7406;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#322-近似最短路径"><span class="toc-nav-number">3.2.2.</span> <span class="toc-nav-text">3.2.2 &#x8FD1;&#x4F3C;&#x6700;&#x77ED;&#x8DEF;&#x5F84;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#33-提高精度"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">3.3 &#x63D0;&#x9AD8;&#x7CBE;&#x5EA6;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#331-cycle-elimination"><span class="toc-nav-number">3.3.1.</span> <span class="toc-nav-text">3.3.1 Cycle Elimination</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#332-shortcutting"><span class="toc-nav-number">3.3.2.</span> <span class="toc-nav-text">3.3.2 Shortcutting</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#34-tree-algorithm"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">3.4 Tree Algorithm</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4实现"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">4.&#x5B9E;&#x73B0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#41-rdf-3x-rdf-graph-processor"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">4.1 RDF-3X: RDF Graph Processor</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#42-sketch-实现"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">4.2 Sketch &#x5B9E;&#x73B0;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5实验评估"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">5.&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#51-使用的数据集"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">5.1 &#x4F7F;&#x7528;&#x7684;&#x6570;&#x636E;&#x96C6;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#52-测试实例生成"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">5.2 &#x6D4B;&#x8BD5;&#x5B9E;&#x4F8B;&#x751F;&#x6210;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#53-结果"><span class="toc-nav-number">5.3.</span> <span class="toc-nav-text">5.3 &#x7ED3;&#x679C;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#531-逼近质量"><span class="toc-nav-number">5.3.1.</span> <span class="toc-nav-text">5.3.1 &#x903C;&#x8FD1;&#x8D28;&#x91CF;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#532-查询执行时间"><span class="toc-nav-number">5.3.2.</span> <span class="toc-nav-text">5.3.2 &#x67E5;&#x8BE2;&#x6267;&#x884C;&#x65F6;&#x95F4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#533-路径多样性"><span class="toc-nav-number">5.3.3.</span> <span class="toc-nav-text">5.3.3 &#x8DEF;&#x5F84;&#x591A;&#x6837;&#x6027;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#534-评估预处理空间和时间要求"><span class="toc-nav-number">5.3.4.</span> <span class="toc-nav-text">5.3.4 &#x8BC4;&#x4F30;&#x9884;&#x5904;&#x7406;&#x7A7A;&#x95F4;&#x548C;&#x65F6;&#x95F4;&#x8981;&#x6C42;</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

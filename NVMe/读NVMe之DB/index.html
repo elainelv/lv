@@ -146,17 +146,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -165,6 +162,9 @@
                         <li>
                             <a href="/recommend/">Recommend</a>
                         </li>
+                        
+                    
+
                         
                     
                     
@@ -219,15 +219,19 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>继续上次NVMe的学习，在上次的博文中，我和大家分享了NVMe中的两大重要的角色SQ和CQ，那么在这次的博文中，我们要一起探讨的是第三个重要的角色DB，话不多说！直接进入主题吧~<br><a id="more"></a></p>
-<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
-<p>还没学习过NVMe之SQ与CQ的请戳<a href="https://www.elainelv.top/2018/12/18/读NVMe之SQ与CQ/#more" target="_blank" rel="noopener">这里</a>,上次也提到了DB的功能，即<code>host发送命令时，不是直接往SSD中发送命令，而是把准备好的命令放到内存中的SQ，通过写SSD中的DB寄存器来通知SSD</code>,这里再提一哈，SQ与CQ都是循环队列。可以看出，DB在这里的角色就是一个负责传递信息的中介</p>
+                <p>继续上次NVMe的学习，在上次的博文中，我和大家分享了NVMe中的两大重要的角色SQ和CQ，那么在这次的博文中，我们要一起探讨的是第三个重要的角色DB，话不多说！直接进入主题吧~</p>
+<a id="more"></a>
+<h2 id="导语">导语</h2>
+<blockquote>
+<p>还没学习过NVMe之SQ与CQ的请戳<a href="https://www.elainelv.top/2018/12/18/%E8%AF%BBNVMe%E4%B9%8BSQ%E4%B8%8ECQ/#more" target="_blank" rel="noopener">这里</a>,上次也提到了DB的功能，即<code>host发送命令时，不是直接往SSD中发送命令，而是把准备好的命令放到内存中的SQ，通过写SSD中的DB寄存器来通知SSD</code>,这里再提一哈，SQ与CQ都是循环队列。可以看出，DB在这里的角色就是一个负责传递信息的中介</p>
 </blockquote>
-<h2 id="db执行过程"><a href="#DB执行过程" class="headerlink" title="DB执行过程"></a>DB执行过程</h2><p>DB：<code>Doorbell Register，位于SSD的控制器内部</code></p>
+<h2 id="db执行过程">DB执行过程</h2>
+<p>DB：<code>Doorbell Register，位于SSD的控制器内部</code></p>
 <blockquote>
 <p>在DB中记录了SQ的Head和Tail以及CQ的Head和Tail，那么host和SSD之间通信如何来更改这些值呢？</p>
 </blockquote>
-<p>上图！(从<a href="http://www.ssdfans.com/blog/2017/08/03/蛋蛋读nvme之二/" target="_blank" rel="noopener">ssdfans</a>扣过来的)<br><img src="/img/article/读NVMe之DB/1.png" alt=""></p>
+<p>上图！(从<a href="http://www.ssdfans.com/blog/2017/08/03/%E8%9B%8B%E8%9B%8B%E8%AF%BBnvme%E4%B9%8B%E4%BA%8C/" target="_blank" rel="noopener">ssdfans</a>扣过来的)<br>
+<img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDB/1.png" alt=""></p>
 <p>从图中我们可以看到，在SSD的控制器内，Doorbell_written写方分别是<code>Host</code>和<code>Controller</code>，<code>SQ1 Head</code>和<code>CQ Tail</code>由<code>Controller</code>控制，而<code>SQ1 Tail</code>和<code>CQ1 Head</code>由<code>Host</code>控制</p>
 <ol>
 <li>首先SQ1和CQ1均为空，Head和Tail均为0</li>
@@ -236,16 +240,24 @@
 <li>当SSD执行完这三条命令后，将完成状态信息写入到内存的CQ1队列中，并更新本地的<code>CQ1 Tail</code></li>
 <li>Host接收到SSD发来的完成状态信息后，进行处理，待处理完这两条信息之后，告诉SSD，并更新<code>CQ1 Head</code></li>
 </ol>
-<p><strong>这里需要注意的是：</strong><br>host知道SQ1 Tail和CQ1 Head，但是不知道SQ1 Head和CQ1 Tail，那么这些信息是如何获取的呢？<br>我们可以想到的是，当SSD处理完命令发给host完成状态信息时，可以附带上SQ1 Head和CQ1 Tail<br><img src="/img/article/读NVMe之DB/2.png" alt=""><br>如上图所示，SQ Head Pointer存的是SQ1 head，标记位P用来表示当前完成状态信息是否处理完，当从SSD返回给Host的信息中，标记位P的值为1，等到host处理完成后改为0，如下图所示<br><img src="/img/article/读NVMe之DB/3.png" alt=""></p>
-<h2 id="总结一哈"><a href="#总结一哈" class="headerlink" title="总结一哈"></a>总结一哈</h2><ul>
+<p><strong>这里需要注意的是：</strong><br>
+host知道SQ1 Tail和CQ1 Head，但是不知道SQ1 Head和CQ1 Tail，那么这些信息是如何获取的呢？<br>
+我们可以想到的是，当SSD处理完命令发给host完成状态信息时，可以附带上SQ1 Head和CQ1 Tail<br>
+<img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDB/2.png" alt=""><br>
+如上图所示，SQ Head Pointer存的是SQ1 head，标记位P用来表示当前完成状态信息是否处理完，当从SSD返回给Host的信息中，标记位P的值为1，等到host处理完成后改为0，如下图所示<br>
+<img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDB/3.png" alt=""></p>
+<h2 id="总结一哈">总结一哈</h2>
+<ul>
 <li>DB在SSD Controller端，是寄存器</li>
 <li>DB记录着SQ和CQ的Head和Tail</li>
 <li>每个SQ或者CQ有两个DB: Head DB 和Tail DB</li>
 <li>Host只能写DB，不能读DB</li>
 <li>Host通过SSD往CQ中写入的命令完成状态获取Head或Tail</li>
 </ul>
-<p><strong>参考资料：</strong><br><a href="http://www.ssdfans.com/blog/2017/08/03/蛋蛋读nvme之二/" target="_blank" rel="noopener">蛋蛋读nvme之二</a></p>
-<h2 id="i-want-to-say"><a href="#“I-Want-To-Say”" class="headerlink" title="“I Want To Say”"></a>“I Want To Say”</h2><blockquote>
+<p><strong>参考资料：</strong><br>
+<a href="http://www.ssdfans.com/blog/2017/08/03/%E8%9B%8B%E8%9B%8B%E8%AF%BBnvme%E4%B9%8B%E4%BA%8C/" target="_blank" rel="noopener">蛋蛋读nvme之二</a></p>
+<h2 id="i-want-to-say">�I Want To Say�</h2>
+<blockquote>
 <p>DB作为host和SSD间数据交互的中介，是一个寄存器，其实很多地方也会设置相应的缓存寄存器来存储数据。这里从名字取为Doorbell也是很通俗易懂了，相当于一个门铃嘛</p>
 </blockquote>
 
@@ -336,7 +348,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5BFC;&#x8BED;" class="headerlink" title="&#x5BFC;&#x8BED;"></a>&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#db执行过程"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#DB&#x6267;&#x884C;&#x8FC7;&#x7A0B;" class="headerlink" title="DB&#x6267;&#x884C;&#x8FC7;&#x7A0B;"></a>DB&#x6267;&#x884C;&#x8FC7;&#x7A0B;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结一哈"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x603B;&#x7ED3;&#x4E00;&#x54C8;" class="headerlink" title="&#x603B;&#x7ED3;&#x4E00;&#x54C8;"></a>&#x603B;&#x7ED3;&#x4E00;&#x54C8;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#&#x201C;I-Want-To-Say&#x201D;" class="headerlink" title="&#x201C;I Want To Say&#x201D;"></a>&#x201C;I Want To Say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#db执行过程"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">DB&#x6267;&#x884C;&#x8FC7;&#x7A0B;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结一哈"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x603B;&#x7ED3;&#x4E00;&#x54C8;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#xFFFD;I Want To Say&#xFFFD;</span></a></li></ol>
         
         </div>
       </aside>

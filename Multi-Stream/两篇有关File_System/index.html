@@ -146,17 +146,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -165,6 +162,9 @@
                         <li>
                             <a href="/recommend/">Recommend</a>
                         </li>
+                        
+                    
+
                         
                     
                     
@@ -220,20 +220,31 @@
                 post-container">
 
                 <ol>
-<li><a href="https://www.usenix.org/system/files/conference/fast18/fast18-rho.pdf" target="_blank" rel="noopener">FStream: Managing Flash Streams in the File System</a><br><a href="https://www.usenix.org/sites/default/files/conference/protected-files/fast18_slides_rho.pdf" target="_blank" rel="noopener">PPT</a></li>
-<li><a href="https://www.usenix.org/system/files/conference/fast18/fast18-son.pdf" target="_blank" rel="noopener">High-Performance Transaction Processing in Journaling File Systems</a><br><a href="https://www.usenix.org/sites/default/files/conference/protected-files/fast18_slides_son.pdf" target="_blank" rel="noopener">PPT</a></li>
-<li><a href="https://www.usenix.org/system/files/conference/hotstorage18/hotstorage18-paper-yong.pdf" target="_blank" rel="noopener">vStream Virtual Stream Management for Multi-streamed SSDs</a><a id="more"></a>
-</li>
+<li><a href="https://www.usenix.org/system/files/conference/fast18/fast18-rho.pdf" target="_blank" rel="noopener">FStream: Managing Flash Streams in the File System</a><br>
+<a href="https://www.usenix.org/sites/default/files/conference/protected-files/fast18_slides_rho.pdf" target="_blank" rel="noopener">PPT</a></li>
+<li><a href="https://www.usenix.org/system/files/conference/fast18/fast18-son.pdf" target="_blank" rel="noopener">High-Performance Transaction Processing in Journaling File Systems</a><br>
+<a href="https://www.usenix.org/sites/default/files/conference/protected-files/fast18_slides_son.pdf" target="_blank" rel="noopener">PPT</a></li>
+<li><a href="https://www.usenix.org/system/files/conference/hotstorage18/hotstorage18-paper-yong.pdf" target="_blank" rel="noopener">vStream Virtual Stream Management for Multi-streamed SSDs</a></li>
 </ol>
-<h2 id="多流ssd笔记"><a href="#多流ssd笔记" class="headerlink" title="多流ssd笔记"></a>多流ssd笔记</h2><p>对于GC回收的数据作为冷数据处理；对于重写的数据作为更热的数据处理</p>
+<a id="more"></a>
+<h2 id="多流ssd笔记">多流ssd笔记</h2>
+<p>对于GC回收的数据作为冷数据处理；对于重写的数据作为更热的数据处理</p>
 <p>多流SSD的提出主要是为了降低GC的开销，将具有相同的stream ID的数据分组在同一闪存块中，从而降低GC成本并提高性能。</p>
-<h3 id="一vstream"><a href="#一-vStream" class="headerlink" title="一.vStream"></a>一.vStream</h3><p>研究背景：<br>在商业SSD中，由于硬件设备资源的限制，仅支持少量的流。在这篇文章中提出了vstream, 通过对主机写请求的分配的流称之为虚拟流，由于硬件设备的物理流数量很少，通过计算每个vStream 的平均寿命和一个物理流的中值寿命的欧几里得距离，将虚拟流映射到距离比较近的物理流。<br>stream的概念，将具有相同生命周期的数据分配给相同的流ID，相同流ID的数据存于同一个闪存块中。这样，这些数据因为很有可能同时失效，降低了GC操作所带来的开销问题。值得我们注意的是，GC操作不仅降低了SSD的性能，还降低了其使用寿命，因为在SSd 中，每个闪存块的擦除次数是有限制的。</p>
-<p>如何对stream进行分类？<br>这篇文章中介绍的算法是K-均值聚类算法，以对vStream的生命周期进行分类。</p>
+<h3 id="一vstream">一.vStream</h3>
+<p>研究背景：<br>
+在商业SSD中，由于硬件设备资源的限制，仅支持少量的流。在这篇文章中提出了vstream, 通过对主机写请求的分配的流称之为虚拟流，由于硬件设备的物理流数量很少，通过计算每个vStream 的平均寿命和一个物理流的中值寿命的欧几里得距离，将虚拟流映射到距离比较近的物理流。<br>
+stream的概念，将具有相同生命周期的数据分配给相同的流ID，相同流ID的数据存于同一个闪存块中。这样，这些数据因为很有可能同时失效，降低了GC操作所带来的开销问题。值得我们注意的是，GC操作不仅降低了SSD的性能，还降低了其使用寿命，因为在SSd 中，每个闪存块的擦除次数是有限制的。</p>
+<p>如何对stream进行分类？<br>
+这篇文章中介绍的算法是K-均值聚类算法，以对vStream的生命周期进行分类。</p>
 <p>这种虚拟流的提出为主机系统提供了足够的流以充分利用多流SSD</p>
-<h3 id="二-fstream"><a href="#二-fStream" class="headerlink" title="二. fStream"></a>二. fStream</h3><p>为了解决SSd老化和GC开销问题而提出的。<br>随着SSD的使用，内部媒体碎片不断增加，这样GC操作就变得频繁起来。那么本文主要利用多流SSd技术，在文件系统层对写请求进行分类。</p>
-<h3 id="三-journaling"><a href="#三-Journaling" class="headerlink" title="三. Journaling"></a>三. Journaling</h3><p>由于日志文件的特殊性，我们在做GC操作时，可以考虑当前block的有效页中，哪些数据虽然还是有效的，但是，数据并没有那么重要，因此我们可以提前当作无效页一并擦除。</p>
+<h3 id="二-fstream">二. fStream</h3>
+<p>为了解决SSd老化和GC开销问题而提出的。<br>
+随着SSD的使用，内部媒体碎片不断增加，这样GC操作就变得频繁起来。那么本文主要利用多流SSd技术，在文件系统层对写请求进行分类。</p>
+<h3 id="三-journaling">三. Journaling</h3>
+<p>由于日志文件的特殊性，我们在做GC操作时，可以考虑当前block的有效页中，哪些数据虽然还是有效的，但是，数据并没有那么重要，因此我们可以提前当作无效页一并擦除。</p>
 <hr>
-<p>“I want to say”<br>多流SSD的使用极大地降低了GC带来的写操作，但是并行性方面并没有改善，可能还降低了，还在调研研究中。之后会持续更新博文进行这方面的说明。</p>
+<p>&quot;I want to say&quot;<br>
+多流SSD的使用极大地降低了GC带来的写操作，但是并行性方面并没有改善，可能还降低了，还在调研研究中。之后会持续更新博文进行这方面的说明。</p>
 
                 
 
@@ -322,7 +333,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#多流ssd笔记"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x591A;&#x6D41;ssd&#x7B14;&#x8BB0;" class="headerlink" title="&#x591A;&#x6D41;ssd&#x7B14;&#x8BB0;"></a>&#x591A;&#x6D41;ssd&#x7B14;&#x8BB0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#一vstream"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#&#x4E00;-vStream" class="headerlink" title="&#x4E00;.vStream"></a>&#x4E00;.vStream</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#二-fstream"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#&#x4E8C;-fStream" class="headerlink" title="&#x4E8C;. fStream"></a>&#x4E8C;. fStream</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#三-journaling"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><a href="#&#x4E09;-Journaling" class="headerlink" title="&#x4E09;. Journaling"></a>&#x4E09;. Journaling</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#多流ssd笔记"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x591A;&#x6D41;ssd&#x7B14;&#x8BB0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#一vstream"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x4E00;.vStream</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#二-fstream"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x4E8C;. fStream</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#三-journaling"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x4E09;. Journaling</span></a></li></ol></li></ol>
         
         </div>
       </aside>
