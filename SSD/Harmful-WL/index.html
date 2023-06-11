@@ -158,13 +158,6 @@
 
                         
                         <li>
-                            <a href="/cv/">Yina&#39;s HomePage</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
@@ -232,13 +225,9 @@
 <blockquote>
 <p>本文发表于HotStorage 22， 来自韩国 <a href="https://web.ecs.syr.edu/~bkim01/?_gl=1*1rp5cx5*_ga*MTc5Mzc0OTExMi4xNjU3Nzg5Mjcw*_ga_QT13NN6N9S*MTY1Nzc4OTI2OS4xLjEuMTY1Nzc4OTMxOS4xMA.." target="_blank" rel="noopener">Bryan S. Kim团队</a>，该团队目前正在研究为SSD支持容量可变接口(Capacity-variant storage systems)。由于SSD在固定容量的全生命周期中，只能以靠均衡磨损的方式来平衡磨损所有闪存块，从而换取整体可靠性。相反，通过利用容量、性能和可靠性(CPR)之间的权衡，从整体角度重新思考现有存储接口。通过灵活的容量变化接口，SSD可以在保持性能的同时优雅地减少其导出块的数量。这进一步探索构建基于闪存的存储系统实现高性能、可靠和高效的特性。</p>
 </blockquote>
-<p>本文评估了现有的几种典型均衡磨损算法（如表1所示）在不同的场景下均衡磨损的效果（写放大和擦除计数）。从测试分析中来看，均衡磨损存在异常行为，其并不总是有效的，在目前的有限擦除次数的SSD中，反而会带来比较严重的写放大问题，严重影响SSD使用寿命。<br>
-这些发现与最近对SSD操作特性的大规模实地研究相一致 [FAST 22，Operational Characteristics of SSDs in Enterprise Storage Systems: A Large-Scale Field Study]。本文接着探讨了放弃均衡磨损而提出使用SSD中的容量差异方法，并表明容量差异方法将SSD的寿命延长2.94×。本文方法开源：<br>
-<a href="https://github.com/ZiyangJiao/FTLSim-WL" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FTLSim-WL</a>.</p>
+<p>本文评估了现有的几种典型均衡磨损算法（如表1所示）在不同的场景下均衡磨损的效果（写放大和擦除计数）。从测试分析中来看，均衡磨损存在异常行为，其并不总是有效的，在目前的有限擦除次数的SSD中，反而会带来比较严重的写放大问题，严重影响SSD使用寿命。<br>这些发现与最近对SSD操作特性的大规模实地研究相一致 [FAST 22，Operational Characteristics of SSDs in Enterprise Storage Systems: A Large-Scale Field Study]。本文接着探讨了放弃均衡磨损而提出使用SSD中的容量差异方法，并表明容量差异方法将SSD的寿命延长2.94×。本文方法开源：<br><a href="https://github.com/ZiyangJiao/FTLSim-WL" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FTLSim-WL</a>.</p>
 <p><img src="/img/article/harmfulWL/harmfulWL-1.png" alt=""></p>
-<h2 id="均衡磨损的效果">均衡磨损的效果</h2>
-<p><strong>1. 写放大如何?</strong><br>
-使用r/ℎ= 0.9/0.1的合成负载来测量WL引起的写放大，最多可进行100 次全盘写入(25 TiB)，本文测试盘的逻辑空间大小为256GiB，11%OPS空间。图2为100次全盘写所对应的写放大，可以得到如下观察。</p>
+<h2 id="均衡磨损的效果"><a href="#均衡磨损的效果" class="headerlink" title="均衡磨损的效果"></a>均衡磨损的效果</h2><p><strong>1. 写放大如何?</strong><br>使用r/ℎ= 0.9/0.1的合成负载来测量WL引起的写放大，最多可进行100 次全盘写入(25 TiB)，本文测试盘的逻辑空间大小为256GiB，11%OPS空间。图2为100次全盘写所对应的写放大，可以得到如下观察。</p>
 <ul>
 <li>整体写放大高达11.49（PWL），其中NoWL的方法下写放大为6左右，因此5.4是WL造成的。这意味着对于每写入256 GiB的用户数据，仅WL就会带来额外的1.35 TiB数据写入。</li>
 <li>写放大对WL阈值参数很敏感。将DP算法从10更改为5（变得更加激进）会将写入的数据量放大到1.6X。</li>
@@ -246,20 +235,18 @@
 <li>随着SSD老化，写放大会随着时间稳步增加，这表明SSD老化会随着写入更多数据而加速。</li>
 </ul>
 <p><img src="/img/article/harmfulWL/harmfulWL-2.png" alt=""></p>
-<p><strong>2. 均衡磨损的有效性如何？</strong><br>
-下面测试两种场景，分别是1）256GiB用户数据，采用全盘写入100次，如图3；2）数据只占全盘5%容量，并持续写入，如图4。对于每一种场景，测试了倾斜性较强的负载(r/h=0.9/0.1)和统一负载(r/h=0.5/0.5)。</p>
+<p><strong>2. 均衡磨损的有效性如何？</strong><br>下面测试两种场景，分别是1）256GiB用户数据，采用全盘写入100次，如图3；2）数据只占全盘5%容量，并持续写入，如图4。对于每一种场景，测试了倾斜性较强的负载(r/h=0.9/0.1)和统一负载(r/h=0.5/0.5)。</p>
 <p><img src="/img/article/harmfulWL/harmfulWL-3.png" alt=""></p>
 <ul>
 <li>对于倾斜性较强的负载（图3a），DP和PWL的擦除次数都比NoWL更多。它们的CDF显示出一个凹陷，这表明擦除计数的双峰分布（表明块擦除次数呈现两拨分布）。而NoWL 显示一条几乎垂直的线，这意味着擦除计数分布更紧密。这是磨损均衡的性能异常（通过检查双峰分布，发现与冷池相关的块比热池中的块更老）。对于DP算法，如果冷池中最年轻的块恰好比热池中最旧的块更老，它仍然会触发两个块之间的交换，从而导致这种反转。DAGC实现了块的均衡磨损，其分布较为集中，但带来写放大18%。</li>
 <li>对于均匀随机的负载（图3b），DP、PWL和NoWL之间的差异可以忽略不计。因为全盘写入时，数据热度接近，使得所有块都被平等地使用，并且几乎不会触发均衡磨损。然而，DAGC仍然表现出性能异常，由于其在GC时会同时考虑有效页面的比例以及块的擦除次数，因此数据写入比NoWL多15%（因为它可能会选择擦除次数较低但是有效页面数量也多的闪存块作为victim块）。</li>
-<li>对于第二类场景（small footprint），大多数WL方法在均衡擦除计数方面是有效的，如图4a和图4b中接近垂直的CDF。 而NoWL显示了两种工作负载中已使用块和未使用块之间的双峰分布。当工作负载倾斜时（图 4a），WL 技术通过放大数据写入量来实现这种均匀性。对于统一的工作负载（图 4b），数据热度接近，因此均衡磨损的整体写放大要低得多。</li>
+<li>对于第二类场景（small footprint），大多数WL方法在均衡擦除计数方面是有效的，如图4a和图4b中接近垂直的CDF。 而NoWL显示了两种工作负载中已使用块和未使用块之间的双峰分布。当工作负载倾斜时（图 4a），WL 技术通过放大数据写入量来实现这种均匀性。对于统一的工作负载（图 4b），数据热度接近，因此均衡磨损的整体写放大要低得多。 </li>
 </ul>
 <blockquote>
 <p>上述场景一考虑全盘使用，充分利用盘的容量特征，结果表明WL是一把双刃剑，可以使得WL效果比NoWL还要差（图3a），也可以实现良好的均衡磨损但其加速了闪存整体磨损（图3b）。而场景二则是针对大容量盘但是实际数据量较少的场景，其采用均衡磨损的效果较好，这部分总结如表4所示。</p>
 </blockquote>
 <p><img src="/img/article/harmfulWL/harmfulWL-4.png" alt=""></p>
-<h2 id="方法">方法</h2>
-<p>本文提出了一种容量差异方法，即不采用WL。因为如果接口允许减少SSD的输出容量，WL就变得不必要了，因为它不需要确保所有块均匀地磨损，这在ZNS中提到过[本文参考文献34]。随着SSD的磨损使用，坏块的数量会逐渐增多，但只要剩余容量满足用户需求，该SSD仍然可以正常服务。从而避免了WL过程中带来的严重写放大问题，增加了整体写入量，从而改善SSD的总使用寿命。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>本文提出了一种容量差异方法，即不采用WL。因为如果接口允许减少SSD的输出容量，WL就变得不必要了，因为它不需要确保所有块均匀地磨损，这在ZNS中提到过[本文参考文献34]。随着SSD的磨损使用，坏块的数量会逐渐增多，但只要剩余容量满足用户需求，该SSD仍然可以正常服务。从而避免了WL过程中带来的严重写放大问题，增加了整体写入量，从而改善SSD的总使用寿命。</p>
 
                 
 
@@ -354,7 +341,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#均衡磨损的效果"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5747;&#x8861;&#x78E8;&#x635F;&#x7684;&#x6548;&#x679C;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#方法"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x65B9;&#x6CD5;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#均衡磨损的效果"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5747;&#x8861;&#x78E8;&#x635F;&#x7684;&#x6548;&#x679C;" class="headerlink" title="&#x5747;&#x8861;&#x78E8;&#x635F;&#x7684;&#x6548;&#x679C;"></a>&#x5747;&#x8861;&#x78E8;&#x635F;&#x7684;&#x6548;&#x679C;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#方法"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x65B9;&#x6CD5;" class="headerlink" title="&#x65B9;&#x6CD5;"></a>&#x65B9;&#x6CD5;</span></a></li></ol>
         
         </div>
       </aside>

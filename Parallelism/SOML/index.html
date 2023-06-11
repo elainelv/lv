@@ -156,13 +156,6 @@
 
                         
                         <li>
-                            <a href="/cv/">Yina&#39;s HomePage</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
@@ -229,55 +222,28 @@
                 <blockquote>
 <p>4月美国举办的ASPLOS19’上一篇最新的<a href="http://delivery.acm.org/10.1145/3310000/3304035/p955-liu.pdf?ip=219.228.60.93&amp;id=3304035&amp;acc=ACTIVE%20SERVICE&amp;key=BF85BBA5741FDC6E%2E035EACC12F524219%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&amp;__acm__=1557316447_860e010d1e8f2ac92ac56cd923901312" target="_blank" rel="noopener">paper</a>，来自<a href="http://camelab.org/" target="_blank" rel="noopener">Myoungsoo Jung</a>大佬团队</p>
 </blockquote>
-<h3 id="问题引入">问题引入</h3>
-<p><img src="/img/article/SOML/1.png" alt=""></p>
-<p>1）3D NAND相比于2D NAND具有更高的density，因此同等容量下，3D NAND的chips数量相对就少，降低了chip-level parallelism。这会导致在相同的时间内被处理的请求数量减少，从而导致整个性能的下降。<br>
-<img src="/img/article/SOML/2.png" alt=""><br>
-从图中可以看出，对于read-intensive 的应用不适合在3D NAND芯片上使用，而对于写操作，由于buffer的存在，因此影响并没有那么严重</p>
+<h3 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入"></a>问题引入</h3><p><img src="/img/article/SOML/1.png" alt=""></p>
+<p>1）3D NAND相比于2D NAND具有更高的density，因此同等容量下，3D NAND的chips数量相对就少，降低了chip-level parallelism。这会导致在相同的时间内被处理的请求数量减少，从而导致整个性能的下降。<br><img src="/img/article/SOML/2.png" alt=""><br>从图中可以看出，对于read-intensive 的应用不适合在3D NAND芯片上使用，而对于写操作，由于buffer的存在，因此影响并没有那么严重</p>
 <p>2）再者，数据在闪存中的分布是比较分散的，也就是说一个read operation（16KB），而大多数的read request是4KB或者8KB。这可能会导致一个请求占用多个chips资源</p>
-<h3 id="问题分析">问题分析</h3>
-<h4 id="nand-read-operation">NAND Read Operation</h4>
-<p><img src="/img/article/SOML/3.png" alt=""></p>
-<p>读延迟包含两个部分，一个是数据读取的时间（从cell读到chip internal buffer），一个是通道传输延迟（chip internal buffer传到SSD控制器的ECC纠错部件或者DRAM buffer）<br>
-<strong>Read Operation有以下四种：</strong><br>
-1）Baseline：在单个plane读一个页<br>
-2）Multi-plane：相较于baseline，提升了chip的吞吐量<br>
-3）Cache read：内部有两个buffer，一个用来cell data reading，一个用来data transfer，因此两个操作可以并行执行<br>
-4）Random data：只读取所需要的部分数据，降低了数据传输的时间</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><h4 id="nand-read-operation"><a href="#NAND-Read-Operation" class="headerlink" title="NAND Read Operation"></a>NAND Read Operation</h4><p><img src="/img/article/SOML/3.png" alt=""></p>
+<p>读延迟包含两个部分，一个是数据读取的时间（从cell读到chip internal buffer），一个是通道传输延迟（chip internal buffer传到SSD控制器的ECC纠错部件或者DRAM buffer）<br><strong>Read Operation有以下四种：</strong><br>1）Baseline：在单个plane读一个页<br>2）Multi-plane：相较于baseline，提升了chip的吞吐量<br>3）Cache read：内部有两个buffer，一个用来cell data reading，一个用来data transfer，因此两个操作可以并行执行<br>4）Random data：只读取所需要的部分数据，降低了数据传输的时间</p>
 <p>虽然3D NAND 支持上述读操作，但是由于芯片密度的增加，数据读取的延迟依然会很高，这是因为密度增加所导致cell sensing time更高了，而数据的传输延迟可以通过时钟来控制，因此主要问题还是在于读取延迟。实际上，最高读取延迟可以上升至90微妙</p>
-<h4 id="负载测试结果分析">负载测试结果分析</h4>
-<p><img src="/img/article/SOML/4.png" alt=""><br>
-x轴表示600个负载，按照纵坐标的大小进行了排序，可以看到随着芯片数量的减少，导致chip-level并行度差，吞吐量变差，延迟变高。<br>
-文中提到DRAM对读请求的改进是很有限的，主要因为超过80% 的数据在400个负载中只读取了一次，这种时间局部性这么差主要原因是频繁读取的数据被缓存在上层。</p>
-<p><img src="/img/article/SOML/5.png" alt=""><br>
-上图显示，芯片数量少，导致队列中排队请求多，队列长。<br>
-这是由于芯片的减少导致芯片并行度下降了，那么想着可以通过某种方式提升芯片内部的并行度~<br>
-<img src="/img/article/SOML/6.png" alt=""></p>
-<p>注意，当前的3D NAND页面至少有16 KB，这是读取操作的最小单位(粒度)。只有很少的工作负载被1K或2K的读取请求所支配。大量的工作负载主要是4K和8K的读取请求。具体来说，300和480个工作负载主要包含小于4K和8K的读取请求。<br>
-当然，4K和8K的请求可以通过某种方式按照16KB的请求来操作。</p>
-<h3 id="策略">策略</h3>
-<p>针对上述问题和分析，本文提出了SOML(<strong>S</strong>ingle-<strong>O</strong>peration-<strong>M</strong>ultiple-<strong>L</strong>ocation)，实现block级别的并行读partial page（部分页）。并且提出了一种的调度算法，实现了将多个小粒度的读请求合并成一个大请求来操作。</p>
+<h4 id="负载测试结果分析"><a href="#负载测试结果分析" class="headerlink" title="负载测试结果分析"></a>负载测试结果分析</h4><p><img src="/img/article/SOML/4.png" alt=""><br>x轴表示600个负载，按照纵坐标的大小进行了排序，可以看到随着芯片数量的减少，导致chip-level并行度差，吞吐量变差，延迟变高。<br>文中提到DRAM对读请求的改进是很有限的，主要因为超过80% 的数据在400个负载中只读取了一次，这种时间局部性这么差主要原因是频繁读取的数据被缓存在上层。</p>
+<p><img src="/img/article/SOML/5.png" alt=""><br>上图显示，芯片数量少，导致队列中排队请求多，队列长。<br>这是由于芯片的减少导致芯片并行度下降了，那么想着可以通过某种方式提升芯片内部的并行度~<br><img src="/img/article/SOML/6.png" alt=""></p>
+<p>注意，当前的3D NAND页面至少有16 KB，这是读取操作的最小单位(粒度)。只有很少的工作负载被1K或2K的读取请求所支配。大量的工作负载主要是4K和8K的读取请求。具体来说，300和480个工作负载主要包含小于4K和8K的读取请求。<br>当然，4K和8K的请求可以通过某种方式按照16KB的请求来操作。</p>
+<h3 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h3><p>针对上述问题和分析，本文提出了SOML(<strong>S</strong>ingle-<strong>O</strong>peration-<strong>M</strong>ultiple-<strong>L</strong>ocation)，实现block级别的并行读partial page（部分页）。并且提出了一种的调度算法，实现了将多个小粒度的读请求合并成一个大请求来操作。</p>
 <blockquote>
-<p>在2D NAND中，增大读操作的粒度可以提升cell density，但是在3D NAND中，反而需要降低读操作的粒度；从上述分析，我们知道了两个关键点：1）3D NAND chip parallelism下降了；2）Read 请求的大小往往比baseline中的page要小<br>
-因此也就产生了上述读取部分页的操作，并且为了弥补chip间并行度的下降，提升了chip内部的并行性，实现不同block间的部分页并行读；例如读一个在block0中的8kb大小的page1和在block m中的page 0<br>
-为了更好的改进性能，本文还实现了算法来发现和combine多个小的读请求，作为一个SOML 读操作来实现</p>
+<p>在2D NAND中，增大读操作的粒度可以提升cell density，但是在3D NAND中，反而需要降低读操作的粒度；从上述分析，我们知道了两个关键点：1）3D NAND chip parallelism下降了；2）Read 请求的大小往往比baseline中的page要小<br>因此也就产生了上述读取部分页的操作，并且为了弥补chip间并行度的下降，提升了chip内部的并行性，实现不同block间的部分页并行读；例如读一个在block0中的8kb大小的page1和在block m中的page 0<br>为了更好的改进性能，本文还实现了算法来发现和combine多个小的读请求，作为一个SOML 读操作来实现</p>
 </blockquote>
 <p>创新点：1） partial-page read operation 2）simultaneous multiple partial-read operations across blocks</p>
-<h4 id="partial-page-read-operation">partial-page read operation</h4>
-<p><img src="/img/article/SOML/7.png" alt=""><br>
-BD（block decoder）&amp; PD（page decoder）会选中一个block，并且读取部分页。因此只有一个block才会接收到PD的控制信号，PD通过layer signal和slice signal对所读取的页进行索引。请注意，其他层和片信号将被设置为适当的值，以指示“off”，以便 读取相应的页面<br>
-例如（c-3,c-4）中，需要读取page 4 和 7，那么第一层中的page-0和第三层中的page-8设置成Vpass，第二层中所要读取的page-4设置成Vread，这样可以确保只有存储在page-4中的电子才会通过bit-lines 外流到sensing circuits</p>
+<h4 id="partial-page-read-operation"><a href="#partial-page-read-operation" class="headerlink" title="partial-page read operation"></a>partial-page read operation</h4><p><img src="/img/article/SOML/7.png" alt=""><br>BD（block decoder）&amp; PD（page decoder）会选中一个block，并且读取部分页。因此只有一个block才会接收到PD的控制信号，PD通过layer signal和slice signal对所读取的页进行索引。请注意，其他层和片信号将被设置为适当的值，以指示“off”，以便 读取相应的页面<br>例如（c-3,c-4）中，需要读取page 4 和 7，那么第一层中的page-0和第三层中的page-8设置成Vpass，第二层中所要读取的page-4设置成Vread，这样可以确保只有存储在page-4中的电子才会通过bit-lines 外流到sensing circuits</p>
 <p>在读操作情况下，LST (lower select transistor)被设置为Vcc，UST(upper select transistor)作为切片信号。更具体地说，所选片的UST设置为Vcc，而同一块中其他片的UST设置为0V。因此，虽然其他切片接收相同的layer signals，但数据不会外流，抑制来自其他slices的读取</p>
 <p>为了实现部分页的读取，在UST和第一个cell layer之间插入新的transistor，SOML ST。d-1中，因此在上述基础之上，可以通过不同的控制信号(红线)选择前半页/后半页。当然可以加入更多的SOML ST来支持更细粒度的读取</p>
-<h4 id="simultaneous-multiple-partial-read-operations-across-blocks">simultaneous multiple partial-read operations across blocks</h4>
-<p>要实现同时读取，必须修改BD和PD，这样才能访问来自不同块的不同页面。PD被复制成索引两个不同的半页读取操作，而BD被分成两个较小的BD，其中每个都可以索引一半的块</p>
+<h4 id="simultaneous-multiple-partial-read-operations-across-blocks"><a href="#simultaneous-multiple-partial-read-operations-across-blocks" class="headerlink" title="simultaneous multiple partial-read operations across blocks"></a>simultaneous multiple partial-read operations across blocks</h4><p>要实现同时读取，必须修改BD和PD，这样才能访问来自不同块的不同页面。PD被复制成索引两个不同的半页读取操作，而BD被分成两个较小的BD，其中每个都可以索引一半的块</p>
 <p>需要注意的是，并行读取是在不同的block之间进行的，同一个block内并行读取是不可行的</p>
-<h4 id="调度算法">调度算法</h4>
-<p><img src="/img/article/SOML/8.png" alt=""></p>
-<p>想法很简单，就是将不同block中的交错的页作为一次SOML 读操作执行。<br>
-注意两点即可，并行操作的块是不同的块，并行块中的页需要错开。（具体可以看paper-5.1）</p>
-<h3 id="i-want-to-say">“I want to say”</h3>
-<blockquote>
+<h4 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h4><p><img src="/img/article/SOML/8.png" alt=""></p>
+<p>想法很简单，就是将不同block中的交错的页作为一次SOML 读操作执行。<br>注意两点即可，并行操作的块是不同的块，并行块中的页需要错开。（具体可以看paper-5.1）</p>
+<h3 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h3><blockquote>
 <p>这篇paper从硬件上对现在3D NAND中存在的并行度差进行改进，方法非常好而且很灵活，对读取页粒度的控制可以通过增加SOML ST的个数来控制，但是毕竟是从硬件上修改，需要开销，并且不能实时适应系统状态的改变。适应场景也比较受限。</p>
 </blockquote>
 
@@ -374,7 +340,7 @@ BD（block decoder）&amp; PD（page decoder）会选中一个block，并且读�
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题引入"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x95EE;&#x9898;&#x5F15;&#x5165;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题分析"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x95EE;&#x9898;&#x5206;&#x6790;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#nand-read-operation"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">NAND Read Operation</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#负载测试结果分析"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">&#x8D1F;&#x8F7D;&#x6D4B;&#x8BD5;&#x7ED3;&#x679C;&#x5206;&#x6790;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#策略"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x7B56;&#x7565;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#partial-page-read-operation"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">partial-page read operation</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#simultaneous-multiple-partial-read-operations-across-blocks"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">simultaneous multiple partial-read operations across blocks</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调度算法"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">&#x8C03;&#x5EA6;&#x7B97;&#x6CD5;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题引入"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x95EE;&#x9898;&#x5F15;&#x5165;" class="headerlink" title="&#x95EE;&#x9898;&#x5F15;&#x5165;"></a>&#x95EE;&#x9898;&#x5F15;&#x5165;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题分析"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x95EE;&#x9898;&#x5206;&#x6790;" class="headerlink" title="&#x95EE;&#x9898;&#x5206;&#x6790;"></a>&#x95EE;&#x9898;&#x5206;&#x6790;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#nand-read-operation"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#NAND-Read-Operation" class="headerlink" title="NAND Read Operation"></a>NAND Read Operation</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#负载测试结果分析"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><a href="#&#x8D1F;&#x8F7D;&#x6D4B;&#x8BD5;&#x7ED3;&#x679C;&#x5206;&#x6790;" class="headerlink" title="&#x8D1F;&#x8F7D;&#x6D4B;&#x8BD5;&#x7ED3;&#x679C;&#x5206;&#x6790;"></a>&#x8D1F;&#x8F7D;&#x6D4B;&#x8BD5;&#x7ED3;&#x679C;&#x5206;&#x6790;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#策略"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x7B56;&#x7565;" class="headerlink" title="&#x7B56;&#x7565;"></a>&#x7B56;&#x7565;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#partial-page-read-operation"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text"><a href="#partial-page-read-operation" class="headerlink" title="partial-page read operation"></a>partial-page read operation</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#simultaneous-multiple-partial-read-operations-across-blocks"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text"><a href="#simultaneous-multiple-partial-read-operations-across-blocks" class="headerlink" title="simultaneous multiple partial-read operations across blocks"></a>simultaneous multiple partial-read operations across blocks</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调度算法"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text"><a href="#&#x8C03;&#x5EA6;&#x7B97;&#x6CD5;" class="headerlink" title="&#x8C03;&#x5EA6;&#x7B97;&#x6CD5;"></a>&#x8C03;&#x5EA6;&#x7B97;&#x6CD5;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

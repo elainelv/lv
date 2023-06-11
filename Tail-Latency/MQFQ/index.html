@@ -156,13 +156,6 @@
 
                         
                         <li>
-                            <a href="/cv/">Yina&#39;s HomePage</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
@@ -226,11 +219,8 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h3 id="写在文前">写在文前</h3>
-<p>在学习这篇文章前，先来了解下块设备层中Multi-Queue的概念，<a href="http://kernel.dk/blk-mq.pdf" target="_blank" rel="noopener">Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems</a>，这篇文章于2013年发在SYSTOR，首次提出了multi-queue，从Linux5.0开始就成为块设备层的默认选项，介绍 Linux 内核的块设备层针对现代硬件——高速 SSD、多核 CPU（NUMA）的新设计</p>
-<h4 id="single-queue">Single-Queue</h4>
-<p>起初的块设备层是针对HDD设计的，我们知道，HDD的I/O性能并不好，而论文中提到当时块设备层可以支持百万级IOPS，这对于HDD来说是完全够用的。因此，以前的很多研究都在于改善底层硬件的性能，而不是内核。但是随着SSD的发展，速度越来越快，原先的设计并不能很好的满足高性能SSD和多核CPU的需求，因此文章提出了Multi-Queue的想法。<br>
-下图是单队列的架构：</p>
+                <h3 id="写在文前"><a href="#写在文前" class="headerlink" title="写在文前"></a>写在文前</h3><p>在学习这篇文章前，先来了解下块设备层中Multi-Queue的概念，<a href="http://kernel.dk/blk-mq.pdf" target="_blank" rel="noopener">Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems</a>，这篇文章于2013年发在SYSTOR，首次提出了multi-queue，从Linux5.0开始就成为块设备层的默认选项，介绍 Linux 内核的块设备层针对现代硬件——高速 SSD、多核 CPU（NUMA）的新设计</p>
+<h4 id="single-queue"><a href="#Single-Queue" class="headerlink" title="Single-Queue"></a>Single-Queue</h4><p>起初的块设备层是针对HDD设计的，我们知道，HDD的I/O性能并不好，而论文中提到当时块设备层可以支持百万级IOPS，这对于HDD来说是完全够用的。因此，以前的很多研究都在于改善底层硬件的性能，而不是内核。但是随着SSD的发展，速度越来越快，原先的设计并不能很好的满足高性能SSD和多核CPU的需求，因此文章提出了Multi-Queue的想法。<br>下图是单队列的架构：</p>
 <p><img src="/img/article/MQFQ/single.png" alt="08ca92598e30522560a6e8c17f9d6ff9.png"></p>
 <p>Request Queue 全局共享，由一个锁进行保护。所有对 Request Queue 的操作，如加入/移除一个 I/O 请求，I/O 合并，I/O 重排序，I/O 调度等，都需互斥操作</p>
 <p>显然，上述限制对于现代的设备来说怎么能容忍呢？极大的限制了性能的提升，也就是应用层和设备层速度都很快，然而夹在中间的块设备层无法满足上下两层的交互需求了</p>
@@ -240,8 +230,7 @@
 <li>CPU核数少，竞争锁的现象不严重</li>
 <li>一个全局队列便于操作和管理</li>
 </ol>
-<h4 id="multi-queue">Multi-Queue</h4>
-<p><img src="/img/article/MQFQ/mq.png" alt="7407adb643fffdd9688cf6ae15280b5f.png"></p>
+<h4 id="multi-queue"><a href="#Multi-Queue" class="headerlink" title="Multi-Queue"></a>Multi-Queue</h4><p><img src="/img/article/MQFQ/mq.png" alt="7407adb643fffdd9688cf6ae15280b5f.png"></p>
 <p>原来的全局请求队列主要有两个功能：</p>
 <ol>
 <li>I/O 调度（包括 I/O 合并、I/O 重排序等优化）</li>
@@ -251,41 +240,26 @@
 <p><strong>软件队列</strong>：  <code>负责 I/O 的调度和优化</code>，可为每个核或者每个socket配置一个处理队列。假设一个NUMA系统有4个sockets，每个socket有6个核，那么最少可配置4个软件队列，最多配置24个软件队列。在对应的每个软件队列中可进行请求调度，添加标记以及计数等功能。在此基础上，每个socket或者核直接将请求发送至其对应的软件队列中， 从而<code>可避免单请求队列造成的锁竞争问题</code>。</p>
 <p><strong>硬件队列</strong>：硬件队列主要负责与底层设备驱动的匹配，即存在多少个设备驱动，则配置对应数量的硬件队列。负责将来自软件队列的请求发送至驱动层</p>
 <p>因此，软件队列中存放来自上层的请求，这些请求是还未被发送到具体设备的请求；而每个硬件队列由于对应一个设备驱动，因此，在硬件队列中的请求是已经发送到相应设备的请求</p>
-<p><strong>参考资料</strong>：<a href="http://www.ssdfans.com/blog/2017/09/04/linux-%E5%9D%97%E8%AE%BE%E5%A4%87%E5%B1%82%E4%B8%AD%E7%9A%84multi-queue-%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">linux-块设备层中的multi-queue-分析</a><br>
-<a href="https://www.thomas-krenn.com/en/wiki/Linux_Multi-Queue_Block_IO_Queueing_Mechanism_(blk-mq)" target="_blank" rel="noopener">Linux Multi-Queue Block IO Queueing Mechanism (blk-mq)</a><br>
-<a href="https://www.berthon.eu/2019/linux-kernel-5-0-switching-to-multi-queue-block-as-default/" target="_blank" rel="noopener">Linux kernel 5.0+ switching to Multi-Queue Block as default</a></p>
+<p><strong>参考资料</strong>：<a href="http://www.ssdfans.com/blog/2017/09/04/linux-%E5%9D%97%E8%AE%BE%E5%A4%87%E5%B1%82%E4%B8%AD%E7%9A%84multi-queue-%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">linux-块设备层中的multi-queue-分析</a><br><a href="https://www.thomas-krenn.com/en/wiki/Linux_Multi-Queue_Block_IO_Queueing_Mechanism_(blk-mq" target="_blank" rel="noopener">Linux Multi-Queue Block IO Queueing Mechanism (blk-mq)</a>)<br><a href="https://www.berthon.eu/2019/linux-kernel-5-0-switching-to-multi-queue-block-as-default/" target="_blank" rel="noopener">Linux kernel 5.0+ switching to Multi-Queue Block as default</a></p>
 <hr>
-<h3 id="问题解决">问题解决</h3>
-<h4 id="classical-fair-queueing">Classical Fair Queueing</h4>
-<p>flow：每个流由到达路由器或服务器的一系列请求/数据包组成<br>
-request：每个请求都有相应的cost<br>
-fair queuing指的是根据流的权重来分配资源</p>
-<p>活动流（active）：有一个或多个请求尚未处理<br>
-积压流（backlogged）：有尚未处理的请求还未派遣dispatch给设备</p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><h4 id="classical-fair-queueing"><a href="#Classical-Fair-Queueing" class="headerlink" title="Classical Fair Queueing"></a>Classical Fair Queueing</h4><p>flow：每个流由到达路由器或服务器的一系列请求/数据包组成<br>request：每个请求都有相应的cost<br>fair queuing指的是根据流的权重来分配资源</p>
+<p>活动流（active）：有一个或多个请求尚未处理<br>积压流（backlogged）：有尚未处理的请求还未派遣dispatch给设备</p>
 <p>Fair queuing algorithms：根据活动流的权重来消耗剩余资源，并且如果一个流的请求到达速度慢，不至于形成积压流，那么这个流未消耗的资源可以被部分回收</p>
-<h5 id="start-time-fair-queuingsfq">Start-time Fair Queuing（SFQ）</h5>
-<p>在每个请求到达的时候，标记开始时间和完成时间，并且按照开始时间分发请求。这里的标记值表示资源使用历史记录中的每个请求应根据虚拟时间的系统概念<br>
-如果满足</p>
+<h5 id="start-time-fair-queuingsfq"><a href="#Start-time-Fair-Queuing（SFQ）" class="headerlink" title="Start-time Fair Queuing（SFQ）"></a>Start-time Fair Queuing（SFQ）</h5><p>在每个请求到达的时候，标记开始时间和完成时间，并且按照开始时间分发请求。这里的标记值表示资源使用历史记录中的每个请求应根据虚拟时间的系统概念<br>如果满足</p>
 <ol>
 <li>所有的流都被积压</li>
 <li>服务器以固定的理想速度完成工作</li>
 <li>请求成本可以精确的度量服务时间</li>
-<li>权重与服务能力相加</li>
+<li>权重与服务能力相加 </li>
 </ol>
 <p>那么虚拟时间总是单调前进，并和实际时间一致</p>
 <p>当服务器空闲时，虚拟时间被定义为等于该时间服务的任何请求的最大完成标记。</p>
-<h5 id="parallel-dispatch">Parallel Dispatch</h5>
-<p>具有内部并行性的服务器可以同时处理多个请求，因此在此场景下，对于常规的SFQ，（1）虚拟时间不是很好的定义（2）即使是活动流也可能在资源利用率方面落后，如果它生成的并发请求数量不足，那么就无法使用其分配的份额<br>
-SFQ(D)的工作原理和SFQ相同，但是允许最多D个服务请求，当D=1时，退化为SFQ<br>
-由于无序完成，虚拟时间被计算为未完成的(尚未发送的)请求的最小值或发送请求的最大值</p>
-<h4 id="multi-queue-fair-queueing">Multi-Queue Fair Queueing</h4>
-<p>主要是障碍是：（1）多队列I/O的架构只有一个优先队列对其排序 （2）需要同时发送多个请求，并且无法简单地依据虚拟时间，会出故障<br>
-<img src="/img/article/MQFQ/cp.png" alt="88fd233072b91a8557908b0db7523a7a.png"></p>
+<h5 id="parallel-dispatch"><a href="#Parallel-Dispatch" class="headerlink" title="Parallel Dispatch"></a>Parallel Dispatch</h5><p>具有内部并行性的服务器可以同时处理多个请求，因此在此场景下，对于常规的SFQ，（1）虚拟时间不是很好的定义（2）即使是活动流也可能在资源利用率方面落后，如果它生成的并发请求数量不足，那么就无法使用其分配的份额<br>SFQ(D)的工作原理和SFQ相同，但是允许最多D个服务请求，当D=1时，退化为SFQ<br>由于无序完成，虚拟时间被计算为未完成的(尚未发送的)请求的最小值或发送请求的最大值</p>
+<h4 id="multi-queue-fair-queueing"><a href="#Multi-Queue-Fair-Queueing" class="headerlink" title="Multi-Queue Fair Queueing"></a>Multi-Queue Fair Queueing</h4><p>主要是障碍是：（1）多队列I/O的架构只有一个优先队列对其排序 （2）需要同时发送多个请求，并且无法简单地依据虚拟时间，会出故障<br><img src="/img/article/MQFQ/cp.png" alt="88fd233072b91a8557908b0db7523a7a.png"></p>
 <p>为了保证各个队列的公平性，我们挂起任何队列，其领先请求是最慢的积压流的第一个(确定虚拟时间的队列)提前超过某个预定义的阈值T，从而允许其他队列先处理</p>
 <p>通过适当调整T，我们可以找到一个设计点来提供传统公平排队的大部分公平性和完全独立队列的大部分性能。</p>
 <p>对于内部并行设备，我们通常需要在前一个请求完成之前发送一个新请求，以使设备处于繁忙状态。同时，由于设备决定发送请求的顺序，我们通常必须避免发送比实际并行处理的请求更多的请求，从而保持了我们命令这些held-back requests延迟请求的能力。</p>
-<p>对于任何支持D≥2并发请求的设备：不再保证活动流至少使用被分配到的公平资源<br>
-在传统的公平排队系统中，活动流决定了虚拟时间的进程。在并行设备下，不饱和的活动流中空闲资源将被回收分配给其他流。积压流来决定虚拟时间</p>
+<p>对于任何支持D≥2并发请求的设备：不再保证活动流至少使用被分配到的公平资源<br>在传统的公平排队系统中，活动流决定了虚拟时间的进程。在并行设备下，不饱和的活动流中空闲资源将被回收分配给其他流。积压流来决定虚拟时间</p>
 <p>定义每个流的虚拟时间：</p>
 <p>队列中存放的请求是已经被提交但是还未发送给设备，根据定义提交这些请求的流是积压流。对于每个这样的流f，其虚拟时间被定义为f的第一个(最老的)积压请求(等待发送)的开始标记。注意到流f可能在多个队列中有积压请求</p>
 <p>假设流f有多个挂起请求，那么发送第一个请求将会增加流f的虚拟时间，l/r，其中r是流f 的权重，l是请求的长度</p>
@@ -388,7 +362,7 @@ SFQ(D)的工作原理和SFQ相同，但是允许最多D个服务请求，当D=1�
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#写在文前"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5199;&#x5728;&#x6587;&#x524D;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#single-queue"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Single-Queue</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#multi-queue"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Multi-Queue</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题解决"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x95EE;&#x9898;&#x89E3;&#x51B3;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#classical-fair-queueing"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">Classical Fair Queueing</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#start-time-fair-queuingsfq"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">Start-time Fair Queuing&#xFF08;SFQ&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#parallel-dispatch"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text">Parallel Dispatch</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#multi-queue-fair-queueing"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">Multi-Queue Fair Queueing</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#写在文前"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5199;&#x5728;&#x6587;&#x524D;" class="headerlink" title="&#x5199;&#x5728;&#x6587;&#x524D;"></a>&#x5199;&#x5728;&#x6587;&#x524D;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#single-queue"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#Single-Queue" class="headerlink" title="Single-Queue"></a>Single-Queue</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#multi-queue"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#Multi-Queue" class="headerlink" title="Multi-Queue"></a>Multi-Queue</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题解决"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x95EE;&#x9898;&#x89E3;&#x51B3;" class="headerlink" title="&#x95EE;&#x9898;&#x89E3;&#x51B3;"></a>&#x95EE;&#x9898;&#x89E3;&#x51B3;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#classical-fair-queueing"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#Classical-Fair-Queueing" class="headerlink" title="Classical Fair Queueing"></a>Classical Fair Queueing</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#start-time-fair-queuingsfq"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text"><a href="#Start-time-Fair-Queuing&#xFF08;SFQ&#xFF09;" class="headerlink" title="Start-time Fair Queuing&#xFF08;SFQ&#xFF09;"></a>Start-time Fair Queuing&#xFF08;SFQ&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#parallel-dispatch"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text"><a href="#Parallel-Dispatch" class="headerlink" title="Parallel Dispatch"></a>Parallel Dispatch</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#multi-queue-fair-queueing"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><a href="#Multi-Queue-Fair-Queueing" class="headerlink" title="Multi-Queue Fair Queueing"></a>Multi-Queue Fair Queueing</span></a></li></ol></li></ol>
         
         </div>
       </aside>

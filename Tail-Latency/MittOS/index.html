@@ -156,13 +156,6 @@
 
                         
                         <li>
-                            <a href="/cv/">Yina&#39;s HomePage</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
@@ -229,16 +222,12 @@
                 <blockquote>
 <p>这是一篇2017年SOSP上的会议文章 <a href="https://ucare.cs.uchicago.edu/pdf/sosp17-mittos.pdf" target="_blank" rel="noopener">paper</a></p>
 </blockquote>
-<h3 id="问题引入">问题引入</h3>
-<blockquote>
-<p>解决OS在集群上的QoS问题<br>
-当一个节点的资源竞争激烈无法满足当前请求时，转而竞争其他不太激烈的节点资源。因此用于解决由于竞争资源导致的等待所带来的尾端延迟问题。</p>
+<h3 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入"></a>问题引入</h3><blockquote>
+<p>解决OS在集群上的QoS问题<br>当一个节点的资源竞争激烈无法满足当前请求时，转而竞争其他不太激烈的节点资源。因此用于解决由于竞争资源导致的等待所带来的尾端延迟问题。</p>
 </blockquote>
 <p>确切地说，当一个application发出I/O请求之后，如果OS的I/O处于繁忙状态，那么此时APP就很有可能需要等待较长的一段时间才能被处理。这篇paper讨论的背景是在分布式架构下，一般数据中心对于此类问题，采取tail-tolerant来应对个别节点的<strong>延迟突刺</strong></p>
-<h3 id="策略">策略</h3>
-<p>通常的做法是<strong>wait-then-speculate</strong>，也即app主动去判断节点运行的OS是否处于资源竞争激烈状态，这需要花费一定的时间。而每个APP本身具有SLO（service-level object）的要求，对于粗粒度的请求来说是可行的，但是对于那些milliseconds的请求来说，这很难满足。</p>
-<p><strong>那怎么办呢？</strong><br>
-这关键在于APP能否<strong>以较快的速度</strong>发觉OS处于繁忙状态，进而决定继续等待下去还是转到其他OS上去处理。而经典的os采用封闭式的设计，上层app是不知道OS的状态信息的，OS也不会暗示这个请求将被等待多久。虽然这种设计可以简化上层APP的设计，但是本文情况下，反而不好。</p>
+<h3 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h3><p>通常的做法是<strong>wait-then-speculate</strong>，也即app主动去判断节点运行的OS是否处于资源竞争激烈状态，这需要花费一定的时间。而每个APP本身具有SLO（service-level object）的要求，对于粗粒度的请求来说是可行的，但是对于那些milliseconds的请求来说，这很难满足。</p>
+<p><strong>那怎么办呢？</strong><br>这关键在于APP能否<strong>以较快的速度</strong>发觉OS处于繁忙状态，进而决定继续等待下去还是转到其他OS上去处理。而经典的os采用封闭式的设计，上层app是不知道OS的状态信息的，OS也不会暗示这个请求将被等待多久。虽然这种设计可以简化上层APP的设计，但是本文情况下，反而不好。</p>
 <p>当然针对上述milliseconds的小请求，先前也提出了一些解决办法：</p>
 <ul>
 <li><code>Cloning</code>：采用副本方法，比如将一个请求分发到多个OS上，最先响应的那个反馈给APP，但是这有个问题就是会导致I/O密集。稍许改进的方法就是适当延迟创建duplicate request的时机，并且在同一个I/O请求已经有结果返回时，要能够快速地撤销其余duplicate request。（为了实现这种方法，必须在应用层中进行创建和撤销队列的管理）</li>
@@ -247,8 +236,7 @@
 </ul>
 <p>上述方法虽然在一定程度上有所改进，但是上述方法均未能对底层有更好的信息掌握，如果OS的状态信息可以expose给APP，那岂不是可以很好的去掌控tail-tolerant的设计啦</p>
 <hr>
-<h3 id="mittos">MittOS</h3>
-<p>—— an OS that employs a fast rejecting SLO-aware interface to support millisecond tail tolerance</p>
+<h3 id="mittos"><a href="#MittOS" class="headerlink" title="MittOS"></a>MittOS</h3><p>—— an OS that employs a fast rejecting SLO-aware interface to support millisecond tail tolerance</p>
 <ol>
 <li>OS能够感知到APP的SLOs</li>
 <li>由于资源繁忙而不能够满足其SLOs的I/O，快速地将其reject</li>
@@ -266,27 +254,17 @@
 <ul>
 <li><code>Fast rejection</code>： 在PC级的应用当中，因为繁忙而被拒绝时，PC APP不能够再retry别处，只能等待；但是在数据中心，应用程序本质上运行在冗余机器上，所以reject方式很合理。</li>
 <li><code>SLO aware</code>：APP需要告诉OS，它的SLOs是什么？因此，OS只需要reject那些不能够满足其SLOs 的I/Os</li>
-<li><code>Instant feedback/failover</code>：feedback指的是fast rejection（小于5微妙）；failover指的是reject后转向另外一个节点，通常就是一个network hop的时间。feedback和failover都要求尽可能瞬时完成，以增强系统的tail-tolerant。<br>
-<img src="/img/article/MittOS/1.png" alt=""><br>
-此图中第一步表明APP预期处理时间为20ms，第二、三步发送syscall给OS，第四步OS reject，第五步表示failover，转向另一个副本进行处理。</li>
+<li><code>Instant feedback/failover</code>：feedback指的是fast rejection（小于5微妙）；failover指的是reject后转向另外一个节点，通常就是一个network hop的时间。feedback和failover都要求尽可能瞬时完成，以增强系统的tail-tolerant。<br><img src="/img/article/MittOS/1.png" alt=""><br>此图中第一步表明APP预期处理时间为20ms，第二、三步发送syscall给OS，第四步OS reject，第五步表示failover，转向另一个副本进行处理。</li>
 <li><code>Keep existing OS policies</code>：MittOS仅仅是简单地扩展原OS的接口，并不涉及到对原有的OS的策略的修改。OS本身有自己的QoS策略，这些策略和MittOS引入的QoS策略是不冲突的。</li>
 <li><code>Keep application simple</code>：APP layer不再需要实现撤销tied I/O request机制，它被推入了OS layer，这一部分代码可以被App layer复用。</li>
 </ul>
 <p>主要是架构方面有点复杂，整体思路是非常清晰的，下面介绍下各参数的设计和计算。</p>
-<p>T_wait：一个I/O请求预期的，从到达到完成的时长<br>
-T_deadline：I/O syscall传入的参数，表明App希望此I/O请求在多长时间内完成<br>
-T_hop：两个节点之间网络传输的时间<br>
-T_nextFree：磁盘下一次处于free的时刻<br>
-T_processNewIO：预期处理此I/O请求的时长<br>
-T_processActual：实际处理此I/O请求的时长</p>
-<p>如果T_wait &gt; T_deadline + T_hop，那么说明此I/O在本节点上无法及时完成，需要快速返回EBUSY<br>
-T_wait = T_nextFree – T_now</p>
+<p>T_wait：一个I/O请求预期的，从到达到完成的时长<br>T_deadline：I/O syscall传入的参数，表明App希望此I/O请求在多长时间内完成<br>T_hop：两个节点之间网络传输的时间<br>T_nextFree：磁盘下一次处于free的时刻<br>T_processNewIO：预期处理此I/O请求的时长<br>T_processActual：实际处理此I/O请求的时长</p>
+<p>如果T_wait &gt; T_deadline + T_hop，那么说明此I/O在本节点上无法及时完成，需要快速返回EBUSY<br>T_wait = T_nextFree – T_now</p>
 <p>T_nextFree是持续追踪的，如果磁盘一直处于繁忙状态，那么就是每一次来一个I/O请求就将它的预期处理时间累加到T_nextFree上：T_nextFree += T_processNewIO。一旦磁盘处于空闲状态，那么这个累加就不再是在T_nextFree上累加，而是在当前时刻T_now上累加：T_nextFree = T_now + T_processNewIO。</p>
 <p>由于T_processNewIO的值是一个预估的值，所以每一个I/O完成时，都需要校准T_nextFree的值：T_nextFree += T_processActual – T_processNewIO</p>
-<h3 id="i-want-to-say">“I want to say”</h3>
-<blockquote>
-<p>这篇paper讲解的处理尾端延迟的方式主要是在分布式架构，多副本节点下，因此可以实现reject后快速精准的转向另一个节点进行处理。这是个在可能情况下选择最优解的问题。而且这篇文章提出idea的设计并未改变原有OS的机制，只是可以通过OS向APP发送信息来告知，这种在改进APP和OS之间交互的paper好像还是第一次阅读，当然里面很多概念也是第一次碰到，比如SLO以及与之很接近的SLA。这篇文章的想法是很不错的，系统的设计思路也很清晰。<br>
-最近在阅读一些关于tail latency 的 paper，最后有时间的话也会整理一个系统的总结！</p>
+<h3 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h3><blockquote>
+<p>这篇paper讲解的处理尾端延迟的方式主要是在分布式架构，多副本节点下，因此可以实现reject后快速精准的转向另一个节点进行处理。这是个在可能情况下选择最优解的问题。而且这篇文章提出idea的设计并未改变原有OS的机制，只是可以通过OS向APP发送信息来告知，这种在改进APP和OS之间交互的paper好像还是第一次阅读，当然里面很多概念也是第一次碰到，比如SLO以及与之很接近的SLA。这篇文章的想法是很不错的，系统的设计思路也很清晰。<br>最近在阅读一些关于tail latency 的 paper，最后有时间的话也会整理一个系统的总结！</p>
 </blockquote>
 
                 
@@ -382,7 +360,7 @@ T_wait = T_nextFree – T_now</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题引入"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x95EE;&#x9898;&#x5F15;&#x5165;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#策略"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x7B56;&#x7565;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mittos"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">MittOS</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题引入"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x95EE;&#x9898;&#x5F15;&#x5165;" class="headerlink" title="&#x95EE;&#x9898;&#x5F15;&#x5165;"></a>&#x95EE;&#x9898;&#x5F15;&#x5165;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#策略"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x7B56;&#x7565;" class="headerlink" title="&#x7B56;&#x7565;"></a>&#x7B56;&#x7565;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mittos"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#MittOS" class="headerlink" title="MittOS"></a>MittOS</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

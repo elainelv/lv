@@ -156,13 +156,6 @@
 
                         
                         <li>
-                            <a href="/cv/">Yina&#39;s HomePage</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
@@ -229,14 +222,9 @@
                 <p>本文主要讨论FLASH阵列的组织以及管理逻辑磁盘和物理闪存地址之间的映射所需的算法,是解决围绕SSD逻辑元件的设计和布局的许多重要问题的论文<a href="https://discl.cs.ttu.edu/lib/exe/fetch.php?media=wiki:usenix08.pdf" target="_blank" rel="noopener">原文链接</a></p>
 <a id="more"></a>
 <hr>
-<p>@Author: Nitin Agrawal，Vijayan Prabhakaran，Ted Wobber…<br>
-@Publiced in: 2008 USENIX Annual Technical Conference, Boston, MA, USA, June 22-27, 2008. Proceedings<br>
-@Action: November 14, 2018 8:14 PM</p>
+<p>@Author: Nitin Agrawal，Vijayan Prabhakaran，Ted Wobber…<br>@Publiced in: 2008 USENIX Annual Technical Conference, Boston, MA, USA, June 22-27, 2008. Proceedings<br>@Action: November 14, 2018 8:14 PM</p>
 <hr>
-<h3 id="关于ssd">关于SSD</h3>
-<p>一般的闪存分为两种：NAND和NOR<br>
-其中，NAND-flash是掉电后非易失性存储体<br>
-NOR以储存程序代码为主，对于存储量少且需要多次擦除操作的代码使用NOR比较合适，NAND，容量大，适用于高数据存储密度</p>
+<h3 id="关于ssd"><a href="#关于SSD" class="headerlink" title="关于SSD"></a>关于SSD</h3><p>一般的闪存分为两种：NAND和NOR<br>其中，NAND-flash是掉电后非易失性存储体<br>NOR以储存程序代码为主，对于存储量少且需要多次擦除操作的代码使用NOR比较合适，NAND，容量大，适用于高数据存储密度</p>
 <ul>
 <li>NOR的读速度比NAND稍快一些</li>
 <li>NAND的写入速度比NOR快很多</li>
@@ -248,37 +236,24 @@ NOR以储存程序代码为主，对于存储量少且需要多次擦除操作�
 <p><img src="/img/article/Design_Tradeoffs_for_SSD_Performance/3.png" alt=""></p>
 <p>图3描述了SSD的通用框图</p>
 <ul>
-<li>
-<p>主机接口逻辑(<code>Host Interface logic</code>)，以支持一些物理主机接口(USB、FiberChannel、PCIExpress、SATA)和逻辑磁盘仿真，如flash translation layer机制，使SSD能够模拟硬盘驱动器<br>
-这个主机接口带宽必须与闪存阵列的配置相匹配</p>
+<li><p>主机接口逻辑(<code>Host Interface logic</code>)，以支持一些物理主机接口(USB、FiberChannel、PCIExpress、SATA)和逻辑磁盘仿真，如flash translation layer机制，使SSD能够模拟硬盘驱动器<br>这个主机接口带宽必须与闪存阵列的配置相匹配</p>
 </li>
-<li>
-<p><code>internal buffer manager</code>用来保存数据请求</p>
+<li><p><code>internal buffer manager</code>用来保存数据请求</p>
 </li>
-<li>
-<p>多路复用器(<code>FlashDemux/Mux</code>)发出命令并沿串行连接到闪存包来处理数据的传输，这个多路复用器可以包含额外的逻辑，比如说缓冲命令和数据</p>
-</li>
-<li>
-<p><code>processing engine</code> 也用来管理请求流和从磁盘逻辑块到物理闪存的地址映射</p>
-</li>
-<li>
-<p><code>processor</code>，<code>buffer manager</code>和<code>multiplexer</code>通常在诸如ASIC或FPGA之类的离散组件中实现，并且这些逻辑元素之间的数据流非常快</p>
-</li>
+<li>多路复用器(<code>FlashDemux/Mux</code>)发出命令并沿串行连接到闪存包来处理数据的传输，这个多路复用器可以包含额外的逻辑，比如说缓冲命令和数据</li>
+<li><code>processing engine</code> 也用来管理请求流和从磁盘逻辑块到物理闪存的地址映射</li>
+<li><code>processor</code>，<code>buffer manager</code>和<code>multiplexer</code>通常在诸如ASIC或FPGA之类的离散组件中实现，并且这些逻辑元素之间的数据流非常快</li>
 </ul>
 <p><img src="/img/article/Design_Tradeoffs_for_SSD_Performance/1.png" alt=""></p>
 <blockquote>
 <p><code>Chanel</code>——<code>chip/pkg</code>——<code>die</code>——<code>plane</code>——<code>block</code>——<code>page</code></p>
-</blockquote>
 <ul>
 <li>其中，block和page不可以并发执行</li>
 <li>一般每个die中有2/4个plane 根据带宽需求来进行data allocation分配资源</li>
 <li>read（25微秒）、write（100微秒）、erase（1毫秒）操作</li>
 <li>写操作不能就地更新，那么，将当前要写的page先拷贝到一个新的block中或者在同一个block的空闲页中。然后将当前页设为Invalid。</li>
 </ul>
-<blockquote>
 <p><strong>什么时候将这些Invalid page擦除呢？</strong></p>
-</blockquote>
-<blockquote>
 <ul>
 <li>用一个block来存储每一个block中无效页的数目，每次erase的时候，选无效页最多的block,将这个块中的有效页放入另一个空闲块中，然后erase当前块。这里需要注意的是每次erase的时候按块大小擦除。</li>
 </ul>
@@ -289,10 +264,8 @@ NOR以储存程序代码为主，对于存储量少且需要多次擦除操作�
 <li>而data allocation考虑的是哪个Chip哪个die哪个plane，考虑的是资源方面</li>
 <li>根据<code>带宽需求</code>来进行data allocation分配资源</li>
 </ul>
-<h3 id="logical-block-map">Logical Block Map</h3>
-<p>假设逻辑块映射保存在易失性存储器中，并在启动时从稳定存储中重建。</p>
-<p>当处理写入操作时，从一个闪存的预定池中获得一个4KB目标逻辑页。<br>
-考虑以下分配池属性：</p>
+<h3 id="logical-block-map"><a href="#Logical-Block-Map" class="headerlink" title="Logical Block Map"></a>Logical Block Map</h3><p>假设逻辑块映射保存在易失性存储器中，并在启动时从稳定存储中重建。</p>
+<p>当处理写入操作时，从一个闪存的预定池中获得一个4KB目标逻辑页。<br>考虑以下分配池属性：</p>
 <ul>
 <li><code>静态映射</code>，每个LBA的一部分构成到特定分配池的固定映射</li>
 <li><code>动态映射</code>，并不固定，等需要时再进行分配</li>
@@ -308,15 +281,11 @@ NOR以储存程序代码为主，对于存储量少且需要多次擦除操作�
 <li>如果将连续范围的LBA映射到相同的物理芯片上，则大块顺序访问的性能将受到影响。在逻辑页小的情况下，需要做更多的工作来消除erase操作所带来的影响</li>
 <li>如果逻辑页大小=块大小，则由于写入单元和擦除单元是相同的，因此简化了擦除，但是，所有小于逻辑页面大小的写入都会影响读取 - 修改 - 写入操作，这些操作涉及未被修改的逻辑页面部分</li>
 </ol>
-<h3 id="cleaning">Cleaning</h3>
-<blockquote>
+<h3 id="cleaning"><a href="#Cleaning" class="headerlink" title="Cleaning"></a>Cleaning</h3><blockquote>
 <p>——cleaning是erase前的操作</p>
 </blockquote>
-<p>我们使用FLASH块作为分配池中的自然分配单元。在任何给定的时间，池都可以有一个或多个可用的活动块来保存传入的写操作。为了支持继续分配新的活动块，我们需要一个garbage collector(GC)来枚举以前使用过的块，也就是在写入操作后无效的块（注意之前讲过写操作只能就地更新，这是电路设备所决定的）。这些Invalid块必须被擦除和回收（<code>这边再提一下下，当进行写入操作时，由于不能就地更新，那么需要在当前块的空闲页或者另一空闲块（只要是空闲的page就可以）写入新数据，将当前页面置为无效，mapping table上索引更改；这个无效页记录在特定的block上，当然记录无效页的block只需要记录每个block中无效页的数量而不需要记录具体哪些页面为无效的</code>）。<br>
-如果逻辑页小于闪存块大小，那么在这个块中就可能包含有效块和无效块，我们要加以区分。必须在擦除之前清理闪存块，<code>Cleaning</code>可概括如下：<br>
-页面写入完成后，先前映射的页面位置将被取代，因为其内容现已过期。在回收候选区块时，候选区域中所有未被取代的页面必须在擦除之前写入其他位置。</p>
-<h3 id="parallelism-and-interconnect-density">Parallelism and Interconnect Density</h3>
-<p>如果要实现ssd的带宽或I/O速率大于单芯片的最大值，它必须能够并行处理多个闪存包上的I/O请求。利用与其引脚的附加串行连接，在与闪存完全连接的前提下，有几种可能的技术可以获得这样的并行性，其中一些我们已经讨论过了。</p>
+<p>我们使用FLASH块作为分配池中的自然分配单元。在任何给定的时间，池都可以有一个或多个可用的活动块来保存传入的写操作。为了支持继续分配新的活动块，我们需要一个garbage collector(GC)来枚举以前使用过的块，也就是在写入操作后无效的块（注意之前讲过写操作只能就地更新，这是电路设备所决定的）。这些Invalid块必须被擦除和回收（<code>这边再提一下下，当进行写入操作时，由于不能就地更新，那么需要在当前块的空闲页或者另一空闲块（只要是空闲的page就可以）写入新数据，将当前页面置为无效，mapping table上索引更改；这个无效页记录在特定的block上，当然记录无效页的block只需要记录每个block中无效页的数量而不需要记录具体哪些页面为无效的</code>）。<br>如果逻辑页小于闪存块大小，那么在这个块中就可能包含有效块和无效块，我们要加以区分。必须在擦除之前清理闪存块，<code>Cleaning</code>可概括如下：<br>页面写入完成后，先前映射的页面位置将被取代，因为其内容现已过期。在回收候选区块时，候选区域中所有未被取代的页面必须在擦除之前写入其他位置。</p>
+<h3 id="parallelism-and-interconnect-density"><a href="#Parallelism-and-Interconnect-Density" class="headerlink" title="Parallelism and Interconnect Density"></a>Parallelism and Interconnect Density</h3><p>如果要实现ssd的带宽或I/O速率大于单芯片的最大值，它必须能够并行处理多个闪存包上的I/O请求。利用与其引脚的附加串行连接，在与闪存完全连接的前提下，有几种可能的技术可以获得这样的并行性，其中一些我们已经讨论过了。</p>
 <ul>
 <li><code>Parallel requests</code>,在一个完全连接的闪存阵列中，每个元素是一个独立的实体，因此，可以接收一个独立的请求流。然而，对于降低处理能力的实现来说，维护每个元素的队列所需的逻辑的复杂性可能是一个问题。</li>
 <li><code>Ganging</code>，一组闪存包可以同时用于优化多页请求。这样做可以允许并行使用多个包，而不需要多个队列的复杂性。然而， 如果只有一个请求队列流向这样一个组，那么当请求不是全部覆盖时，元素将处于空闲状态。</li>
@@ -330,16 +299,14 @@ NOR以储存程序代码为主，对于存储量少且需要多次擦除操作�
 </ol>
 <p><strong>configuration：</strong></p>
 <ol>
-<li>如图4所示。数据和控制线是共享的，<code>Chip Enables用来为每个命令选择一个target（也就是图中的Flash pkg 0~4）</code><br>
-该方案在不需要更多引脚的情况下增加容量，但不增加带宽。</li>
+<li>如图4所示。数据和控制线是共享的，<code>Chip Enables用来为每个命令选择一个target（也就是图中的Flash pkg 0~4）</code><br>该方案在不需要更多引脚的情况下增加容量，但不增加带宽。</li>
 </ol>
 <p><img src="/img/article/Design_Tradeoffs_for_SSD_Performance/4.png" alt=""></p>
-<ol start="2">
+<ol>
 <li>如图5所示。有一组共享的控制引脚，但是由于每个package有单独的数据路径，所以跨多个包的同步操作可以<code>并行</code>。可以从第二个配置中删除Chip Enables，但在这种情况下，所有命令操作作用于整个Falsh Package，没有一个包闲置</li>
 </ol>
 <p><img src="/img/article/Design_Tradeoffs_for_SSD_Performance/5.png" alt=""></p>
-<p><code>Interleaving</code>可以在一个元件上执行诸如块擦除之类的长时间运行操作，而在其他元件上进行读取或写入（因此控制线只需要保持足够长的时间以发出命令。<br>
-唯一的限制是对共享数据和命令总线的竞争。在块回收过程中，这一点可能变得非常重要，因为块擦除比其他块擦除要贵一个数量级</p>
+<p><code>Interleaving</code>可以在一个元件上执行诸如块擦除之类的长时间运行操作，而在其他元件上进行读取或写入（因此控制线只需要保持足够长的时间以发出命令。<br>唯一的限制是对共享数据和命令总线的竞争。在块回收过程中，这一点可能变得非常重要，因为块擦除比其他块擦除要贵一个数量级</p>
 
                 
 
@@ -428,7 +395,7 @@ NOR以储存程序代码为主，对于存储量少且需要多次擦除操作�
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于ssd"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5173;&#x4E8E;SSD</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#logical-block-map"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Logical Block Map</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#cleaning"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Cleaning</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#parallelism-and-interconnect-density"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Parallelism and Interconnect Density</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于ssd"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5173;&#x4E8E;SSD" class="headerlink" title="&#x5173;&#x4E8E;SSD"></a>&#x5173;&#x4E8E;SSD</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#logical-block-map"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#Logical-Block-Map" class="headerlink" title="Logical Block Map"></a>Logical Block Map</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#cleaning"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#Cleaning" class="headerlink" title="Cleaning"></a>Cleaning</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#parallelism-and-interconnect-density"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#Parallelism-and-Interconnect-Density" class="headerlink" title="Parallelism and Interconnect Density"></a>Parallelism and Interconnect Density</span></a></li></ol>
         
         </div>
       </aside>

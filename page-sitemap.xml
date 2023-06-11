@@ -7,8 +7,8 @@
     </url>
     
     <url>
-        <loc>http://elainelv.com/cv/</loc>
-        <lastmod>2023-06-01T07:26:19.427Z</lastmod>
+        <loc>http://elainelv.com/tags/</loc>
+        <lastmod>2023-06-11T12:13:02.676Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -23,13 +23,6 @@
     <url>
         <loc>http://elainelv.com/photos/</loc>
         <lastmod>2020-07-26T16:30:05.984Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://elainelv.com/tags/</loc>
-        <lastmod>2019-02-12T11:31:11.277Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

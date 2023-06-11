@@ -156,13 +156,6 @@
 
                         
                         <li>
-                            <a href="/cv/">Yina&#39;s HomePage</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
@@ -226,42 +219,24 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h2 id="引子">引子</h2>
-<p>我们知道，在闪存设备中，由于数据的非就地更新特性，并采用重映射的page写机制，使得在GC操作时需要先以block为单位进行erase。然而GC耗时且被频繁触发。<br>
-<img src="/img/article/FastGC/1.png" alt=""></p>
+                <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>我们知道，在闪存设备中，由于数据的非就地更新特性，并采用重映射的page写机制，使得在GC操作时需要先以block为单位进行erase。然而GC耗时且被频繁触发。<br><img src="/img/article/FastGC/1.png" alt=""></p>
 <p>在GC过程中，传统基于数据迁移的copyback操作如上述所示，由于ECC纠错机制存在于SSD 控制器中，每次执行copyback操作时，需要将数据从Source Page中读取出来放到cache Register然后一步步传至Data Buffer进行ECC，在ECC中判断如何迁移数据，若存在错误，则通过ECC更正数据并将更正后的数据一步步传回至Destination Page；若不存在错误，那么直接将数据从Cache Register传回至Destination Page。因此，copyback需要一定的<code>时间开销</code>。</p>
-<h3 id="1时间开销大">1.时间开销大</h3>
-<p>其中，执行一个page的copyback操作所需要的时间为<br>
-<img src="/img/article/FastGC/gs1.png" alt=""></p>
-<p>那么，数据传输时间占比为<br>
-<img src="/img/article/FastGC/gs2.png" alt=""></p>
+<h3 id="1时间开销大"><a href="#1-时间开销大" class="headerlink" title="1.时间开销大"></a>1.时间开销大</h3><p>其中，执行一个page的copyback操作所需要的时间为<br><img src="/img/article/FastGC/gs1.png" alt=""></p>
+<p>那么，数据传输时间占比为<br><img src="/img/article/FastGC/gs2.png" alt=""></p>
 <p>其中，N<sub>page</sub>代表一个block中的page数目，\mu代表当前block中的有效页数目</p>
 <p>随着迁移页面的增加，数据传输延迟变得巨大，并极大地影响了GC性能。因此，这种传统的GC虽然确保了数据复制的可靠性，但是其copyback feasibility detection开销很大</p>
-<h3 id="2传统的copyback">2.传统的Copyback</h3>
-<p><img src="/img/article/FastGC/2.png" alt=""></p>
+<h3 id="2传统的copyback"><a href="#2-传统的Copyback" class="headerlink" title="2.传统的Copyback"></a>2.传统的Copyback</h3><p><img src="/img/article/FastGC/2.png" alt=""></p>
 <p><img src="/img/article/FastGC/3.png" alt=""></p>
-<h3 id="3copyback的出错率">3.copyback的出错率</h3>
-<p>这是有规则可寻的。<br>
-<img src="/img/article/FastGC/4.png" alt=""></p>
-<p>从上图可以看出，不同的P/E下，copyback数越多，出错率就越高，而且是在copyback数目达到一定值之后迅速上升。因此可以计算出这个threshold。如下图分布。<br>
-<img src="/img/article/FastGC/5.png" alt=""></p>
-<h2 id="fastgc">FastGC</h2>
-<blockquote>
+<h3 id="3copyback的出错率"><a href="#3-copyback的出错率" class="headerlink" title="3.copyback的出错率"></a>3.copyback的出错率</h3><p>这是有规则可寻的。<br><img src="/img/article/FastGC/4.png" alt=""></p>
+<p>从上图可以看出，不同的P/E下，copyback数越多，出错率就越高，而且是在copyback数目达到一定值之后迅速上升。因此可以计算出这个threshold。如下图分布。<br><img src="/img/article/FastGC/5.png" alt=""></p>
+<h2 id="fastgc"><a href="#FastGC" class="headerlink" title="FastGC"></a>FastGC</h2><blockquote>
 <p>经过上述的分析判断，可以知道，可以设定一个threshold。本文提出的方法是在每个block中纪录copy back的数目。</p>
 </blockquote>
-<h3 id="copyback-feasibility-detector">Copyback Feasibility Detector</h3>
-<p>根据copyback阈值及所有数据（在ssdcontroller内可知）copy back的次数来决定采用哪一种方式。<br>
-如果copyback执行的次数小于阈值，意味着还可以继续执行copyback，否则不然。<br>
-<img src="/img/article/FastGC/6.png" alt=""></p>
-<p>当GC操作被触发时，victim block中的所有数据的迁移方式都会由Copyback Feasibility Detector所决定。<br>
-少量有效页的迁移通过copyback操作实现，但是大量的copyback时候，一旦超过阈值，外部数据迁移操作将被执行。在执行多个copyback操作后，只需进行一次外部数据移动就可以减少累积的位错误，然后继续采用copyback来加速数据迁移</p>
-<h3 id="example">Example</h3>
-<p><img src="/img/article/FastGC/7.png" alt=""></p>
-<h2 id="i-want-to-say">�I want to say�</h2>
-<blockquote>
+<h3 id="copyback-feasibility-detector"><a href="#Copyback-Feasibility-Detector" class="headerlink" title="Copyback Feasibility Detector"></a>Copyback Feasibility Detector</h3><p>根据copyback阈值及所有数据（在ssdcontroller内可知）copy back的次数来决定采用哪一种方式。<br>如果copyback执行的次数小于阈值，意味着还可以继续执行copyback，否则不然。<br><img src="/img/article/FastGC/6.png" alt=""></p>
+<p>当GC操作被触发时，victim block中的所有数据的迁移方式都会由Copyback Feasibility Detector所决定。<br>少量有效页的迁移通过copyback操作实现，但是大量的copyback时候，一旦超过阈值，外部数据迁移操作将被执行。在执行多个copyback操作后，只需进行一次外部数据移动就可以减少累积的位错误，然后继续采用copyback来加速数据迁移</p>
+<h3 id="example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3><p><img src="/img/article/FastGC/7.png" alt=""></p>
+<h2 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h2><blockquote>
 <p>这篇文章是关于GC操作的，文章很简单，就是有点细节问题还需要自己研究一哈，GC操作的过程可以分为copyback和erase，本文针对的是GC过程时间开销大，那么主要原因就是在copy back（包括read、transport、program）过程中transport时间开销大。而且随着copyback数目的增加，达到一定值后，位出错率显著上升！因此，文章中新颖的idea就在于在SSD Controller中加入了Copyback Feasibility Detector以判别采用哪种方式。</p>
-</blockquote>
-<blockquote>
 <p>emmmm，好久不写博文，今天看了这篇paper，赶紧更新！hhhh</p>
 </blockquote>
 
@@ -358,7 +333,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5F15;&#x5B50;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1时间开销大"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.&#x65F6;&#x95F4;&#x5F00;&#x9500;&#x5927;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2传统的copyback"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">2.&#x4F20;&#x7EDF;&#x7684;Copyback</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3copyback的出错率"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">3.copyback&#x7684;&#x51FA;&#x9519;&#x7387;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#fastgc"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">FastGC</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#copyback-feasibility-detector"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">Copyback Feasibility Detector</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#example"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">Example</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#xFFFD;I want to say&#xFFFD;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5F15;&#x5B50;" class="headerlink" title="&#x5F15;&#x5B50;"></a>&#x5F15;&#x5B50;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1时间开销大"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#1-&#x65F6;&#x95F4;&#x5F00;&#x9500;&#x5927;" class="headerlink" title="1.&#x65F6;&#x95F4;&#x5F00;&#x9500;&#x5927;"></a>1.&#x65F6;&#x95F4;&#x5F00;&#x9500;&#x5927;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2传统的copyback"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#2-&#x4F20;&#x7EDF;&#x7684;Copyback" class="headerlink" title="2.&#x4F20;&#x7EDF;&#x7684;Copyback"></a>2.&#x4F20;&#x7EDF;&#x7684;Copyback</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3copyback的出错率"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><a href="#3-copyback&#x7684;&#x51FA;&#x9519;&#x7387;" class="headerlink" title="3.copyback&#x7684;&#x51FA;&#x9519;&#x7387;"></a>3.copyback&#x7684;&#x51FA;&#x9519;&#x7387;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#fastgc"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#FastGC" class="headerlink" title="FastGC"></a>FastGC</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#copyback-feasibility-detector"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#Copyback-Feasibility-Detector" class="headerlink" title="Copyback Feasibility Detector"></a>Copyback Feasibility Detector</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#example"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><a href="#Example" class="headerlink" title="Example"></a>Example</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
         
         </div>
       </aside>
