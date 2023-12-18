@@ -221,8 +221,7 @@
 
                 <p>本文提出的idea主要用来解决SSD内部不规则行为所导致的响应延迟不一致而影响QoS问题，此问题的存在导致不能很好的展现SSD的高性能、低延迟、低开销优势</p>
 <a id="more"></a>
-<h2 id="导语">导语</h2>
-<blockquote>
+<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
 <p>现代的SSD不仅仅是一个快速存储设备，而是一个高度复杂的计算机系统，这个复杂的系统有一个嵌入式处理器和多个硬件单元组成，例如，flash cells、channel。嵌入式处理器执行复杂程序以实现非易失性单元的可编程性（例如，读取，写入，擦除操作），并且还改善了设备的整体性能和耐久性（例如，垃圾收集，缓冲，负载平衡）</p>
 </blockquote>
 <p>为了解决上述问题，提出一种精准预测未来访问的延迟方法，然而</p>
@@ -233,31 +232,23 @@
 <p>在本文中，提出了<font color="ff8c00"><strong>SSDcheck</strong></font>，一种新颖的SSD性能模型，用于准确预测SSD上未来访问的延迟</p>
 <ul>
 <li>首先，通过重构SSD和性能测试实验，确定影响SSD延迟的两大关键因素——write buffer和GC，然后，SSDCheck基于这两个特性构造了一个通用的性能模型</li>
-<li>其次，在启动应用之前，SSDcheck运行诊断代码片段，以提取特定设备的静态特征参数(例如，内部卷的存在，write buffer的大小、buffer flush算法)，使用此信息为目标设备配置通用ssd性能模型<br>
-在运行时，SSDCheck监视传入的I/O请求，以动态管理性能模型。该模型基于预测的不规则行为的发生，有效地预测了请求的延迟。SSDCHECK还可以校准其模型参数，以适应模型以处理未建模的特征</li>
+<li>其次，在启动应用之前，SSDcheck运行诊断代码片段，以提取特定设备的静态特征参数(例如，内部卷的存在，write buffer的大小、buffer flush算法)，使用此信息为目标设备配置通用ssd性能模型<br>在运行时，SSDCheck监视传入的I/O请求，以动态管理性能模型。该模型基于预测的不规则行为的发生，有效地预测了请求的延迟。SSDCHECK还可以校准其模型参数，以适应模型以处理未建模的特征</li>
 </ul>
 <p>为了证明SSDcheck的有效性，本文除了对实际SSD进行测试，还评估了两个用例：一个新的卷管理器和一个利用延迟预测的新I/O调度器。</p>
-<h2 id="基础知识">基础知识</h2>
-<p>现代SSD的通用架构：<br>
-<img src="/img/article/SSDcheck/1.png" alt=""><br>
-闪存操作延迟：<strong>read(大约60微秒)、write(大约1000微秒)、erase(大约3500微秒)</strong><br>
-NAND型闪存芯片不能就地更新，因此，多次写在相同的page上时，必须要先擦除再写（erase-before-write）</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>现代SSD的通用架构：<br><img src="/img/article/SSDcheck/1.png" alt=""><br>闪存操作延迟：<strong>read(大约60微秒)、write(大约1000微秒)、erase(大约3500微秒)</strong><br>NAND型闪存芯片不能就地更新，因此，多次写在相同的page上时，必须要先擦除再写（erase-before-write）</p>
 <p>图b中，显示了现代SSD的典型架构：controller、write buffer、NAND flash chips</p>
-<p>controller由<font color="ff8c00">HIL</font>、<font color="ff8c00">FTL</font>、<font color="ff8c00">FIL</font>三部分，其中<br>
-<font color="ff8c00">HIL</font>接收I/O请求发送给<font color="ff8c00">FTL</font>，<font color="ff8c00">FTL</font>将它们翻译成一系列的NAND操作，并将这些操作发送给<font color="ff8c00">FIL</font>，<font color="ff8c00">FIL</font>将这些操作通过channel发送给独立工作的chips，通过管理这些channels，一个SSD能实现通道间/内的并行性、</p>
+<p>controller由<font color="ff8c00">HIL</font>、<font color="ff8c00">FTL</font>、<font color="ff8c00">FIL</font>三部分，其中</p>
+<p><font color="ff8c00">HIL</font>接收I/O请求发送给<font color="ff8c00">FTL</font>，<font color="ff8c00">FTL</font>将它们翻译成一系列的NAND操作，并将这些操作发送给<font color="ff8c00">FIL</font>，<font color="ff8c00">FIL</font>将这些操作通过channel发送给独立工作的chips，通过管理这些channels，一个SSD能实现通道间/内的并行性、</p>
 <hr>
 <p>在这些架构中，最关键的时FTL，其有三个核心函数：<strong>write buffering</strong>、<strong>page allocation</strong>、 <strong>garbage collection</strong></p>
-<p><font color="ff8c00"><strong>1.Write buffer</strong></font><br>
-为了隐藏写操作的长延时问题，FTL暂时将这些写数据存到write buffer（WB），并把它们排到后台的闪存芯片上，但是如果buffer达到一定的阈值时，必须将buffer中的数据立即flush到flash chips。从上面，我们已经知道了，flush操作大约需要3500微秒，在这个过程中，对性能要求比较高的read操作将会延迟</p>
+<p><font color="ff8c00"><strong>1.Write buffer</strong></font><br>为了隐藏写操作的长延时问题，FTL暂时将这些写数据存到write buffer（WB），并把它们排到后台的闪存芯片上，但是如果buffer达到一定的阈值时，必须将buffer中的数据立即flush到flash chips。从上面，我们已经知道了，flush操作大约需要3500微秒，在这个过程中，对性能要求比较高的read操作将会延迟</p>
 <blockquote>
 <p>我认为的read对延迟比较严格的理解是read操作只需要大概60微秒的时间，那么3500微秒在read对比看来自然是个天大的数字，因此可以说，read延迟短，对延迟要求严格，flush操作对紧接着后面的read操作将会带来很大的影响</p>
 </blockquote>
 <hr>
-<p><font color="ff8c00"><strong>2.Page allocation</strong></font>（应当是有一个mapping table来存LBA与分配的PBA映射关系）<br>
-将LBA映射到flash chips上相应的PBA，从空闲的page pool中选择一个新的page作为当前write数据的page，先前对应的PBA置为Invalid</p>
+<p><font color="ff8c00"><strong>2.Page allocation</strong></font>（应当是有一个mapping table来存LBA与分配的PBA映射关系）<br>将LBA映射到flash chips上相应的PBA，从空闲的page pool中选择一个新的page作为当前write数据的page，先前对应的PBA置为Invalid</p>
 <blockquote>
-<p>为了减少页面分配开销，一些SSD采用多个用户未暴露的分配卷，它们独立地控制每卷页面分配单元，一组通道中的闪存芯片和写缓冲区<br>
-<strong>FTL通过检查请求LBA的特定地址位来确定目标卷，并且每个LBA仅映射到卷中的闪存芯片集</strong></p>
+<p>为了减少页面分配开销，一些SSD采用多个用户未暴露的分配卷，它们独立地控制每卷页面分配单元，一组通道中的闪存芯片和写缓冲区<br><strong>FTL通过检查请求LBA的特定地址位来确定目标卷，并且每个LBA仅映射到卷中的闪存芯片集</strong></p>
 </blockquote>
 <hr>
 <p><font color="ff8c00"><strong>3.Garbage collection</strong></font></p>
@@ -270,9 +261,7 @@ NAND型闪存芯片不能就地更新，因此，多次写在相同的page上时
 <p>这里需要注意的是，merge操作中的valid page只能移动到GC卷指定的预定义chips上</p>
 </blockquote>
 <p>当然，在FTL上，也可以通过执行其他操作来改善性能，例如，power management，read-ahead，SLC caching等等或者可靠性，例如，wear-leveling，ECC等等，但是以上三个是最关键的性能特征</p>
-<h2 id="irregular-behaviors">Irregular Behaviors</h2>
-<h3 id="来源">来源</h3>
-<p><strong>intra-SSD irregularity</strong> 主要是由于内部组件以及它们之间的交互所带来的影响，例如，</p>
+<h2 id="irregular-behaviors"><a href="#Irregular-Behaviors" class="headerlink" title="Irregular Behaviors"></a>Irregular Behaviors</h2><h3 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h3><p><strong>intra-SSD irregularity</strong> 主要是由于内部组件以及它们之间的交互所带来的影响，例如，</p>
 <ul>
 <li>即使write buffer可以有效隐藏写延迟，但是其不规则的flush可能会导致read请求的延迟</li>
 <li>即使分配多个卷在性能上是有效的，一些LBA访问模式可能导致不规则的卷激活</li>
@@ -280,92 +269,52 @@ NAND型闪存芯片不能就地更新，因此，多次写在相同的page上时
 </ul>
 <p><strong>inter-SSD irregularity</strong>主要来源于设备特定的设计和优化，例如，</p>
 <ul>
-<li>供应商可能希望通过实现一个大的写缓冲区和许多分配卷来实现快速的ssd，而另一个供应商可能希望通过均衡磨损的方法来改善ssd的生存期， 但GC比较慢<br>
-因此，这种特定于设备的设计和优化会导致不同SSD之间的高度不规则行为。</li>
+<li>供应商可能希望通过实现一个大的写缓冲区和许多分配卷来实现快速的ssd，而另一个供应商可能希望通过均衡磨损的方法来改善ssd的生存期， 但GC比较慢<br>因此，这种特定于设备的设计和优化会导致不同SSD之间的高度不规则行为。</li>
 </ul>
-<h3 id="benefits-of-predicting">Benefits of Predicting</h3>
-<p>准确地预测下一个请求的延迟对于减少SSD中的性能不规范起着至关重要的作用，例如，准确预测NL(或HL)请求，可以在HL请求之前调度NL请求，从而提高吞吐量和QoS</p>
+<h3 id="benefits-of-predicting"><a href="#Benefits-of-Predicting" class="headerlink" title="Benefits of Predicting"></a>Benefits of Predicting</h3><p>准确地预测下一个请求的延迟对于减少SSD中的性能不规范起着至关重要的作用，例如，准确预测NL(或HL)请求，可以在HL请求之前调度NL请求，从而提高吞吐量和QoS</p>
 <blockquote>
 <p>要精确的预测 NL 请求，将NL请求放在HL请求之前处理，但若预测错误，那么会导致NL 请求误认为HL请求而延后，从而造成性能下降，这里的NL可以是read请求，而HL可以是flush，之后也会举例子</p>
 </blockquote>
-<h2 id="model">Model</h2>
-<p>下图显示了<strong>SSDcheck是如何为SSD创建一个性能模型</strong>的，在运行期间，SSDcheck动态地管理性能模型来预测将来的延迟：<br>
-<img src="/img/article/SSDcheck/2.png" alt=""><br>
-<strong>过程：</strong></p>
+<h2 id="model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>下图显示了<strong>SSDcheck是如何为SSD创建一个性能模型</strong>的，在运行期间，SSDcheck动态地管理性能模型来预测将来的延迟：<br><img src="/img/article/SSDcheck/2.png" alt=""><br><strong>过程：</strong></p>
 <ol>
 <li>SSDcheck首先<strong>提取内部卷特征</strong>（如a）</li>
 <li>使用信息来测试提取具体设备的写<strong>缓冲区参数</strong>（如b），并且发送这些信息给model construction part</li>
 <li>model construction会<strong>动态构建</strong>write buffer model 和GC model</li>
 </ol>
-<p><font size="4" color="ff8c00"><strong>write buffer model</strong></font><br>
-buffer model动态地管理buffer counter和flush detector，当一个写请求到达write buffer model时，buffer counter加一，当buffer counter的值达到buffer size时，那么就需要进行flush操作，启动flush detector进行flush，并重置buffer counter</p>
+<p><font size="4" color="ff8c00"><strong>write buffer model</strong></font><br>buffer model动态地管理buffer counter和flush detector，当一个写请求到达write buffer model时，buffer counter加一，当buffer counter的值达到buffer size时，那么就需要进行flush操作，启动flush detector进行flush，并重置buffer counter</p>
 <p>同时，buffer detector把flush事件通知给GC（c-1，GC于是乎知道了有这么一个事件过来了，他就得做好准备，查看是否需要垃圾回收，已准备足够的空间给flush操作使用），也将此事件发布到性能模型的外部（c-2）。如果write buffer使用了read-trigger flush 算法，那么flush detector</p>
-<p><font size="4" color="ff8c00"><strong>GC model</strong></font><br>
-GC model管理interval counter和interval distribution，以实现基于历史的预测，从而将缓冲区刷新的历史与GC事件关联起来<br>
-简单来说，就是通过检查间隔写请求分布，GC检查器确定后续缓冲区刷新是否会触发GC进程<br>
-如果GC detector确定当前的写请求会影响GC，那么将此GC事件暴露到性能模型外部（如d）<br>
-interval counter记录buffer flush次数，决定了GC victim选择算法和有效页的分布情况</p>
-<p><strong>SSDcheck动态管理框架：</strong><br>
-<img src="/img/article/SSDcheck/3.png" alt=""><br>
-host发送查询给framework来检查一个不规则事件的产生，framework返回一个预测延迟</p>
+<p><font size="4" color="ff8c00"><strong>GC model</strong></font><br>GC model管理interval counter和interval distribution，以实现基于历史的预测，从而将缓冲区刷新的历史与GC事件关联起来<br>简单来说，就是通过检查间隔写请求分布，GC检查器确定后续缓冲区刷新是否会触发GC进程<br>如果GC detector确定当前的写请求会影响GC，那么将此GC事件暴露到性能模型外部（如d）<br>interval counter记录buffer flush次数，决定了GC victim选择算法和有效页的分布情况</p>
+<p><strong>SSDcheck动态管理框架：</strong><br><img src="/img/article/SSDcheck/3.png" alt=""><br>host发送查询给framework来检查一个不规则事件的产生，framework返回一个预测延迟</p>
 <p>主要分为Volume selector、Prediction engine、Latency monitor、calibrator</p>
-<p><font size="4" color="ff8c00"><strong>Volume selector</strong></font><br>
-host发送一个请求给framework来检查这个请求是否会延迟——&gt;然后这个请求通过Volume Select，转发给相应的内部响应卷（通过LBA中的volume indices）——&gt;framework将请求放入选择好的卷的请求队列中——&gt;到达Prediction engine</p>
-<p><font size="4" color="ff8c00"><strong>Prediction engine</strong></font><br>
-Prediction engine采用EBT来预测将来的HL请求。Prediction engine在每次I/O完成之后都更新interval信息，例如，EBT,buffer counter, interval counter, interval distribution<br>
-当Write buffer flush或GC出现时，<strong>EBT = 当前时间+运行开销（flush/GC所需时间）</strong></p>
-<p>NL还是HL判定？<br>
-对于传入的I/O请求，预测引擎通过从EBT中减去查询提交时间来计算预测的延迟，Estimated End Time(EET)，如果预测的延迟比阈值要小，那么判定为NL，否则HL</p>
+<p><font size="4" color="ff8c00"><strong>Volume selector</strong></font><br>host发送一个请求给framework来检查这个请求是否会延迟——&gt;然后这个请求通过Volume Select，转发给相应的内部响应卷（通过LBA中的volume indices）——&gt;framework将请求放入选择好的卷的请求队列中——&gt;到达Prediction engine</p>
+<p><font size="4" color="ff8c00"><strong>Prediction engine</strong></font><br>Prediction engine采用EBT来预测将来的HL请求。Prediction engine在每次I/O完成之后都更新interval信息，例如，EBT,buffer counter, interval counter, interval distribution<br>当Write buffer flush或GC出现时，<strong>EBT = 当前时间+运行开销（flush/GC所需时间）</strong></p>
+<p>NL还是HL判定？<br>对于传入的I/O请求，预测引擎通过从EBT中减去查询提交时间来计算预测的延迟，Estimated End Time(EET)，如果预测的延迟比阈值要小，那么判定为NL，否则HL</p>
 <p>framework把预测结果返回给host，包括EET，事件类型等</p>
-<p><font size="4" color="ff8c00"><strong>Latency monitor</strong></font><br>
-SSDcheck监管每个请求的延迟，并将请求分类成NL和HL，然后Latency monitor传递延迟日志和分类信息给Calibrator</p>
-<p><font size="4" color="ff8c00"><strong>calibrator校准器</strong></font><br>
-SSDcheck运行框架动态调整上述的性能模型。校准器接收到延迟日志，并使用延迟日志来检测buffer model</p>
-<p>例如，latency monitor注意到HL请求到达校准器，此时若未达到buffer size，当校准器检测到buffer model存在偏差时，它要求prediction engine重置其缓冲区状态。同理，校准器也可以调整GC model<br>
-当然，校准器还有其他方面的作用，可以看论文描述</p>
-<h2 id="use-case">Use case</h2>
-<blockquote>
-<p>1.volume-Aware logical volume manager<br>
-将一块SSD分成几个逻辑卷，这样使得各卷之间互不干扰<br>
-2.prediction-aware I/O scheduler<br>
-使用前文提出的ssdcheck‘s prediction engine来通过提高吞吐量和缩减尾延迟而实现更好的OoS性能</p>
+<p><font size="4" color="ff8c00"><strong>Latency monitor</strong></font><br>SSDcheck监管每个请求的延迟，并将请求分类成NL和HL，然后Latency monitor传递延迟日志和分类信息给Calibrator</p>
+<p><font size="4" color="ff8c00"><strong>calibrator校准器</strong></font><br>SSDcheck运行框架动态调整上述的性能模型。校准器接收到延迟日志，并使用延迟日志来检测buffer model</p>
+<p>例如，latency monitor注意到HL请求到达校准器，此时若未达到buffer size，当校准器检测到buffer model存在偏差时，它要求prediction engine重置其缓冲区状态。同理，校准器也可以调整GC model<br>当然，校准器还有其他方面的作用，可以看论文描述</p>
+<h2 id="use-case"><a href="#Use-case" class="headerlink" title="Use case"></a>Use case</h2><blockquote>
+<p>1.volume-Aware logical volume manager<br>将一块SSD分成几个逻辑卷，这样使得各卷之间互不干扰<br>2.prediction-aware I/O scheduler<br>使用前文提出的ssdcheck‘s prediction engine来通过提高吞吐量和缩减尾延迟而实现更好的OoS性能</p>
 </blockquote>
-<h3 id="1卷感知逻辑卷管理">1.卷感知逻辑卷管理</h3>
-<p>**背景：**在云存储系统上使用<br>
-多租户共享所带来的尾延迟问题，并使得性能下降。比如读频繁的租户和写频繁的租户共享同一块SSD时，写频繁的负载会导致读频繁的负载变慢，因此改善多租户间的干扰问题十分的重要<br>
-采用性能隔离的方式，将一个SSD分成多个逻辑卷，将它们分配给每个租户，以尽量减少干扰</p>
-<p>下图显示了传统的分区方案(Linear-LVM)和所提出的方案：<br>
-<img src="/img/article/SSDcheck/4.png" alt=""></p>
-<p>传统的方案在每个卷内部都会发生争用，这大大降低了性能（如图a)<br>
-为了减少争用产生，提出VA-LVM。VA-LVM将SSD划分成两个逻辑卷，并将其暴露给host。当host发送一个I/O请求给相关的逻辑卷时，VA-LVM基于每个逻辑卷的ID（eg，0或1）来更新输入的LBA（N+V bits）</p>
+<h3 id="1卷感知逻辑卷管理"><a href="#1-卷感知逻辑卷管理" class="headerlink" title="1.卷感知逻辑卷管理"></a>1.卷感知逻辑卷管理</h3><p><strong>背景：</strong>在云存储系统上使用<br>多租户共享所带来的尾延迟问题，并使得性能下降。比如读频繁的租户和写频繁的租户共享同一块SSD时，写频繁的负载会导致读频繁的负载变慢，因此改善多租户间的干扰问题十分的重要<br>采用性能隔离的方式，将一个SSD分成多个逻辑卷，将它们分配给每个租户，以尽量减少干扰</p>
+<p>下图显示了传统的分区方案(Linear-LVM)和所提出的方案：<br><img src="/img/article/SSDcheck/4.png" alt=""></p>
+<p>传统的方案在每个卷内部都会发生争用，这大大降低了性能（如图a)<br>为了减少争用产生，提出VA-LVM。VA-LVM将SSD划分成两个逻辑卷，并将其暴露给host。当host发送一个I/O请求给相关的逻辑卷时，VA-LVM基于每个逻辑卷的ID（eg，0或1）来更新输入的LBA（N+V bits）</p>
 <p>VA-LVM将LBA开始的N位+来自volume ID的1位+LBA 后面V位组合起来，最后，VA-LVM将更新的LBA(N+1+V bits)发送I/O请求给SSD，由于第V个位的值表明了具体的逻辑卷号，那么在不同逻辑卷中的I/O请求不会彼此影响</p>
-<h3 id="2预测感知机制一种基于ssdcheck的io调度机制">2.预测感知机制（一种基于SSDcheck的I/O调度机制）</h3>
-<p>有两个不同的版本，一个是传统系统上使用的SSD-only PAS，另一个是使用NVM的新出现系统上使用的Hybrid PAS</p>
-<h4 id="ssd-only-pas">SSD-only PAS</h4>
-<p>目的：减少read尾延迟，增加吞吐量<br>
-<strong>没有预测感知机制与SSD-only PAS对比</strong><br>
-<img src="/img/article/SSDcheck/5.png" alt=""><br>
-上述事例中，分为两个队列来存放读请求和写请求，WQ和RQ。并此时有请求序列W1-W2，R1，W3-W5。<br>
-<strong>没有预测感知机制的做法</strong>：W2写请求产生一个flush（可能是因为当写入W2写请求时，缓冲区达到阈值，进行flush操作），引起的flush占用NAND，R1需等待（延迟来源）<br>
-<strong>SSD-only PAS的做法</strong>：知道R1将会因为flush而延后，那么通过SSD check可以了解到将R1放在W2前面，通过这样的方式，将延迟要求比较高的read放在可能产生的flush前面执行，可以减少尾延迟，增加吞吐量</p>
+<h3 id="2预测感知机制一种基于ssdcheck的io调度机制"><a href="#2-预测感知机制（一种基于SSDcheck的I-O调度机制）" class="headerlink" title="2.预测感知机制（一种基于SSDcheck的I/O调度机制）"></a>2.预测感知机制（一种基于SSDcheck的I/O调度机制）</h3><p>有两个不同的版本，一个是传统系统上使用的SSD-only PAS，另一个是使用NVM的新出现系统上使用的Hybrid PAS</p>
+<h4 id="ssd-only-pas"><a href="#SSD-only-PAS" class="headerlink" title="SSD-only PAS"></a>SSD-only PAS</h4><p>目的：减少read尾延迟，增加吞吐量<br><strong>没有预测感知机制与SSD-only PAS对比</strong><br><img src="/img/article/SSDcheck/5.png" alt=""><br>上述事例中，分为两个队列来存放读请求和写请求，WQ和RQ。并此时有请求序列W1-W2，R1，W3-W5。<br><strong>没有预测感知机制的做法</strong>：W2写请求产生一个flush（可能是因为当写入W2写请求时，缓冲区达到阈值，进行flush操作），引起的flush占用NAND，R1需等待（延迟来源）<br><strong>SSD-only PAS的做法</strong>：知道R1将会因为flush而延后，那么通过SSD check可以了解到将R1放在W2前面，通过这样的方式，将延迟要求比较高的read放在可能产生的flush前面执行，可以减少尾延迟，增加吞吐量</p>
 <p>SSD-only PAS处理请求的过程如下：</p>
 <ol>
 <li>如果所有的请求都是read或者write，那么发射最老的请求；否则，SSD-only PAS从SSDcheck中经过延迟预测得到一个最老的read（此种情况我认为是因为可能有flush，那么将read往前推）</li>
-<li>然后SSD-only PAS使用阈值来区分read是HL还是NL。如果是HL，那么不用管什么顺序，直接发射；否则，发射最老的请求<br>
-通过将read 的优先级高于write，可以隐藏buffer flush的开销</li>
+<li>然后SSD-only PAS使用阈值来区分read是HL还是NL。如果是HL，那么不用管什么顺序，直接发射；否则，发射最老的请求<br>通过将read 的优先级高于write，可以隐藏buffer flush的开销</li>
 </ol>
-<h4 id="hybrid-pas">Hybrid PAS</h4>
-<p>——混合型预测感知机制</p>
-<p>由于频繁的写入操作所带来的不断flush，使得GC更加的不规则——&gt;采用NVM非易失性存储来解决（但是NVM容量小，满了之后仍然会产生flush，依然不能够解决上述问题）——&gt;采用Hybrid PAS（核心思想：selective delivery）<br>
-<strong>什么是selective delivery？</strong></p>
+<h4 id="hybrid-pas"><a href="#Hybrid-PAS" class="headerlink" title="Hybrid PAS"></a>Hybrid PAS</h4><p>——混合型预测感知机制</p>
+<p>由于频繁的写入操作所带来的不断flush，使得GC更加的不规则——&gt;采用NVM非易失性存储来解决（但是NVM容量小，满了之后仍然会产生flush，依然不能够解决上述问题）——&gt;采用Hybrid PAS（核心思想：selective delivery）<br><strong>什么是selective delivery？</strong></p>
 <ol>
 <li>通过SSDcheck得到延迟预测</li>
 <li>Hybrid PAS将写请求分为NL和HL，Hybrid PAS发送HL给NVM，对于NL请求，基于特定的buffer weight W，随机选择目的地；也就是说，<strong>NVM和SSD处理NL请求的W%和(100%-W)%</strong></li>
 <li>在NVM中的内容周期性的更新</li>
 </ol>
-<h2 id="i-want-to-say">�I want to say�</h2>
-<p>最近在看一些关于SSD内部操作而引起的延迟抖动问题，包括之前写的I/O determinism，本文的提出的模型旨在于通过预测的方式调整处理请求的先后顺序<br>
-整篇文章看了三遍，整理了上述内容，还有如下几个问题未解决：</p>
+<h2 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h2><p>最近在看一些关于SSD内部操作而引起的延迟抖动问题，包括之前写的I/O determinism，本文的提出的模型旨在于通过预测的方式调整处理请求的先后顺序<br>整篇文章看了三遍，整理了上述内容，还有如下几个问题未解决：</p>
 <ol>
 <li>为什么W3~W5在R1前面flush时，不能read（因为Nand被占用）但可以write（写入buffer）？</li>
 <li>write buffer type分为back和fore？有何区别呢？</li>
@@ -459,7 +408,7 @@ SSDcheck运行框架动态调整上述的性能模型。校准器接收到延迟
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#基础知识"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x57FA;&#x7840;&#x77E5;&#x8BC6;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#irregular-behaviors"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Irregular Behaviors</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#来源"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">&#x6765;&#x6E90;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#benefits-of-predicting"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">Benefits of Predicting</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#model"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Model</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#use-case"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">Use case</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1卷感知逻辑卷管理"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">1.&#x5377;&#x611F;&#x77E5;&#x903B;&#x8F91;&#x5377;&#x7BA1;&#x7406;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2预测感知机制一种基于ssdcheck的io调度机制"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">2.&#x9884;&#x6D4B;&#x611F;&#x77E5;&#x673A;&#x5236;&#xFF08;&#x4E00;&#x79CD;&#x57FA;&#x4E8E;SSDcheck&#x7684;I/O&#x8C03;&#x5EA6;&#x673A;&#x5236;&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd-only-pas"><span class="toc-nav-number">5.2.1.</span> <span class="toc-nav-text">SSD-only PAS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hybrid-pas"><span class="toc-nav-number">5.2.2.</span> <span class="toc-nav-text">Hybrid PAS</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">&#xFFFD;I want to say&#xFFFD;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5BFC;&#x8BED;" class="headerlink" title="&#x5BFC;&#x8BED;"></a>&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#基础知识"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x57FA;&#x7840;&#x77E5;&#x8BC6;" class="headerlink" title="&#x57FA;&#x7840;&#x77E5;&#x8BC6;"></a>&#x57FA;&#x7840;&#x77E5;&#x8BC6;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#irregular-behaviors"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#Irregular-Behaviors" class="headerlink" title="Irregular Behaviors"></a>Irregular Behaviors</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#来源"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text"><a href="#&#x6765;&#x6E90;" class="headerlink" title="&#x6765;&#x6E90;"></a>&#x6765;&#x6E90;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#benefits-of-predicting"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text"><a href="#Benefits-of-Predicting" class="headerlink" title="Benefits of Predicting"></a>Benefits of Predicting</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#model"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#Model" class="headerlink" title="Model"></a>Model</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#use-case"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#Use-case" class="headerlink" title="Use case"></a>Use case</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1卷感知逻辑卷管理"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text"><a href="#1-&#x5377;&#x611F;&#x77E5;&#x903B;&#x8F91;&#x5377;&#x7BA1;&#x7406;" class="headerlink" title="1.&#x5377;&#x611F;&#x77E5;&#x903B;&#x8F91;&#x5377;&#x7BA1;&#x7406;"></a>1.&#x5377;&#x611F;&#x77E5;&#x903B;&#x8F91;&#x5377;&#x7BA1;&#x7406;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2预测感知机制一种基于ssdcheck的io调度机制"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text"><a href="#2-&#x9884;&#x6D4B;&#x611F;&#x77E5;&#x673A;&#x5236;&#xFF08;&#x4E00;&#x79CD;&#x57FA;&#x4E8E;SSDcheck&#x7684;I-O&#x8C03;&#x5EA6;&#x673A;&#x5236;&#xFF09;" class="headerlink" title="2.&#x9884;&#x6D4B;&#x611F;&#x77E5;&#x673A;&#x5236;&#xFF08;&#x4E00;&#x79CD;&#x57FA;&#x4E8E;SSDcheck&#x7684;I/O&#x8C03;&#x5EA6;&#x673A;&#x5236;&#xFF09;"></a>2.&#x9884;&#x6D4B;&#x611F;&#x77E5;&#x673A;&#x5236;&#xFF08;&#x4E00;&#x79CD;&#x57FA;&#x4E8E;SSDcheck&#x7684;I/O&#x8C03;&#x5EA6;&#x673A;&#x5236;&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd-only-pas"><span class="toc-nav-number">5.2.1.</span> <span class="toc-nav-text"><a href="#SSD-only-PAS" class="headerlink" title="SSD-only PAS"></a>SSD-only PAS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hybrid-pas"><span class="toc-nav-number">5.2.2.</span> <span class="toc-nav-text"><a href="#Hybrid-PAS" class="headerlink" title="Hybrid PAS"></a>Hybrid PAS</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">6.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

@@ -222,16 +222,7 @@
                 <blockquote>
 <p>对NVMe支持的多流SSD进行整理，虽然在NVMe1.3c中关于这方面的篇幅不长，但还是可以清楚的了解从上层软件到下层设备是如何进行信息交换的</p>
 </blockquote>
-<h2 id="directives">Directives</h2>
-<p><img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDirectives%E4%B8%8EStream/1.png" alt=""><br>
-可以看到在NVMe1.3c的第九章中，讲述了这部分内容。Directives是host和NVM subsystem/controller之间信息交换的机制，实现了SSD设备和上层软件之间的信息交互，而stream只是directives的一个部分，在1.3c中也只实现了stream<br>
-<img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDirectives%E4%B8%8EStream/2.png" alt=""><br>
-对Directive的支持是可选的，在 Identify Controller data structure中的Optional Admin Command Support (OACS) 字段中表示。<br>
-过程如下：<br>
-1.上层软件向SSD发送identify command<br>
-2.SSD 接收到后回复identify data structure，描述了该设备支持的相关特性。<br>
-3.对于支持directive的ssd设备，用户必须显式调用directive send command执行enable stream操作，以开启multi-stream特性<br>
-4.在write command的directive type 字段设置streams（01h），同时directive specific字段设置为对应的stream id，那么就可以将相应的写入数据映射到对应stream id描述的stream中了</p>
+<h2 id="directives"><a href="#Directives" class="headerlink" title="Directives"></a>Directives</h2><p><img src="/img/article/读NVMe之Directives与Stream/1.png" alt=""><br>可以看到在NVMe1.3c的第九章中，讲述了这部分内容。Directives是host和NVM subsystem/controller之间信息交换的机制，实现了SSD设备和上层软件之间的信息交互，而stream只是directives的一个部分，在1.3c中也只实现了stream<br><img src="/img/article/读NVMe之Directives与Stream/2.png" alt=""><br>对Directive的支持是可选的，在 Identify Controller data structure中的Optional Admin Command Support (OACS) 字段中表示。<br>过程如下：<br>1.上层软件向SSD发送identify command<br>2.SSD 接收到后回复identify data structure，描述了该设备支持的相关特性。<br>3.对于支持directive的ssd设备，用户必须显式调用directive send command执行enable stream操作，以开启multi-stream特性<br>4.在write command的directive type 字段设置streams（01h），同时directive specific字段设置为对应的stream id，那么就可以将相应的写入数据映射到对应stream id描述的stream中了</p>
 <blockquote>
 <p>如果控制器支持directives，那么controller应该在OACS可选字段中显示；支持directive receive command（controller到host）和directive send command（host到controller）；支持identify directive（type 00h）。</p>
 </blockquote>
@@ -239,20 +230,12 @@
 <blockquote>
 <p>Support for a specific directive type is indicated using the Return Parameters operation of the Identify Directive. A specific directive may be enabled or disabled using the Enable operation of the Identify Directive. Before using a specific directive, the host should determine if that directive is supported and should enable that directive using the Identify Directive</p>
 </blockquote>
-<p>Directive Specific field 和 Directive Operation field 取决于特定的指令类型（directive send还是directive receive还是I/O command）<br>
-<img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDirectives%E4%B8%8EStream/3.png" alt=""></p>
+<p>Directive Specific field 和 Directive Operation field 取决于特定的指令类型（directive send还是directive receive还是I/O command）<br><img src="/img/article/读NVMe之Directives与Stream/3.png" alt=""></p>
 <p>上述情况是支持directive的，那么对于不支持directive或者支持directive但没有被启用的情况，所有的带有该指令类型的directive send command和directive receive command都将在命令中设置无效字段而中止。</p>
-<h3 id="identifydirective-type-00h">identify（directive type 00h）</h3>
-<p>确定控制器是否支持特定类型的指令。directive receive返回的参数中描述了指令是否支持并是否启用；directive send中描述了需要将那个类型的指令启用或者不启用。</p>
-<h3 id="streamdirective-type-01h">stream（directive type 01h）</h3>
-<p>Streams Directive 使得主机通过标识stream id向控制器传递数据，确保在一个write command中的数据是一组相关的数据，这样控制器存储数据的时候将会存放到相关的位置上。<br>
-控制器在返回的参数中会提供相关的配置信息（ Stream Write Size, Stream Granularity Size, and stream resources at the NVM subsystem and namespace levels）<br>
-数据在写入到时候按照SWS对齐的方式，而SGS是每个stream分配单元大小。SGS是SWS的倍数。<br>
-<img src="/img/article/%E8%AF%BBNVMe%E4%B9%8BDirectives%E4%B8%8EStream/4.png" alt=""><br>
-传统的不支持 multi-stream 的 SSD FTL 通常只维护一个 log structure，它只会根据操作系统提交的 IO 请求的先后顺序，将这些 IO 请求依次存储到可用的存储空间中</p>
+<h3 id="identifydirective-type-00h"><a href="#identify（directive-type-00h）" class="headerlink" title="identify（directive type 00h）"></a>identify（directive type 00h）</h3><p>确定控制器是否支持特定类型的指令。directive receive返回的参数中描述了指令是否支持并是否启用；directive send中描述了需要将那个类型的指令启用或者不启用。</p>
+<h3 id="streamdirective-type-01h"><a href="#stream（directive-type-01h）" class="headerlink" title="stream（directive type 01h）"></a>stream（directive type 01h）</h3><p>Streams Directive 使得主机通过标识stream id向控制器传递数据，确保在一个write command中的数据是一组相关的数据，这样控制器存储数据的时候将会存放到相关的位置上。<br>控制器在返回的参数中会提供相关的配置信息（ Stream Write Size, Stream Granularity Size, and stream resources at the NVM subsystem and namespace levels）<br>数据在写入到时候按照SWS对齐的方式，而SGS是每个stream分配单元大小。SGS是SWS的倍数。<br><img src="/img/article/读NVMe之Directives与Stream/4.png" alt=""><br>传统的不支持 multi-stream 的 SSD FTL 通常只维护一个 log structure，它只会根据操作系统提交的 IO 请求的先后顺序，将这些 IO 请求依次存储到可用的存储空间中</p>
 <p>而支持 multi-stream 的 SSD FTL 则会维护多个 log structure，其中为每个 stream 维护一个单独的 log structure，FTL 以 Stream Granularity Size (SGS) 为单位分配存储空间，即 FTL 一开始会为每个 stream 预先分配 SGS 大小的存储块，之后该 stream 的数据都会存储到这一预分配的 SGS 大小的存储块中。当这一存储块的空间用尽时，FTL 则再次分配一个 SGS 大小的存储块。stream 的 log structure 会维护该 stream 分配的所有存储块，而正是所有的这些 SGS 大小的存储块构成了一个 stream。</p>
-<p><strong>推荐阅读:</strong><br>
-<a href="https://m.aliyun.com/yunqi/articles/637481" target="_blank" rel="noopener">multi-stream SSD 介绍</a></p>
+<p><strong>推荐阅读:</strong><br><a href="https://m.aliyun.com/yunqi/articles/637481" target="_blank" rel="noopener">multi-stream SSD 介绍</a></p>
 
                 
 
@@ -341,7 +324,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#directives"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Directives</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#identifydirective-type-00h"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">identify&#xFF08;directive type 00h&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#streamdirective-type-01h"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">stream&#xFF08;directive type 01h&#xFF09;</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#directives"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#Directives" class="headerlink" title="Directives"></a>Directives</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#identifydirective-type-00h"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#identify&#xFF08;directive-type-00h&#xFF09;" class="headerlink" title="identify&#xFF08;directive type 00h&#xFF09;"></a>identify&#xFF08;directive type 00h&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#streamdirective-type-01h"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#stream&#xFF08;directive-type-01h&#xFF09;" class="headerlink" title="stream&#xFF08;directive type 01h&#xFF09;"></a>stream&#xFF08;directive type 01h&#xFF09;</span></a></li></ol></li></ol>
         
         </div>
       </aside>

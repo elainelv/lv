@@ -221,14 +221,12 @@
 
                 <p>本文对FLUSH进行块设备接口重构，提出一种RFLUSH命令<a href="https://www.usenix.org/conference/fast18/presentation/yeon" target="_blank" rel="noopener">原文链接</a></p>
 <a id="more"></a>
-<h2 id="导语">导语</h2>
-<blockquote>
+<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
 <p>前面多篇paper讲述了HDD和SSD，想必若和我一起学习的小伙伴已经对这方面有一定的了解了，那么对于这两类存储介质，都有易失的缓冲区。其中，HDD的缓冲区可将多个写请求聚合到一起，然后再一并写入到硬盘中，从而<code>减少寻道时间</code>；SSD的缓冲区则是为了<code>优化随机写性能和/或进行磨损均衡</code>，或者也可能是对于Multi-Stream来说的话，先缓存起来，然后一并写入可将这些写请求的数据（若都为hot data）尽可能放在一块，这样处理可提高多流SSD的性能，当然，上述Multi-Stream是我猜想的，大家可以思考的时候可以做个参考！</p>
 <p>首次接触到FLUSH命令一词是在之前看过的一篇名为<a href="https://www.elainelv.top/2018/12/23/FStream/" target="_blank" rel="noopener">FStream:Managing Flash Streams in the File System</a>的paper中，将内存中的Memtable数据Flushing到硬盘的SSTable</p>
-</blockquote>
 <hr>
-<h2 id="background">Background</h2>
-<p>由于有了易失的缓冲区，硬盘也就需要相应的命令确保计算机能够强制将数据<code>从易失性缓冲区写入底层持久化存储介质（磁盘或闪存颗粒）</code>，这样的命令叫做<code>FLUSH</code>。特别地，易失性缓冲区会带来数据丢失和电源中断后更新顺序不当。那么采用FLUSH命令强制对非易失性存储中待写入的数据flushing到硬盘中</p>
+</blockquote>
+<h2 id="background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>由于有了易失的缓冲区，硬盘也就需要相应的命令确保计算机能够强制将数据<code>从易失性缓冲区写入底层持久化存储介质（磁盘或闪存颗粒）</code>，这样的命令叫做<code>FLUSH</code>。特别地，易失性缓冲区会带来数据丢失和电源中断后更新顺序不当。那么采用FLUSH命令强制对非易失性存储中待写入的数据flushing到硬盘中</p>
 <p>当然凡事都有优缺点，FLUSH也不例外。考虑一个银行交易系统，为了能够将交易信息立即持久化保存，上面提到的FLUSH命令确实是必要的，否则交易数据有可能因为系统崩溃或掉电而丢失，但是考虑并发执行两个应用程序：一个需要立即持久保存每个事务的在线银行应用程序，以及一个写入大量中间结果的大数据分析应用程序，这是现代复杂和多重的常见情况多租户存储平台。 在这种情况下，银行应用程序对已提交事务的刷新请求最终将导致存储设备中的大量脏数据，从而降低效率</p>
 <p>论文也提到，有的存储系统采用<code>超级电容</code>方法来提高数据的安全性，但论文认为这类方案增加了制造成本。</p>
 <p>传统块设备接口可以简化为这样三个命令：</p>
@@ -238,27 +236,21 @@
 <li><strong>FLUSH，将缓冲区内所有数据块真正写入持久化存储介质</strong></li>
 </ul>
 <p>随着诸如闪存和其他非易失性存储器（NVM）之类的新兴存储介质出现和使用，正在积极探索扩展传统块设备接口以使新存储介质可尽可能展现其全部潜力</p>
-<h2 id="rflush">RFLUSH</h2>
-<p>这篇论文认为FLUSH命令的<strong>粒度太粗</strong>，导致每执行一次FLUSH命令就要将缓冲区内全部数据，包括实际上并不需要立即写入的数据，一并写入持久化存储介质。由于额外写入了不需要立即写入的数据，这样的FLUSH命令很大程度上对性能有不利影响</p>
+<h2 id="rflush"><a href="#RFLUSH" class="headerlink" title="RFLUSH"></a>RFLUSH</h2><p>这篇论文认为FLUSH命令的<strong>粒度太粗</strong>，导致每执行一次FLUSH命令就要将缓冲区内全部数据，包括实际上并不需要立即写入的数据，一并写入持久化存储介质。由于额外写入了不需要立即写入的数据，这样的FLUSH命令很大程度上对性能有不利影响</p>
 <blockquote>
 <p>再次考虑那个银行系统，如果在该系统上同时运行了一个“大数据”分析系统，并且分析系统有大量（事实上并不需要立即持久化保存的）中间结果要写入，此时，由交易系统发出的FLUSH命令会同时将这些中间结果也写入，这就造成了性能的损失</p>
 </blockquote>
 <p>并且，论文指出，随着硬盘技术，特别是固态硬盘技术的发展，硬盘内的缓冲区越来越大（固态硬盘可能会使用若干GB的DRAM作为缓冲区），因此，一条FLUSH命令的开销也就越来越大，对性能的不利影响也就越来越大。为此，通过对存储设备接口的重构来解决上述传统Flush机制的性能问题，论文提出了一种新的命令，叫做<code>RFLUSH</code>。该命令是FLUSH命令的更精细的版本，与FLUSH命令的不同之处就在于RFLUSH命令<code>加入了范围作为参数，指定真正需要FLUSH的地址范围</code></p>
 <p>已经提出了一个TRIM命令，以防止无用的数据被复制，并降低闪存的耐受性。</p>
-<h2 id="challenges">Challenges</h2>
-<p>虽然思想很纯粹，发送RFLUSH命令时指定需要FLUSH的地址范围，但是实现上有如下一些细节问题需要考虑：</p>
+<h2 id="challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h2><p>虽然思想很纯粹，发送RFLUSH命令时指定需要FLUSH的地址范围，但是实现上有如下一些细节问题需要考虑：</p>
 <ol>
-<li>
-<p><strong>在哪里使用RFLUSH命令</strong>。论文提到，使用RFLUSH命令的位置会不同程度上影响性能。作为一个例子，这篇论文选择在fsync一类<strong>系统调用</strong>的实现中使用RFLUSH命令。同时，论文指出RFLUSH命令也可以在系统的其他地方使用，例如在日志文件系统（用于恢复，日志常常是在数据写到相应位置之前更新）或者数据库写日志的时候使用</p>
+<li><p><strong>在哪里使用RFLUSH命令</strong>。论文提到，使用RFLUSH命令的位置会不同程度上影响性能。作为一个例子，这篇论文选择在fsync一类<strong>系统调用</strong>的实现中使用RFLUSH命令。同时，论文指出RFLUSH命令也可以在系统的其他地方使用，例如在日志文件系统（用于恢复，日志常常是在数据写到相应位置之前更新）或者数据库写日志的时候使用</p>
 </li>
-<li>
-<p><strong>如何确定地址范围</strong>。前文提到，这篇论文修改fsync一类系统调用，利用RFLUSH命令实现将单个文件的元数据和数据写入持久化存储介质。如果RFLUSH命令使用逻辑块地址的范围作为参数，那么这样就需要跟踪文件的每一个数据块（包括其状态），每个数据块可能有这样的状态：是否处于操作系统内核的内存缓冲区中、是否已经执行WRITE命令但未FLUSH、是否已经FLUSH到硬盘。跟踪文件的每一个数据块是十分繁琐的，为此，论文首先指出，可以近似认为文件是连续存放的，这样就不必跟踪每一个块，而每次fsync也只需很少几条RFLUSH命令即可，但是效果可能在文件碎片较多的情况下并不是十分理想。最后，论文决定改为<strong>使用inode号作为RFLUSH命令的参数</strong>，只FLUSH这个inode对应文件的数据块</p>
+<li><p><strong>如何确定地址范围</strong>。前文提到，这篇论文修改fsync一类系统调用，利用RFLUSH命令实现将单个文件的元数据和数据写入持久化存储介质。如果RFLUSH命令使用逻辑块地址的范围作为参数，那么这样就需要跟踪文件的每一个数据块（包括其状态），每个数据块可能有这样的状态：是否处于操作系统内核的内存缓冲区中、是否已经执行WRITE命令但未FLUSH、是否已经FLUSH到硬盘。跟踪文件的每一个数据块是十分繁琐的，为此，论文首先指出，可以近似认为文件是连续存放的，这样就不必跟踪每一个块，而每次fsync也只需很少几条RFLUSH命令即可，但是效果可能在文件碎片较多的情况下并不是十分理想。最后，论文决定改为<strong>使用inode号作为RFLUSH命令的参数</strong>，只FLUSH这个inode对应文件的数据块</p>
 </li>
-<li>
-<p><strong>对于元数据的处理</strong>。论文以F2FS作为例子，这个文件系统在硬盘上的内容分为元数据区以及数据区。经过讨论，论文决定对于任一条元数据区的RFLUSH命令，处理整个元数据区。论文表示，这样做可能会在处理某一个文件的元数据时将另外一个文件的元数据也写入底层存储介质，导致某些顺序要求被违反，因为两个文件的元数据有可能位于同一个逻辑块，而一个逻辑块必须整体写入。然而，论文又说明，现在的文件系统，例如F2FS或者ext4，已经考虑到这一点，因此，这个问题不需要这篇论文来解决。这样做确实会包含一些不必要的块，但即便如此，论文提出的方法对于整体性能的提升也是可观的</p>
+<li><p><strong>对于元数据的处理</strong>。论文以F2FS作为例子，这个文件系统在硬盘上的内容分为元数据区以及数据区。经过讨论，论文决定对于任一条元数据区的RFLUSH命令，处理整个元数据区。论文表示，这样做可能会在处理某一个文件的元数据时将另外一个文件的元数据也写入底层存储介质，导致某些顺序要求被违反，因为两个文件的元数据有可能位于同一个逻辑块，而一个逻辑块必须整体写入。然而，论文又说明，现在的文件系统，例如F2FS或者ext4，已经考虑到这一点，因此，这个问题不需要这篇论文来解决。这样做确实会包含一些不必要的块，但即便如此，论文提出的方法对于整体性能的提升也是可观的</p>
 </li>
-<li>
-<p><strong>如何将RFLUSH命令实现到已有的硬盘接口协议</strong>。论文指出，成熟的硬盘接口，如SATA或SAS等，难以添加论文提出的RFLUSH命令作为扩展，而论文发现新兴的NVMe接口则可以做到这一点。论文同时指出，还可以使用新的固态硬盘架构，这种架构允许主机端直接操纵物理闪存颗粒。对于后者，我的理解就是将FTL（层）从硬盘控制芯片移动到主机端（也就是目前比较流行的Open Channel SSD）。论文选择了后者，因为实现起来比较方便。此外，上面提到，论文使用inode号作为RFLUSH命令的参数。容易想到，为了实现这一点，需要在WRITE命令写入时也给每一个数据块标记上它对应文件的inode号，方便之后的RFLUSH命令。论文中的实现将缓冲区的块按照inode号为键，组织成了哈希表</p>
+<li><p><strong>如何将RFLUSH命令实现到已有的硬盘接口协议</strong>。论文指出，成熟的硬盘接口，如SATA或SAS等，难以添加论文提出的RFLUSH命令作为扩展，而论文发现新兴的NVMe接口则可以做到这一点。论文同时指出，还可以使用新的固态硬盘架构，这种架构允许主机端直接操纵物理闪存颗粒。对于后者，我的理解就是将FTL（层）从硬盘控制芯片移动到主机端（也就是目前比较流行的Open Channel SSD）。论文选择了后者，因为实现起来比较方便。此外，上面提到，论文使用inode号作为RFLUSH命令的参数。容易想到，为了实现这一点，需要在WRITE命令写入时也给每一个数据块标记上它对应文件的inode号，方便之后的RFLUSH命令。论文中的实现将缓冲区的块按照inode号为键，组织成了哈希表</p>
 </li>
 </ol>
 <hr>
@@ -267,9 +259,7 @@
 <p>Micro-benchmark结果表明，对于IOPS，RFLUSH相比FLUSH有所提升，但是还达不到完全没有FLUSH操作时的理想情况；对于响应时间，RFLUSH能够消除FLUSH的长尾，基本达到与完全没有FLUSH操作时的理想情况差不多的性能；对于实际写入底层存储介质的数据量，RFLUSH能够大幅减少FLUSH带来的写入，基本达到与完全没有FLUSH操作时的理想情况差不多的写入量。</p>
 <p>Macro-benchmark则使用更真实的软件作为负载，包括Fileserver、Linkbench以及TPC-C，测试时两两组合，测试它们在这样的系统中的实际性能。此外，macro-benchmark还分别测试了关闭和开启页缓存机制两种情况下的性能，RFLUSH相对于FLUSH基本上都能够在性能上有所提升，甚至在个别情况下RFLUSH比完全没有FLUSH操作时的理想情况表现得更好。</p>
 <p>总体而言，可以看出RFLUSH对于性能确实有一定提升。</p>
-<h2 id="i-want-to-say">“I WANT TO SAY”</h2>
-<p>论文对FLUSH命令存在的问题以及所提出的RFLUSH命令做了详细的说明。论文内容的分析就到这里，我认为若今后的固态硬盘将FTL从硬盘控制芯片移动到主机端，那么对于硬盘块的操作就直接对应到对物理闪存颗粒的操作，这样自然也就可以从本质上做到更细粒度的FLUSH<br>
-总之，这篇论文的实际价值以及应用场景还需要我们进一步探索与思考。</p>
+<h2 id="i-want-to-say"><a href="#“I-WANT-TO-SAY”" class="headerlink" title="“I WANT TO SAY”"></a>“I WANT TO SAY”</h2><p>论文对FLUSH命令存在的问题以及所提出的RFLUSH命令做了详细的说明。论文内容的分析就到这里，我认为若今后的固态硬盘将FTL从硬盘控制芯片移动到主机端，那么对于硬盘块的操作就直接对应到对物理闪存颗粒的操作，这样自然也就可以从本质上做到更细粒度的FLUSH<br>总之，这篇论文的实际价值以及应用场景还需要我们进一步探索与思考。</p>
 
                 
 
@@ -358,7 +348,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#background"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Background</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rflush"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">RFLUSH</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#challenges"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Challenges</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">&#x201C;I WANT TO SAY&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5BFC;&#x8BED;" class="headerlink" title="&#x5BFC;&#x8BED;"></a>&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#background"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#Background" class="headerlink" title="Background"></a>Background</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rflush"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#RFLUSH" class="headerlink" title="RFLUSH"></a>RFLUSH</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#challenges"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#&#x201C;I-WANT-TO-SAY&#x201D;" class="headerlink" title="&#x201C;I WANT TO SAY&#x201D;"></a>&#x201C;I WANT TO SAY&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

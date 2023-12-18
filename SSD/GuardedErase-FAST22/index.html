@@ -221,67 +221,45 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h2 id="引子">引子</h2>
-<p>本工作发表于FAST 2022, 来自韩国首尔大学Jihong老师团队。致力于解决目前高密度闪存中由于制程差异导致的WL间可靠性差异。本文提出GuardedErase。研究表明闪存磨损主要来源于擦除操作，因此提出在擦除操作执行过程中，<strong><code>保护天生抗磨性较弱的WL，从而增加整体可擦除次数</code></strong>。本文动机实验在160 TLC闪存上测试，实验在MQsim上模拟。实验结果表明，寿命平均可改善21%。</p>
+                <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>本工作发表于FAST 2022, 来自韩国首尔大学Jihong老师团队。致力于解决目前高密度闪存中由于制程差异导致的WL间可靠性差异。本文提出GuardedErase。研究表明闪存磨损主要来源于擦除操作，因此提出在擦除操作执行过程中，<strong><code>保护天生抗磨性较弱的WL，从而增加整体可擦除次数</code></strong>。本文动机实验在160 TLC闪存上测试，实验在MQsim上模拟。实验结果表明，寿命平均可改善21%。</p>
 <hr>
 <p><a href="https://www.usenix.org/conference/fast22/presentation/hong" target="_blank" rel="noopener">GuardedErase: Extending SSD Lifetimes by Protecting Weak Wordlines</a></p>
-<h2 id="背景">背景</h2>
-<p>芯片容量增加，闪存块尺寸增大，单个闪存块中WL数目增多；这使得WL间的可靠性特征存在显著差异。最弱的WL最大可擦除次数仅为最强WL的54%。其主要原因是3D闪存制造时采用打孔技术，通道孔直径和形状不一。本文在160 3D TLC闪存上进行测试，验证此问题的严重性，并且WL间的RBER差异将随着磨损增加而变得严重。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>芯片容量增加，闪存块尺寸增大，单个闪存块中WL数目增多；这使得WL间的可靠性特征存在显著差异。最弱的WL最大可擦除次数仅为最强WL的54%。其主要原因是3D闪存制造时采用打孔技术，通道孔直径和形状不一。本文在160 3D TLC闪存上进行测试，验证此问题的严重性，并且WL间的RBER差异将随着磨损增加而变得严重。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-1.png" alt=""></p>
-<h2 id="问题">问题</h2>
-<p>现有的闪存采用的坏块管理策略是较保守的。如果一个闪存块中的某个WL不能使用了，整个闪存块就标记为坏块。因此，WL间的上述可靠性差异将导致闪存寿命的下降。本文通过测试分析闪存磨损的主要来源，发现擦除操作对闪存耐久性的影响高达80%。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>现有的闪存采用的坏块管理策略是较保守的。如果一个闪存块中的某个WL不能使用了，整个闪存块就标记为坏块。因此，WL间的上述可靠性差异将导致闪存寿命的下降。本文通过测试分析闪存磨损的主要来源，发现擦除操作对闪存耐久性的影响高达80%。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-3.png" alt=""></p>
-<h2 id="方法">方法</h2>
-<p>为了解决WL间制程差异引起的SSD寿命下降问题，本文提出GuardedErase。通过在擦除时降低对弱WL的擦除压力来提高闪存能够承受的最大P/E次数。gErase支持低压力擦除模式和正常的擦除模式。当一个WL被一个较低的擦除电压擦除时，对其磨损低，使得WL的寿命增加。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>为了解决WL间制程差异引起的SSD寿命下降问题，本文提出GuardedErase。通过在擦除时降低对弱WL的擦除压力来提高闪存能够承受的最大P/E次数。gErase支持低压力擦除模式和正常的擦除模式。当一个WL被一个较低的擦除电压擦除时，对其磨损低，使得WL的寿命增加。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-4.png" alt=""></p>
-<p>上图显示10个WLBER随着P/E增加的变化情况。1）当使用normal擦除模式时，由于WL可靠性存在显著差异，BER值存在显著差异。WL0是最弱的WL，WL5是最可靠性。在10个P/E循环后，WL0达到BER阈值。最强的WL5仅达到其最大BER值的50%。但是，由于WL0已经达到BER阈值，该块将标记为坏块且不再使用（采用坏块管理策略BBM）。如果采用细粒度的坏页管理策略BPM，那么剩余9个WL依然可以继续使用。但有个问题是随着到达BER阈值的WL越来越多，块的容量将逐渐减小，可能会导致严重的WAF。2）当采用gErase模式时，弱WL（如WL0、WL1和WL9）的BER值高于其他WL时，使用低压力擦除模式，该模式减少磨损约1/3。例如，在第一次擦除周期后，WL0的BER值是WL5的两倍多。为了保护WL0，在第2个擦除周期中对WL0使用低压力擦除模式，如右图的白框表示。最后，WL0在使用7次低压力擦除模式后，总共可承受14次P/E。比较这两种模式的写入数据总量，从100个WL增加到119个WL，数据写入量增加近19%。<br>
-注意，当使用低压力擦除模式擦除弱WL后，WL并不能可靠存储数据。也就是说，WL0能承受的14次P/E中，只有其中采用7次normal擦除时，才可存储数据（白色方框表示不稳定的WL状态，擦除后不被使用，当下一个normal擦除后才使用）。</p>
+<p>上图显示10个WLBER随着P/E增加的变化情况。1）当使用normal擦除模式时，由于WL可靠性存在显著差异，BER值存在显著差异。WL0是最弱的WL，WL5是最可靠性。在10个P/E循环后，WL0达到BER阈值。最强的WL5仅达到其最大BER值的50%。但是，由于WL0已经达到BER阈值，该块将标记为坏块且不再使用（采用坏块管理策略BBM）。如果采用细粒度的坏页管理策略BPM，那么剩余9个WL依然可以继续使用。但有个问题是随着到达BER阈值的WL越来越多，块的容量将逐渐减小，可能会导致严重的WAF。2）当采用gErase模式时，弱WL（如WL0、WL1和WL9）的BER值高于其他WL时，使用低压力擦除模式，该模式减少磨损约1/3。例如，在第一次擦除周期后，WL0的BER值是WL5的两倍多。为了保护WL0，在第2个擦除周期中对WL0使用低压力擦除模式，如右图的白框表示。最后，WL0在使用7次低压力擦除模式后，总共可承受14次P/E。比较这两种模式的写入数据总量，从100个WL增加到119个WL，数据写入量增加近19%。<br>注意，当使用低压力擦除模式擦除弱WL后，WL并不能可靠存储数据。也就是说，WL0能承受的14次P/E中，只有其中采用7次normal擦除时，才可存储数据（白色方框表示不稳定的WL状态，擦除后不被使用，当下一个normal擦除后才使用）。</p>
 <blockquote>
 <p>“思考：如果闪存块执行擦除操作，其中部分弱WL采用gErase，那么这些WL擦除之后由于其存储元中的电荷没有擦除干净，因此是不可靠的，在后续也不存储数据。事实上，这也会带来短暂的容量降低。这些弱WL下次如果使用normal擦除模式，那么后续还是可以存储写数据的。本文后面也提出多种gErase，根据负载及GC情况，来动态选择。”</p>
 </blockquote>
-<h2 id="底层固件实现">底层固件实现</h2>
-<p><strong>1.Per-WL Low-Stress Erase Mode</strong><br>
-低压力擦除模式有两种实现途径：1）减少擦除时间；2）减少擦除电压。然而，由于在WL粒度上控制擦除时间并不容易，所以本文采用了一种降低擦除电压的方案。执行擦除操作时，在衬底添加17V的电压，控制栅极添加0V，形成17V电压差作为擦除压力。当将较高的电压施加到WL的控制栅极时，电压差将降低，从而降低了WL上的擦除压力。在下图中，弱WLWL47的控制栅极采用了3V，而不是通常的0V，从而将WL47的有效擦除压力降低了3V。右图显示WL47使用低压力擦除模式，其余的WLs使用正常的擦除模式时，如何驱动各种电压。</p>
+<h2 id="底层固件实现"><a href="#底层固件实现" class="headerlink" title="底层固件实现"></a>底层固件实现</h2><p><strong>1.Per-WL Low-Stress Erase Mode</strong><br>低压力擦除模式有两种实现途径：1）减少擦除时间；2）减少擦除电压。然而，由于在WL粒度上控制擦除时间并不容易，所以本文采用了一种降低擦除电压的方案。执行擦除操作时，在衬底添加17V的电压，控制栅极添加0V，形成17V电压差作为擦除压力。当将较高的电压施加到WL的控制栅极时，电压差将降低，从而降低了WL上的擦除压力。在下图中，弱WLWL47的控制栅极采用了3V，而不是通常的0V，从而将WL47的有效擦除压力降低了3V。右图显示WL47使用低压力擦除模式，其余的WLs使用正常的擦除模式时，如何驱动各种电压。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-5.png" alt=""></p>
-<p><strong>Stress Mitigation Effect</strong><br>
-为了测试低压力擦除模式对WLs的耐久性影响，使用3D TLC NAND闪存芯片进行了测试。从闪存芯片不同的物理位置均匀地选择块组成两组闪存块。两组块分别使用不同的擦除模式，一组仅使用正常擦除模式，另一组分别使用正常擦除模式和低压力擦除模式的比例为1：1（每次擦除，BER最差的N个WL采用低压力擦除模式）。<br>
-下图显示了WL的相对压力系数Sk（两种擦除模式的Max P/E之比，正常擦除模式/低压力擦除模式），值越小说明采用低压力擦除模式改善的耐久性越多。例如，当使用正常擦除模式时，WLP的最大P/E为10K，而当使用低压力擦除模式时增加到20K，则相对压力系数为0.5。</p>
+<p><strong>Stress Mitigation Effect</strong><br>为了测试低压力擦除模式对WLs的耐久性影响，使用3D TLC NAND闪存芯片进行了测试。从闪存芯片不同的物理位置均匀地选择块组成两组闪存块。两组块分别使用不同的擦除模式，一组仅使用正常擦除模式，另一组分别使用正常擦除模式和低压力擦除模式的比例为1：1（每次擦除，BER最差的N个WL采用低压力擦除模式）。<br>下图显示了WL的相对压力系数Sk（两种擦除模式的Max P/E之比，正常擦除模式/低压力擦除模式），值越小说明采用低压力擦除模式改善的耐久性越多。例如，当使用正常擦除模式时，WLP的最大P/E为10K，而当使用低压力擦除模式时增加到20K，则相对压力系数为0.5。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-6.png" alt=""></p>
 <p>虽然Sk值存在显著差异，但我们观察到弱WLs的相对压力系数非常相似：所有的系数都属于一个区间[0.31,0.34]，平均值为0.33。虽然低压力擦除模式应用于强WL时，相对压力系数较大。本文评估低压力擦除模式时，假设所有WLs有相同的相对压力系数，0.35。</p>
-<p><strong>2.Per-Block Erase Modes</strong><br>
-为了有效地利用低压力擦除模式，下表显示支持的9种gErase模式。gE(n)中的n越高，使用低压力擦除模式的WLs越多，擦除缓解率越高。当一个块以较高的gErase模式被擦除时，1）该块的Max P/E将会增加。例如，对比gE(1) 和gE(9)，Max P/E增加从19%到45%；2）在下一个编程循环中无法使用的WLs就越多，从而增加了WAF值。因此，当FTL擦除一个块时，选择一个适当的gErase模式是一项重要的任务。</p>
+<p><strong>2.Per-Block Erase Modes</strong><br>为了有效地利用低压力擦除模式，下表显示支持的9种gErase模式。gE(n)中的n越高，使用低压力擦除模式的WLs越多，擦除缓解率越高。当一个块以较高的gErase模式被擦除时，1）该块的Max P/E将会增加。例如，对比gE(1) 和gE(9)，Max P/E增加从19%到45%；2）在下一个编程循环中无法使用的WLs就越多，从而增加了WAF值。因此，当FTL擦除一个块时，选择一个适当的gErase模式是一项重要的任务。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-7.png" alt=""></p>
-<h2 id="ftl设计long-ftl">FTL设计—Long FTL</h2>
-<p>本文实现支持的gErase的FTL，称为longFTL。如下图所示，LongFTL基于页级映射，新增三个模块，弱WL检测器、WAF监视器和gErase模式选择器。弱WL检测器动态识别一个块中的弱WL，WAF监视器跟踪WAF的变化，gErase模式选择器确定由WAF监视器估计的当前工作负载特征的最佳gErase模式。</p>
+<h2 id="ftl设计long-ftl"><a href="#FTL设计—Long-FTL" class="headerlink" title="FTL设计—Long FTL"></a>FTL设计—Long FTL</h2><p>本文实现支持的gErase的FTL，称为longFTL。如下图所示，LongFTL基于页级映射，新增三个模块，弱WL检测器、WAF监视器和gErase模式选择器。弱WL检测器动态识别一个块中的弱WL，WAF监视器跟踪WAF的变化，gErase模式选择器确定由WAF监视器估计的当前工作负载特征的最佳gErase模式。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-8.png" alt=""></p>
-<p><strong>1.Weak WL Detector</strong><br>
-弱WL检测器的作用是识别哪些WLs是弱的。根据WL的BER值来创建排序链表。当gErase模式选择器请求N个最弱的WL时，可以快速识别出具有N个最大BER值的WL。一个链表包含了所有带有k个位错误的WL。使用一个单独的位图数据结构来维护已识别的弱WL。为了识别一个块的弱WL，在每100个P/E后为该块构建BER 排序链表。</p>
+<p><strong>1.Weak WL Detector</strong><br>弱WL检测器的作用是识别哪些WLs是弱的。根据WL的BER值来创建排序链表。当gErase模式选择器请求N个最弱的WL时，可以快速识别出具有N个最大BER值的WL。一个链表包含了所有带有k个位错误的WL。使用一个单独的位图数据结构来维护已识别的弱WL。为了识别一个块的弱WL，在每100个P/E后为该块构建BER 排序链表。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-9.png" alt=""></p>
-<p><strong>2.WAF Monitor</strong><br>
-由于gErase模式选用过于激进，就会因为短暂的容量下降引起严重的WAF；如果过于保守，则寿命改善的效果不明显。为了防止频繁的gErase模式变化导致I/O性能波动，只在当前I/O工作负载相对稳定时修改gErase模式，这样瞬态I/O工作负载变化就不会因错误预测的模式变化而导致SSD容量减少。WAF监控器通过观察WAF的波动，分析I/O工作负载的变化，并决定当前的WAF值是否足够稳定，以便gErase模式选择器做出适当的模式决策。</p>
-<p><strong>如何定义稳定的WAF？</strong><br>
-如果最后9个测量的WAF以及当前的WAF在各自的观测间隔内都是稳定的，那么我们假设一个WAF值是稳定的。如果在(ts，te]中观察到的所有WAF值都在[0.98w，1.02w]内，则WAF值对于观测间隔(ts，te]称为稳定的，其中w是ts处的WAF值。</p>
-<p><strong>3.gErase Mode Selector</strong><br>
-决定下一个擦除模式时，gErase模式选择器考虑来自WAF监视器的两条信息：WAF稳定性和WAF历史记录。如果WAF值是稳定的，进一步计算三种相邻的gE模式（gE(cur-1), gE(cur) 和 gE(cur+1)）对应的TBW（通过WAF计算），并选择TBW值最大的gErase模式。如果相邻gE模式中没有WAF历史记录，将下一个gErase模式设置为gE(cur+1)，以便使用更激进的gErase模式的潜在好处。<br>
-如下图所示，gErase模式由gE(0)启动。时刻1，相邻的gErase模式没有WAF历史记录，因此它更改为gE(1)，不进行TBW比较。时刻2，3同理。时刻4，gE(3)的TBW低于gE(2)，模式变回gE(2)。时刻5，由于gE(2)的TBW低于gE(1)，模式变为gE(1)。在实际的gE(1)执行中，TBW低于gE(2)，所以模式被更回gE(2)。之后，WAF保持稳定，TBW在gE(2)模式下达到最大值。</p>
+<p><strong>2.WAF Monitor</strong><br>由于gErase模式选用过于激进，就会因为短暂的容量下降引起严重的WAF；如果过于保守，则寿命改善的效果不明显。为了防止频繁的gErase模式变化导致I/O性能波动，只在当前I/O工作负载相对稳定时修改gErase模式，这样瞬态I/O工作负载变化就不会因错误预测的模式变化而导致SSD容量减少。WAF监控器通过观察WAF的波动，分析I/O工作负载的变化，并决定当前的WAF值是否足够稳定，以便gErase模式选择器做出适当的模式决策。</p>
+<p><strong>如何定义稳定的WAF？</strong><br>如果最后9个测量的WAF以及当前的WAF在各自的观测间隔内都是稳定的，那么我们假设一个WAF值是稳定的。如果在(ts，te]中观察到的所有WAF值都在[0.98w，1.02w]内，则WAF值对于观测间隔(ts，te]称为稳定的，其中w是ts处的WAF值。</p>
+<p><strong>3.gErase Mode Selector</strong><br>决定下一个擦除模式时，gErase模式选择器考虑来自WAF监视器的两条信息：WAF稳定性和WAF历史记录。如果WAF值是稳定的，进一步计算三种相邻的gE模式（gE(cur-1), gE(cur) 和 gE(cur+1)）对应的TBW（通过WAF计算），并选择TBW值最大的gErase模式。如果相邻gE模式中没有WAF历史记录，将下一个gErase模式设置为gE(cur+1)，以便使用更激进的gErase模式的潜在好处。<br>如下图所示，gErase模式由gE(0)启动。时刻1，相邻的gErase模式没有WAF历史记录，因此它更改为gE(1)，不进行TBW比较。时刻2，3同理。时刻4，gE(3)的TBW低于gE(2)，模式变回gE(2)。时刻5，由于gE(2)的TBW低于gE(1)，模式变为gE(1)。在实际的gE(1)执行中，TBW低于gE(2)，所以模式被更回gE(2)。之后，WAF保持稳定，TBW在gE(2)模式下达到最大值。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-10.png" alt=""></p>
 <blockquote>
-<p><strong>闪存块管理的思考：</strong><br>
-1．	采用gErase模式擦除的块适合存储热数据。这是因为冷数据保存时间较长，如果gErase模式擦除的块用来存储冷数据，那么由于SSD容量下降引起的WAF问题将持续很长一段时间。<br>
-2．	避免gErase模式擦除后的块存放GC回收的有效数据（该部分数据一般认为是冷数据）。</p>
+<p><strong>闪存块管理的思考：</strong><br>1．    采用gErase模式擦除的块适合存储热数据。这是因为冷数据保存时间较长，如果gErase模式擦除的块用来存储冷数据，那么由于SSD容量下降引起的WAF问题将持续很长一段时间。<br>2．    避免gErase模式擦除后的块存放GC回收的有效数据（该部分数据一般认为是冷数据）。</p>
 </blockquote>
-<h2 id="实验评估">实验评估</h2>
-<p>实验在MQsim模拟器上完成，测试Baseline，BPM和longFTL的寿命优化、性能开销情况。</p>
-<p><strong>寿命优化</strong><br>
-图14显示寿命优化情况，收集TBW并归一化到baseline。BPM®指的是允许减少块容量的r%。BPM方案对负载特征不敏感，主要取决于块容量减少的上限。其中BPM(2.1)和BPM(5.2)分别改善9%和13%。LongFTL平均可改善寿命21%。longFTL在不同的负载下，改善程度不一，主要原因是，当应用gErase模式时，对每个负载的WAF值的影响不同。</p>
+<h2 id="实验评估"><a href="#实验评估" class="headerlink" title="实验评估"></a>实验评估</h2><p>实验在MQsim模拟器上完成，测试Baseline，BPM和longFTL的寿命优化、性能开销情况。</p>
+<p><strong>寿命优化</strong><br>图14显示寿命优化情况，收集TBW并归一化到baseline。BPM(r)指的是允许减少块容量的r%。BPM方案对负载特征不敏感，主要取决于块容量减少的上限。其中BPM(2.1)和BPM(5.2)分别改善9%和13%。LongFTL平均可改善寿命21%。longFTL在不同的负载下，改善程度不一，主要原因是，当应用gErase模式时，对每个负载的WAF值的影响不同。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-11.png" alt=""></p>
 <p>图15显示longFTL中WAF值情况。图中给出每个负载最常用gErase模式。一般来说，受保护的WLs数量越多，WAF值就越高。然而从结果来看，gErase模式的WAF多少与负载特征有关。例如，gE(8)模式下保护28个WL，其WAF增加11%，而gE(1)仅保护8个WL，WAF就增加6.8%。这在于proj2本身写放大就很高，加入gErase之后，由于容量降低，增加了WAF。因此，其WAF对受保护WL的数量非常敏感。因此，proj2没有使用更高的gE(n)模式，不过这就限制了这类负载下，longFTL对SSD寿命的影响，在图14中可以看到proj2改善寿命11%，相对于其他负载改善程度较低。</p>
 <p><img src="/img/article/GuardedErase/GuardedErase-12.png" alt=""></p>
-<p><strong>性能开销</strong><br>
-虽然longFTL选择性地降低了gErase模式下的有效SSD容量，但它对I/O性能的负面影响非常小，因为longFTL将gErase模式主要应用于热数据。图16显示IOPS，并归一化到baseline。和baseline相比，longFTL的IOPS平均下降3%。BPM(2.1)与longFTL差不多。BPM(5.2)性能下降严重，其在实际场景下不被采用。</p>
+<p><strong>性能开销</strong><br>虽然longFTL选择性地降低了gErase模式下的有效SSD容量，但它对I/O性能的负面影响非常小，因为longFTL将gErase模式主要应用于热数据。图16显示IOPS，并归一化到baseline。和baseline相比，longFTL的IOPS平均下降3%。BPM(2.1)与longFTL差不多。BPM(5.2)性能下降严重，其在实际场景下不被采用。 </p>
 <p><img src="/img/article/GuardedErase/GuardedErase-13.png" alt=""></p>
-<h2 id="总结">总结</h2>
-<p>本文提出了一种新的擦除模式gErase，可以通过低压力擦除方式保护弱WL，避免其过早到达Max P/E，从而延长闪存块的耐久性。进而优化FTL，根据负载特征选择合适的gErase模式，从而有效改善SSD寿命。作者指出能采用机器学习方式提高预测准确性，则可以更早地选择更好的gE(n)，从而进一步提高SSD。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文提出了一种新的擦除模式gErase，可以通过低压力擦除方式保护弱WL，避免其过早到达Max P/E，从而延长闪存块的耐久性。进而优化FTL，根据负载特征选择合适的gErase模式，从而有效改善SSD寿命。作者指出能采用机器学习方式提高预测准确性，则可以更早地选择更好的gE(n)，从而进一步提高SSD。</p>
 
                 
 
@@ -376,7 +354,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5F15;&#x5B50;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#背景"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x80CC;&#x666F;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#问题"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x95EE;&#x9898;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#方法"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x65B9;&#x6CD5;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#底层固件实现"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">&#x5E95;&#x5C42;&#x56FA;&#x4EF6;&#x5B9E;&#x73B0;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ftl设计long-ftl"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">FTL&#x8BBE;&#x8BA1;&#x2014;Long FTL</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#实验评估"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">&#x603B;&#x7ED3;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5F15;&#x5B50;" class="headerlink" title="&#x5F15;&#x5B50;"></a>&#x5F15;&#x5B50;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#背景"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x80CC;&#x666F;" class="headerlink" title="&#x80CC;&#x666F;"></a>&#x80CC;&#x666F;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#问题"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x95EE;&#x9898;" class="headerlink" title="&#x95EE;&#x9898;"></a>&#x95EE;&#x9898;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#方法"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#&#x65B9;&#x6CD5;" class="headerlink" title="&#x65B9;&#x6CD5;"></a>&#x65B9;&#x6CD5;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#底层固件实现"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#&#x5E95;&#x5C42;&#x56FA;&#x4EF6;&#x5B9E;&#x73B0;" class="headerlink" title="&#x5E95;&#x5C42;&#x56FA;&#x4EF6;&#x5B9E;&#x73B0;"></a>&#x5E95;&#x5C42;&#x56FA;&#x4EF6;&#x5B9E;&#x73B0;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ftl设计long-ftl"><span class="toc-nav-number">6.</span> <span class="toc-nav-text"><a href="#FTL&#x8BBE;&#x8BA1;&#x2014;Long-FTL" class="headerlink" title="FTL&#x8BBE;&#x8BA1;&#x2014;Long FTL"></a>FTL&#x8BBE;&#x8BA1;&#x2014;Long FTL</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#实验评估"><span class="toc-nav-number">7.</span> <span class="toc-nav-text"><a href="#&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;" class="headerlink" title="&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;"></a>&#x5B9E;&#x9A8C;&#x8BC4;&#x4F30;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">8.</span> <span class="toc-nav-text"><a href="#&#x603B;&#x7ED3;" class="headerlink" title="&#x603B;&#x7ED3;"></a>&#x603B;&#x7ED3;</span></a></li></ol>
         
         </div>
       </aside>
