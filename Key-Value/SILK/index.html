@@ -71,13 +71,13 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/building.jpg')
+            background-image: url('/lv/img/article_header/building.jpg')
             /*post*/
         
     }
     
     #signature{
-        background-image: url('/lv/img/signature/BeanTechSign-white.png');
+        background-image: url('/lv/lv/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -156,14 +156,14 @@
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
@@ -220,34 +220,56 @@
                 post-container">
 
                 <p>ATC 2019，<a href="https://www.usenix.org/conference/atc19/presentation/balmau" target="_blank" rel="noopener">原文链接</a></p>
-<h4 id="lsm-kv"><a href="#LSM-KV" class="headerlink" title="LSM KV"></a>LSM KV</h4><p><img src="/img/article/SILK/SILK1.png" alt=""></p>
-<p>所谓的LSM（log structured-merge tree）是一种日志型结构的树。其中一部分在内存中（写缓存），其余部分在磁盘内。从图中可以看出，从上到下容量不断增加。因此，通过在内存中缓存写请求来提升写性能。<br>客户端操作：读、更新或者写；LSM内部的操作：flushing、compaction<br>内存中的文件称为<code>memtable</code>；硬盘中的文件称为<code>SStable</code>（sorted string table）</p>
+<h4 id="lsm-kv">LSM KV</h4>
+<p><img src="/lv/img/article/SILK/SILK1.png" alt=""></p>
+<p>所谓的LSM（log structured-merge tree）是一种日志型结构的树。其中一部分在内存中（写缓存），其余部分在磁盘内。从图中可以看出，从上到下容量不断增加。因此，通过在内存中缓存写请求来提升写性能。<br>
+客户端操作：读、更新或者写；LSM内部的操作：flushing、compaction<br>
+内存中的文件称为<code>memtable</code>；硬盘中的文件称为<code>SStable</code>（sorted string table）</p>
 <ul>
 <li>当一些写操作或者更新操作到达时，它们会被放到内存中，若内存满了则通过flushing操作刷到硬盘。因此已经刷回的文件并不会被修改，并且新的内容或者更新只是简单地生成了一个新的文件。那么随着越来越多的数据存到系统中，<strong>将会有更多的不可被修改的、顺序的文件</strong>，也即SStable。这些SStable代表了一小段时间内的按照顺序的写入或者更新。显然，这样的写特征也会导致<strong>数据的冗余</strong>。</li>
 <li>为了将文件数量控制在一定的范围之内，系统会周期性的执行compaction操作，将上一层的文件合并到下一层的文件中。compaction时，需要将文件先读到内存，执行完后在写回。并且，在此过程中将一些重复的更新和数据的冗余删除掉。</li>
 <li>当一个读操作请求时，系统首先检查内存数据(memtable)，如果没有找到这个key，就会逆序的一个一个检查sstable文件，并且由于每个文件都是顺序的，因此读的效率比较高。但是随着SStable数量的增加，读操作会变得越来越慢。那么可以使用LRU将一些数据缓存在内存中</li>
 </ul>
-<h4 id="问题及原因"><a href="#问题及原因" class="headerlink" title="问题及原因"></a>问题及原因</h4><ol>
-<li><p>L0满了以致于不能进行flushing，导致在内存写满后不能处理新的请求<br><img src="/img/article/SILK/SILK2.png" alt=""><br><strong>原因：</strong><br><img src="/img/article/SILK/SILK3.png" alt=""><br>为什么会有那么多的high-level compaction同时发生呢?<br>每次处理写请求都是创建新的文件，原来旧的文件不做处理。只有当累积的新文件达到阈值时，所有这些新文件才会合并到旧文件中。最糟糕的情况是，所有存储的数据都包含在一轮compaction中，导致了巨大的尾延迟。</p>
-</li>
-<li><p>flushing速度缓慢导致内存耗尽了，flushing还没完成，这时候内存中没有剩余空间，不能处理新的请求<br><img src="/img/article/SILK/SILK4.png" alt=""><br><strong>原因：</strong><br><img src="/img/article/SILK/SILK5.png" alt=""></p>
-</li>
-</ol>
-<h4 id="先前的解决办法"><a href="#先前的解决办法" class="headerlink" title="先前的解决办法"></a>先前的解决办法</h4><ol>
-<li>限制compaction的比率<br>这种方式简单地协调了内外部操作，但是从长远来看，并不好，会导致一些并行compaction的累积</li>
-</ol>
+<h4 id="问题及原因">问题及原因</h4>
 <ol>
-<li>延迟compaction<br>Selective/Delayed Compaction (TRIAD [USENIX ATC ’17], PebblesDB [SOSP ‘17]).</li>
+<li>
+<p>L0满了以致于不能进行flushing，导致在内存写满后不能处理新的请求<br>
+<img src="/lv/img/article/SILK/SILK2.png" alt=""><br>
+<strong>原因：</strong><br>
+<img src="/lv/img/article/SILK/SILK3.png" alt=""><br>
+为什么会有那么多的high-level compaction同时发生呢?<br>
+每次处理写请求都是创建新的文件，原来旧的文件不做处理。只有当累积的新文件达到阈值时，所有这些新文件才会合并到旧文件中。最糟糕的情况是，所有存储的数据都包含在一轮compaction中，导致了巨大的尾延迟。</p>
+</li>
+<li>
+<p>flushing速度缓慢导致内存耗尽了，flushing还没完成，这时候内存中没有剩余空间，不能处理新的请求<br>
+<img src="/lv/img/article/SILK/SILK4.png" alt=""><br>
+<strong>原因：</strong><br>
+<img src="/lv/img/article/SILK/SILK5.png" alt=""></p>
+</li>
+</ol>
+<h4 id="先前的解决办法">先前的解决办法</h4>
+<ol>
+<li>限制compaction的比率<br>
+这种方式简单地协调了内外部操作，但是从长远来看，并不好，会导致一些并行compaction的累积</li>
+</ol>
+<ol start="2">
+<li>延迟compaction<br>
+Selective/Delayed Compaction (TRIAD [USENIX ATC ’17], PebblesDB [SOSP ‘17]).</li>
 </ol>
 <p>这种方式并没有避免干扰，最终还是要执行延迟的compaction操作</p>
-<h4 id="silk"><a href="#SILK" class="headerlink" title="SILK"></a>SILK</h4><ol>
+<h4 id="silk">SILK</h4>
+<ol>
 <li>Make sure L0 is never full.</li>
 <li>Ensure sufficient I/O for flush/compactions on low levels.</li>
 <li>Higher level compactions should not fall behind too much.</li>
 </ol>
-<p><img src="/img/article/SILK/SILK6.png" alt=""></p>
-<p>因此，SILK提出了一种<code>I/O调度算法</code>，合理使用Prioritize和 Preempt<br>专门给flushing和L0到L1的compaction配置I/O带宽，因为这两者直接影响客户端的延迟<br>动态的调整客户端和内部操作的带宽<br><code>低层操作的优先级别更高</code>，并且可以抢占高层操作</p>
-<h4 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h4><p>本文发现问题的思路非常巧妙，让人读起来感觉说得合情合理。并且对LSM KV存储的解读也非常到位。提出I/O调度方法很好的提升了性能。当然也是存在一定的问题的，还有待考虑。现在很多文章也讲到LSM KV存储，当然，这涉及到数据库的知识点，还没有深挖。</p>
+<p><img src="/lv/img/article/SILK/SILK6.png" alt=""></p>
+<p>因此，SILK提出了一种<code>I/O调度算法</code>，合理使用Prioritize和 Preempt<br>
+专门给flushing和L0到L1的compaction配置I/O带宽，因为这两者直接影响客户端的延迟<br>
+动态的调整客户端和内部操作的带宽<br>
+<code>低层操作的优先级别更高</code>，并且可以抢占高层操作</p>
+<h4 id="i-want-to-say">“I want to say”</h4>
+<p>本文发现问题的思路非常巧妙，让人读起来感觉说得合情合理。并且对LSM KV存储的解读也非常到位。提出I/O调度方法很好的提升了性能。当然也是存在一定的问题的，还有待考虑。现在很多文章也讲到LSM KV存储，当然，这涉及到数据库的知识点，还没有深挖。</p>
 
                 
 
@@ -342,7 +364,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#lsm-kv"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#LSM-KV" class="headerlink" title="LSM KV"></a>LSM KV</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#问题及原因"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x95EE;&#x9898;&#x53CA;&#x539F;&#x56E0;" class="headerlink" title="&#x95EE;&#x9898;&#x53CA;&#x539F;&#x56E0;"></a>&#x95EE;&#x9898;&#x53CA;&#x539F;&#x56E0;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#先前的解决办法"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x5148;&#x524D;&#x7684;&#x89E3;&#x51B3;&#x529E;&#x6CD5;" class="headerlink" title="&#x5148;&#x524D;&#x7684;&#x89E3;&#x51B3;&#x529E;&#x6CD5;"></a>&#x5148;&#x524D;&#x7684;&#x89E3;&#x51B3;&#x529E;&#x6CD5;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#silk"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#SILK" class="headerlink" title="SILK"></a>SILK</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#lsm-kv"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">LSM KV</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#问题及原因"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x95EE;&#x9898;&#x53CA;&#x539F;&#x56E0;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#先前的解决办法"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x5148;&#x524D;&#x7684;&#x89E3;&#x51B3;&#x529E;&#x6CD5;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#silk"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">SILK</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

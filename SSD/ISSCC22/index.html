@@ -71,13 +71,13 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/passd_bg.png')
+            background-image: url('/lv/img/article_header/passd_bg.png')
             /*post*/
         
     }
     
     #signature{
-        background-image: url('/lv/img/signature/BeanTechSign-white.png');
+        background-image: url('/lv/lv/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -160,14 +160,14 @@
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
@@ -223,12 +223,25 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>随着数据大小呈指数级增长，对具有更小单元尺寸和更高接口速度的高密度闪存的需求也在增加。TLC NAND已在非易失性存储器市场占据主导地位，但QLC NAND正在成为低成本和高密度存储的合适替代品。然而，尽管QLC具有成本效益，但其市场份额并没有迅速增加，这不仅是因为其可靠性较差，而且还因为其缓慢的顺序和随机读取性能。而高性能是QLC NAND闪存进入主流系统的关键推动因素。当然，随着发展，3D-NAND闪存技术在其性能和可靠性方面有了显著的提高，使一个高密度的QLC器件的设计成为可能。<br><code>随之而来的技术问题包括以下几方面：</code><br>1）WL堆叠层数增加导致感测电路尺寸以及WL间距减小，这增加了晶体管差异和存储元间干扰；<br>2）随着WL数量的增加，BL负载很重；<br>3）为了节省芯片面积，采用CUA技术。为了提高随机读取性能，提出支持多plane独立读取，这会导致噪声功率增加；<br>4）随着接口速度的扩大，功率降低变得更加重要；<br>5）运行并发操作的不同裸片的高峰值电流事件；<br>6）缩小芯片尺寸和提高I/O速度（由独立平面读取或缓存读取中的高速I/O操作引起的）都会削弱配电网络 (PDN) 并增加电源噪声。这些会导致读取偏差出现波动，从而导致位故障率增加。具体来说，接地电压不均匀会导致严重的偏置失真。进一步引起重读导致的读性能下降问题。</p>
-<p>总的来说，2022年的论文进一步提升了WL的堆叠层数。KIOXIA和SK hynix在2021年提出了176层TLC，2022年实现了更高层QLC。可以看到，未来的QLC闪存的广泛部署使用依然是可能的。<br>技术上主要探讨如何进一步优化电路结构，来改善高I/O速度带来的高功率问题；怎么降低多plane读取时的噪声干扰问题；如何实现快速读取以及快速编程（双重验证模式）。其中，KIOXIA侧重电路优化，Micron和SK hynix侧重提升QLC的可靠性和读写性能，Micron在2022年提出了基于16-16的快速编程算法（双重验证来减少编程时间）。从编程可靠性角度来看，随着堆叠的WL数不断上升，采用两步编程依然不能很好地实现阈值电压分布，高电压状态受到干扰严重。另外，Samsung依然致力于TLC研究，以实现更高层数的TLC闪存（220层）。</p>
+                <h2 id="引子">引子</h2>
+<p>随着数据大小呈指数级增长，对具有更小单元尺寸和更高接口速度的高密度闪存的需求也在增加。TLC NAND已在非易失性存储器市场占据主导地位，但QLC NAND正在成为低成本和高密度存储的合适替代品。然而，尽管QLC具有成本效益，但其市场份额并没有迅速增加，这不仅是因为其可靠性较差，而且还因为其缓慢的顺序和随机读取性能。而高性能是QLC NAND闪存进入主流系统的关键推动因素。当然，随着发展，3D-NAND闪存技术在其性能和可靠性方面有了显著的提高，使一个高密度的QLC器件的设计成为可能。<br>
+<code>随之而来的技术问题包括以下几方面：</code><br>
+1）WL堆叠层数增加导致感测电路尺寸以及WL间距减小，这增加了晶体管差异和存储元间干扰；<br>
+2）随着WL数量的增加，BL负载很重；<br>
+3）为了节省芯片面积，采用CUA技术。为了提高随机读取性能，提出支持多plane独立读取，这会导致噪声功率增加；<br>
+4）随着接口速度的扩大，功率降低变得更加重要；<br>
+5）运行并发操作的不同裸片的高峰值电流事件；<br>
+6）缩小芯片尺寸和提高I/O速度（由独立平面读取或缓存读取中的高速I/O操作引起的）都会削弱配电网络 (PDN) 并增加电源噪声。这些会导致读取偏差出现波动，从而导致位故障率增加。具体来说，接地电压不均匀会导致严重的偏置失真。进一步引起重读导致的读性能下降问题。</p>
+<p>总的来说，2022年的论文进一步提升了WL的堆叠层数。KIOXIA和SK hynix在2021年提出了176层TLC，2022年实现了更高层QLC。可以看到，未来的QLC闪存的广泛部署使用依然是可能的。<br>
+技术上主要探讨如何进一步优化电路结构，来改善高I/O速度带来的高功率问题；怎么降低多plane读取时的噪声干扰问题；如何实现快速读取以及快速编程（双重验证模式）。其中，KIOXIA侧重电路优化，Micron和SK hynix侧重提升QLC的可靠性和读写性能，Micron在2022年提出了基于16-16的快速编程算法（双重验证来减少编程时间）。从编程可靠性角度来看，随着堆叠的WL数不断上升，采用两步编程依然不能很好地实现阈值电压分布，高电压状态受到干扰严重。另外，Samsung依然致力于TLC研究，以实现更高层数的TLC闪存（220层）。</p>
 <blockquote>
-<p>【WD，KIOXIA】A 1-Tb 4b/Cell 4-Plane 162-Layer 3D Flash Memory with a 2.4-Gb/s I/O Speed Interface<br>【Micron】A 1-Tb Density 4b/Cell 3D-NAND Flash on 176-Tier Technology with 4-Independent Planes for Read using CMOS-Under-the-Array<br>【SK hynix】A 1-Tb, 4b/Cell, 176-Stacked-WL 3D-NAND Flash Memory with Improved Read Latency and a 14.8Gb/mm2 Density<br>【Samsung】A 1Tb 3b/Cell 8th-Generation 3D-NAND Flash Memory with 164MB/s Write Throughput and a 2.4Gb/s Interface</p>
+<p>【WD，KIOXIA】A 1-Tb 4b/Cell 4-Plane 162-Layer 3D Flash Memory with a 2.4-Gb/s I/O Speed Interface<br>
+【Micron】A 1-Tb Density 4b/Cell 3D-NAND Flash on 176-Tier Technology with 4-Independent Planes for Read using CMOS-Under-the-Array<br>
+【SK hynix】A 1-Tb, 4b/Cell, 176-Stacked-WL 3D-NAND Flash Memory with Improved Read Latency and a 14.8Gb/mm2 Density<br>
+【Samsung】A 1Tb 3b/Cell 8th-Generation 3D-NAND Flash Memory with 164MB/s Write Throughput and a 2.4Gb/s Interface</p>
 </blockquote>
-<p><strong>【WD，KIOXIA】A 1-Tb 4b/Cell 4-Plane 162-Layer 3D Flash Memory with a 2.4-Gb/s I/O Speed Interface</strong><br>1Tb 162层3D-NAND QLC闪存的面积密度为15Gb/mm2，比之前的工作[1]高出8.7%。Die采用4个plane排列在2×2矩阵中。相关的字线驱动器、感测放大器（S/A）、电荷泵、电压发生器和控制逻辑电路放置在每个存储垫下面。</p>
+<p><strong>【WD，KIOXIA】A 1-Tb 4b/Cell 4-Plane 162-Layer 3D Flash Memory with a 2.4-Gb/s I/O Speed Interface</strong><br>
+1Tb 162层3D-NAND QLC闪存的面积密度为15Gb/mm2，比之前的工作[1]高出8.7%。Die采用4个plane排列在2×2矩阵中。相关的字线驱动器、感测放大器（S/A）、电荷泵、电压发生器和控制逻辑电路放置在每个存储垫下面。</p>
 <ul>
 <li>编程吞吐量 = 60MB/s，tR = 65μs，具有8KB central WL stair架构和contact-through-WL (CTW)区域；</li>
 <li><strong>I/O带宽：</strong> 使用LTT和CTT组合驱动程序，可以实现2.4Gb/s的I/O速度；</li>
@@ -236,9 +249,12 @@
 <li><strong>功耗：</strong> 时分峰值功率管理(TD-PPM)可以有效降低系统峰值功率，同时最大化系统性能；</li>
 <li><strong>测试方法：</strong> Cache DFT和I/O DFT功能支持在晶圆级(wafer level)的高速测试方法。</li>
 </ul>
-<p><img src="/img/article/ISSCC22/ISSCC22KIOXIA_1.png" alt=""></p>
-<p>【更新电路架构，提高性能】<br>介绍了circuit-under-array(CUA)的阵列结构接触Contact-through-WL(CTW)区域来连接过阵列和阵列下金属线。<br><strong>CUA：</strong> 用于页面缓冲区和源代码线驱动器的电源开关(power switches)分布在整个CTW区域，以提高性能；<br><strong>CNA：</strong> 而在CNA的情况下，这些电路被放置在页面缓冲区的两侧。</p>
-<p><img src="/img/article/ISSCC22/ISSCC22KIOXIA_2.png" alt=""></p>
+<p><img src="/lv/img/article/ISSCC22/ISSCC22KIOXIA_1.png" alt=""></p>
+<p>【更新电路架构，提高性能】<br>
+介绍了circuit-under-array(CUA)的阵列结构接触Contact-through-WL(CTW)区域来连接过阵列和阵列下金属线。<br>
+<strong>CUA：</strong> 用于页面缓冲区和源代码线驱动器的电源开关(power switches)分布在整个CTW区域，以提高性能；<br>
+<strong>CNA：</strong> 而在CNA的情况下，这些电路被放置在页面缓冲区的两侧。</p>
+<p><img src="/lv/img/article/ISSCC22/ISSCC22KIOXIA_2.png" alt=""></p>
 <p><strong>【Micron】A 1-Tb Density 4b/Cell 3D-NAND Flash on 176-Tier Technology with 4-Independent Planes for Read using CMOS-Under-the-Array</strong></p>
 <p>1Tb 176层 3D-NAND QLC 闪存。Die采用4-plane结构，页面大小为16KB。1×4 plane架构提高了编程和读取吞吐量，而不增加Die大小。使用第五代CMOS under array(CuA)技术，将外围电路和页面缓冲器放置在阵列下。CMOS under array (CuA)已作为3D NAND的重要技术创新被引入。零外围架构(zero-periphery architecture)是CuA的演变，其中整个外围都移动到阵列下方，但与焊盘和串驱动器相关的电路除外。与以前的架构相比，节省了10-20%的面积。</p>
 <ul>
@@ -250,7 +266,7 @@
 <li>I/O占空比校准模式，在高频I/O速率下显著，优化占空比；</li>
 <li><strong>I/O带宽：</strong> 在ONFI 4.2中，I/O传输速度为1600MT/s。</li>
 </ul>
-<p><img src="/img/article/ISSCC22/ISSCC22Micron_1.png" alt=""></p>
+<p><img src="/lv/img/article/ISSCC22/ISSCC22Micron_1.png" alt=""></p>
 <p><strong>【SK hynix】A 1-Tb, 4b/Cell, 176-Stacked-WL 3D-NAND Flash Memory with Improved Read Latency and a 14.8Gb/mm2 Density</strong></p>
 <p>1Tb 176层 QLC 3D-NAND闪存。Die采用 4-plane架构，页面大小为16KB，页面编程时间为1.6ms，编程吞吐量为40MB/s。使用单元阵列技术下的外围电路实现了14.8Gb/mm2 的位密度；</p>
 <ul>
@@ -258,14 +274,14 @@
 <li><strong>噪声：</strong> 接地噪声补偿ground-noise-compensation(GNC)方案可最大限度地减少独立plane和高速缓存读取操作期间的读取偏置电压波动。因此，Vth偏移被最小化，并且转移到错误缓解（即重读）的概率降低。</li>
 <li><strong>读性能：</strong> 设计了一种快速读取swift-read(SWR)算法来搜索最佳读取参考电压。GNC和SWR都减少了整体读操作延迟。</li>
 </ul>
-<p><img src="/img/article/ISSCC22/ISSCC22SK_1.png" alt=""></p>
+<p><img src="/lv/img/article/ISSCC22/ISSCC22SK_1.png" alt=""></p>
 <p><strong>【Samsung】A 1Tb 3b/Cell 8th-Generation 3D-NAND Flash Memory with 164MB/s Write Throughput and a 2.4Gb/s Interface</strong></p>
 <p>1Tb 3D-NAND TLC闪存(第8代)，在88.6mm2的裸片上制造了超过220个WL。Die采用4-plane(256Gb/plane)架构，页面大小为16KB，读写性能分别为1.64GB/s和164Mb/s（BL比之前的512Gb第七代闪存长1.6倍，对比可以看到，读写性能下降很多）；</p>
 <ul>
 <li><strong>I/O带宽：</strong> Toggle 5.0 接口功耗低，支持高达2.4Gb/s的I/O速度；在高速I/O带宽方面，还提出了接收电路和内部参考电压发生器，以提高I/O速度，降低待机功耗，减少芯片使能时的建立时间；</li>
 <li><strong>噪声：</strong> 提出偏移消除感应锁存器(OCSL)方案、四组无干扰读取(Q-IFR)方案和共源线(CSL)噪声跟踪方案；</li>
 </ul>
-<p><img src="/img/article/ISSCC22/ISSCC22Samsung_1.png" alt=""></p>
+<p><img src="/lv/img/article/ISSCC22/ISSCC22Samsung_1.png" alt=""></p>
 
                 
 
@@ -360,7 +376,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5F15;&#x5B50;" class="headerlink" title="&#x5F15;&#x5B50;"></a>&#x5F15;&#x5B50;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5F15;&#x5B50;</span></a></li></ol>
         
         </div>
       </aside>

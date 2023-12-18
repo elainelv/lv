@@ -71,13 +71,13 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/fstream_bg.jpg')
+            background-image: url('/lv/img/article_header/fstream_bg.jpg')
             /*post*/
         
     }
     
     #signature{
-        background-image: url('/lv/img/signature/BeanTechSign-white.png');
+        background-image: url('/lv/lv/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -156,14 +156,14 @@
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
@@ -219,26 +219,46 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><img src="/img/article_header/2018fenghui_bg.png" alt="/img/article_header/2018fenghui_bg.png"></p>
+                <p><img src="/lv/img/article_header/2018fenghui_bg.png" alt="/lv/img/article_header/2018fenghui_bg.png"></p>
 <blockquote>
 <p>去北京参加了2018中国存储与数据峰会，总得整理一下听的内容呀，供大家了解了解~</p>
 </blockquote>
-<h2 id="12月11日"><a href="#12月11日" class="headerlink" title="12月11日"></a>12月11日</h2><p>中午到达，听了下午的会议，下面挑几个介绍一哈</p>
-<h3 id="12018到2022数据中心ssd的新故事"><a href="#1-2018到2022数据中心SSD的新故事" class="headerlink" title="1.2018到2022数据中心SSD的新故事"></a>1.2018到2022数据中心SSD的新故事</h3><p>——Memblaze产品副总裁 张泰乐</p>
+<h2 id="12月11日">12月11日</h2>
+<p>中午到达，听了下午的会议，下面挑几个介绍一哈</p>
+<h3 id="12018到2022数据中心ssd的新故事">1.2018到2022数据中心SSD的新故事</h3>
+<p>——Memblaze产品副总裁 张泰乐</p>
 <blockquote>
 <p>张泰乐本人在NVMe、3D NAND 以及全球 SSD 市场发展和演进等多个领域有深入的研究和独到的见解，是不折不扣的业内专家</p>
 </blockquote>
-<h4 id="闪存"><a href="#闪存" class="headerlink" title="闪存"></a>闪存</h4><p>闪存是数据中心存储的未来，从闪存和控制器芯片到SSD，再到存储和数<br>1、闪存和介质<br>闪存是数据中心存储的未来，从闪存和控制器芯片到SSD，再到存储和数据中心基础架构，都围绕闪存产生了一大批新的技术和理念。<br>以前PCIe SSD还非常小众，缺乏标准化的领域，然而十年后NVMe 、3D NAND、全闪存阵列等技术都已经越来越成熟<br>目前的闪存主要分为NAND和NOR Flash ，其中NAND是按page读写，按block擦除，NOR为字节存储，目前大多数都是NAND型闪存<br>NAND价格预测<br>SSD的主要成本来自NAND<br>2、协议与功能<br>NVMe对上层来说是一个黑盒子，它的latency是不可控的</p>
-<h4 id="qlc"><a href="#QLC" class="headerlink" title="QLC"></a>QLC</h4><p>SLC——MLC——TLC——QLC<br>区别：一个晶体管可以放多少位，位数不同，电压变化也是不同的。上述不同类型使用寿命相差大<br>1、SLC：Single-Level Cell，每个Cell单元存储1bit信息，也就是只有0、1两种电压变化，结构简单，电压控制也快速- </p>
+<h4 id="闪存">闪存</h4>
+<p>闪存是数据中心存储的未来，从闪存和控制器芯片到SSD，再到存储和数<br>
+1、闪存和介质<br>
+闪存是数据中心存储的未来，从闪存和控制器芯片到SSD，再到存储和数据中心基础架构，都围绕闪存产生了一大批新的技术和理念。<br>
+以前PCIe SSD还非常小众，缺乏标准化的领域，然而十年后NVMe 、3D NAND、全闪存阵列等技术都已经越来越成熟<br>
+目前的闪存主要分为NAND和NOR Flash ，其中NAND是按page读写，按block擦除，NOR为字节存储，目前大多数都是NAND型闪存<br>
+NAND价格预测<br>
+SSD的主要成本来自NAND<br>
+2、协议与功能<br>
+NVMe对上层来说是一个黑盒子，它的latency是不可控的</p>
+<h4 id="qlc">QLC</h4>
+<p>SLC——MLC——TLC——QLC<br>
+区别：一个晶体管可以放多少位，位数不同，电压变化也是不同的。上述不同类型使用寿命相差大<br>
+1、SLC：Single-Level Cell，每个Cell单元存储1bit信息，也就是只有0、1两种电压变化，结构简单，电压控制也快速-</p>
 <ul>
 <li>特点：寿命长，性能强，寿命在1万到10万次之间</li>
-<li>缺点：容量低，成本高，毕竟一个Cell单元只能存储1bit信息<br>2、MLC：Multi-Level Cell，每个cell单元存储2bit信息，电压有四种变化，所以它比SLC需要更复杂的的电压控制，加压过程用时也变长，意味着写入性能降低了，同时可靠性也下降了，P/E寿命根据不同制程在3000-5000次不等<br>3、TLC：Trinary-Level Cell，3bit MLC，每个cell单元存储3bit信息，电压有8种变化，容量比MLC再次增加1/3，成本更低，但是架构更复杂，P/E编程时间长，写入速度慢，P/E寿命也降至1000-3000次<br>4、QLC：Quad-Level Cell，或者叫4bit MLC，一个晶体管可以放四个bit，电压有16种变化，容量增加了33%，但是写入性能差，寿命低，价格低。重写一遍基本不会再重写，与以往擦写不同。</li>
+<li>缺点：容量低，成本高，毕竟一个Cell单元只能存储1bit信息<br>
+2、MLC：Multi-Level Cell，每个cell单元存储2bit信息，电压有四种变化，所以它比SLC需要更复杂的的电压控制，加压过程用时也变长，意味着写入性能降低了，同时可靠性也下降了，P/E寿命根据不同制程在3000-5000次不等<br>
+3、TLC：Trinary-Level Cell，3bit MLC，每个cell单元存储3bit信息，电压有8种变化，容量比MLC再次增加1/3，成本更低，但是架构更复杂，P/E编程时间长，写入速度慢，P/E寿命也降至1000-3000次<br>
+4、QLC：Quad-Level Cell，或者叫4bit MLC，一个晶体管可以放四个bit，电压有16种变化，容量增加了33%，但是写入性能差，寿命低，价格低。重写一遍基本不会再重写，与以往擦写不同。</li>
 </ul>
 <blockquote>
 <p>说到这里，你是否会想到既然QLC容量上增加了那么多，价格还便宜，在未来是否会完全取代机械硬盘HDD呢？</p>
 </blockquote>
-<h4 id="闪存价格趋势"><a href="#闪存价格趋势" class="headerlink" title="闪存价格趋势"></a>闪存价格趋势</h4><p>闪存的价格持续走低，闪存进一步普及：<br><img src="/img/article/2018中国存储与数据峰会参会总结/1.png" alt=""></p>
-<h4 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h4><p>闪存与介质</p>
+<h4 id="闪存价格趋势">闪存价格趋势</h4>
+<p>闪存的价格持续走低，闪存进一步普及：<br>
+<img src="/lv/img/article/2018%E4%B8%AD%E5%9B%BD%E5%AD%98%E5%82%A8%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B3%B0%E4%BC%9A%E5%8F%82%E4%BC%9A%E6%80%BB%E7%BB%93/1.png" alt=""></p>
+<h4 id="summary">summary</h4>
+<p>闪存与介质</p>
 <ul>
 <li>闪存价格将持续下降，普及加速</li>
 <li>3D TLC在企业级已经成为绝对主流，QLC的市场份额在未来5年将显著增加，但无法取代TLC</li>
@@ -250,57 +270,105 @@
 <li>各自特殊的定制化会不断出现，但投入产出风险很大</li>
 <li>PCLe未来5年会增加4倍速度。SSD进入一个快速发展阶段</li>
 </ul>
-<h3 id="2存储新势力华为全系列nvme全闪存发布会"><a href="#2-存储新势力——华为全系列NVMe全闪存发布会" class="headerlink" title="2.存储新势力——华为全系列NVMe全闪存发布会"></a>2.存储新势力——华为全系列NVMe全闪存发布会</h3><p>——华为 肖德刚</p>
+<h3 id="2存储新势力华为全系列nvme全闪存发布会">2.存储新势力——华为全系列NVMe全闪存发布会</h3>
+<p>——华为 肖德刚</p>
 <blockquote>
 <p>华为的全闪存技术是市场的领导者</p>
 </blockquote>
-<p>来自会场的展览图：<br><img src="/img/article/2018中国存储与数据峰会参会总结/2.png" alt=""></p>
-<p>华为在闪存领域13年持续积累：<br>2005年，华为投入SSD研发<br>2008年，自主研发第一代 SATA SSD<br>2011年，第一代全闪存阵列Dorado2100上市<br>2012年，第二代全闪存阵列Dorado2100 G2上市，具备磨损均衡能力<br>2015年，业界领先的12G bit/s SAS SSD<br>2016年，又快又稳全闪存Dorado V3上市<br>2017年，业界首个商用NVMe全闪存 Dorado5000 V3上市</p>
-<p>业内唯一全系列支持NVMe，领先于Dell EMC、NetApp和Pure Storage<br>一套系列同时支持SAN和NAS，企业级特性齐备，提供更高品质的数据服务，数据缩减率可达5:1，性能和效率兼得</p>
-<p><img src="/img/article/2018中国存储与数据峰会参会总结/3.png" alt=""></p>
-<h3 id="3新存储-驱数据-领未来"><a href="#3-新存储、驱数据、领未来" class="headerlink" title="3.新存储、驱数据、领未来"></a>3.新存储、驱数据、领未来</h3><p>——紫光西部数据 靳扬<br>云计算————————大数据————————人工智能<br>(数据获取)   (数据存储)     (数据处理)</p>
-<h4 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h4><p>当今世界，已经是一个数据爆炸的时代了，那么如何来提高一系列性能呢？</p>
+<p>来自会场的展览图：<br>
+<img src="/lv/img/article/2018%E4%B8%AD%E5%9B%BD%E5%AD%98%E5%82%A8%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B3%B0%E4%BC%9A%E5%8F%82%E4%BC%9A%E6%80%BB%E7%BB%93/2.png" alt=""></p>
+<p>华为在闪存领域13年持续积累：<br>
+2005年，华为投入SSD研发<br>
+2008年，自主研发第一代 SATA SSD<br>
+2011年，第一代全闪存阵列Dorado2100上市<br>
+2012年，第二代全闪存阵列Dorado2100 G2上市，具备磨损均衡能力<br>
+2015年，业界领先的12G bit/s SAS SSD<br>
+2016年，又快又稳全闪存Dorado V3上市<br>
+2017年，业界首个商用NVMe全闪存 Dorado5000 V3上市</p>
+<p>业内唯一全系列支持NVMe，领先于Dell EMC、NetApp和Pure Storage<br>
+一套系列同时支持SAN和NAS，企业级特性齐备，提供更高品质的数据服务，数据缩减率可达5:1，性能和效率兼得</p>
+<p><img src="/lv/img/article/2018%E4%B8%AD%E5%9B%BD%E5%AD%98%E5%82%A8%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B3%B0%E4%BC%9A%E5%8F%82%E4%BC%9A%E6%80%BB%E7%BB%93/3.png" alt=""></p>
+<h3 id="3新存储-驱数据-领未来">3.新存储、驱数据、领未来</h3>
+<p>——紫光西部数据 靳扬<br>
+云计算————————大数据————————人工智能<br>
+(数据获取)   (数据存储)     (数据处理)</p>
+<h4 id="技术">技术</h4>
+<p>当今世界，已经是一个数据爆炸的时代了，那么如何来提高一系列性能呢？</p>
 <p>1、极致性能</p>
 <ul>
 <li>最快响应，提高I/O吞吐能力</li>
-<li>任何时间、任何设备、进行安全访问<br>如何做？<br>动态跨云：跨云统一命名空间、多协议便捷访问、数据流的方式<br>2、跨云访问</li>
-<li>云架构、虚拟桌面、虚拟服务器、……<br>3、AI就绪</li>
+<li>任何时间、任何设备、进行安全访问<br>
+如何做？<br>
+动态跨云：跨云统一命名空间、多协议便捷访问、数据流的方式<br>
+2、跨云访问</li>
+<li>云架构、虚拟桌面、虚拟服务器、……<br>
+3、AI就绪</li>
 <li>边缘计算、大数据云平台</li>
-<li>全闪存——分布式——海量存储<br>4、绿色运维</li>
+<li>全闪存——分布式——海量存储<br>
+4、绿色运维</li>
 <li>延时下降、空间节约、能源节约、能耗下降</li>
 </ul>
-<h4 id="紫光西部数据产品"><a href="#紫光西部数据产品" class="headerlink" title="紫光西部数据产品"></a>紫光西部数据产品</h4><p>UniverScale C18000 ： 自主、安全、可控</p>
+<h4 id="紫光西部数据产品">紫光西部数据产品</h4>
+<p>UniverScale C18000 ： 自主、安全、可控</p>
 <ul>
 <li>紫光西部数据UniverScale 分布式云存储系统是一套成熟、开放、经济、易用，基于软件定义的超规模多协议海量存储系统。采用弹性、稳定、高效、融合，支持纵向和横向全方位扩展（Scale Anything）的全对称分布式架构</li>
 <li>采用高级别冗余模式，数据耐受度极高，可满足EB级存储容量需求、千万级IOPS性能以及百GB级综合带宽需求</li>
 <li>统可广泛应用于气象预测、 教育科研、 能源勘探、广电媒资、视频监控、生物工程、卫星测绘等领域，面向大数据分析、私有云、高性能计算、海量文件、桌面云和大容量备份归档等多种应用场景。</li>
 </ul>
-<p><img src="/img/article/2018中国存储与数据峰会参会总结/4.png" alt=""></p>
-<h3 id="4打造硬核存储构筑数字化基石"><a href="#4-打造“硬核”存储，构筑数字化基石" class="headerlink" title="4.打造“硬核”存储，构筑数字化基石"></a>4.打造“硬核”存储，构筑数字化基石</h3><p>——郑穆 紫晶存储</p>
-<h4 id="存储介质"><a href="#存储介质" class="headerlink" title="存储介质"></a>存储介质</h4><p>介质是存储领域的关键技术,在当前普及的磁、光、电存储技术中, 国外公司始终把控着磁、电的核心介质,国内无法做到真正自主可控,存储安全问题面临极大的挑战。因此,从底层存储介质开始实现安全可控成为了一种刚性需求</p>
+<p><img src="/lv/img/article/2018%E4%B8%AD%E5%9B%BD%E5%AD%98%E5%82%A8%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B3%B0%E4%BC%9A%E5%8F%82%E4%BC%9A%E6%80%BB%E7%BB%93/4.png" alt=""></p>
+<h3 id="4打造硬核存储构筑数字化基石">4.打造“硬核”存储，构筑数字化基石</h3>
+<p>——郑穆 紫晶存储</p>
+<h4 id="存储介质">存储介质</h4>
+<p>介质是存储领域的关键技术,在当前普及的磁、光、电存储技术中, 国外公司始终把控着磁、电的核心介质,国内无法做到真正自主可控,存储安全问题面临极大的挑战。因此,从底层存储介质开始实现安全可控成为了一种刚性需求</p>
 <ul>
 <li>磁存储：硬盘、磁带</li>
 <li>半导体存储技术：Flash Memory</li>
-<li>光存储技术：光盘ODD，最核心的技术是<code>蓝光光盘</code><br>目前, 全息光存储技术是紫晶存储的研发方向,2019年,全息产品的样机即将问世。</li>
+<li>光存储技术：光盘ODD，最核心的技术是<code>蓝光光盘</code><br>
+目前, 全息光存储技术是紫晶存储的研发方向,2019年,全息产品的样机即将问世。</li>
 </ul>
-<p>在11号的会议上，sony公司也介绍了他们的光盘存储技术，有兴趣的可以去了解一下<br>Sony 公司：optical Disc Archive（ODA），1T，3GB/s</p>
-<p>下面着重介绍下蓝光存储技术，这个词在这次会议上对我来说是第一次听到，也是非常的好奇了。<br><code>蓝光光盘（BDR）</code>：它的记录层金属材料接收镭射激光转换成热能，并借由所造成对滴局部高温在记录层上形成“物理变换”。由于转换时不可逆的，因此已存储的数据不能够再被篡改，这是一种真正意义上的一次性写入的记录介质。所以理论上相比其他可能被攻击或篡改的介质，蓝光光盘在长期存储上很有优势，可以确保数据不可攻击和篡改。</p>
+<p>在11号的会议上，sony公司也介绍了他们的光盘存储技术，有兴趣的可以去了解一下<br>
+Sony 公司：optical Disc Archive（ODA），1T，3GB/s</p>
+<p>下面着重介绍下蓝光存储技术，这个词在这次会议上对我来说是第一次听到，也是非常的好奇了。<br>
+<code>蓝光光盘（BDR）</code>：它的记录层金属材料接收镭射激光转换成热能，并借由所造成对滴局部高温在记录层上形成“物理变换”。由于转换时不可逆的，因此已存储的数据不能够再被篡改，这是一种真正意义上的一次性写入的记录介质。所以理论上相比其他可能被攻击或篡改的介质，蓝光光盘在长期存储上很有优势，可以确保数据不可攻击和篡改。</p>
 <p><strong>紫晶存储BDR：</strong></p>
 <blockquote>
-<p>记录密度高存储容量大<br>405nm波长的蓝紫光激光器<br>0.85数值孔径的光学头<br>轨道间距为0.32微妙<br>蓝光光盘的记录介质采用无机材料<br>可实现超长寿命<br>基于紫晶存储自主开发的材料和技术<br>光盘采用非接触式读写<br>无接触、没有磨损、可靠性高、寿命长<br>记录的信息不会因为反复读取而产生信息衰减<br>激光头焦距的改变可以改变记录层的相对位置信息<br>这使得光存储实现多层记录称为可能</p>
+<p>记录密度高存储容量大<br>
+405nm波长的蓝紫光激光器<br>
+0.85数值孔径的光学头<br>
+轨道间距为0.32微妙<br>
+蓝光光盘的记录介质采用无机材料<br>
+可实现超长寿命<br>
+基于紫晶存储自主开发的材料和技术<br>
+光盘采用非接触式读写<br>
+无接触、没有磨损、可靠性高、寿命长<br>
+记录的信息不会因为反复读取而产生信息衰减<br>
+激光头焦距的改变可以改变记录层的相对位置信息<br>
+这使得光存储实现多层记录称为可能</p>
 </blockquote>
-<h2 id="12月12日"><a href="#12月12日" class="headerlink" title="12月12日"></a>12月12日</h2><p>12号是论坛 ，上午去听了闪存存储和应用论坛，下午串场先去听了西瓜哥讲的第二存储，之后都在闪存国际合作论坛。下午早早的去占座，坐到了VIP后面一排，然而下午各位大牛们讲的都是他们公司的产品，商业自吹，没有上午的有意思……虽然讲的都是各大公司的大牛！</p>
-<h3 id="1阿里巴巴用户态单机存储引擎与ssd演进"><a href="#1-阿里巴巴用户态单机存储引擎与SSD演进" class="headerlink" title="1.阿里巴巴用户态单机存储引擎与SSD演进"></a>1.阿里巴巴用户态单机存储引擎与SSD演进</h3><p>——刘攀 阿里巴巴</p>
-<p>用户态核心难点：<br>设备管理：重建设备管理运维体系<br>内存管理：实现虚拟地址映射虚实<br>进程通信：实现共享内存回收、死锁处理、内存互踩<br>提出了一个FusionEngine框架：协议、运维工具、测试平台等</p>
-<p>用户态文件系统<br>痛点：元数据更新频繁，日志双写。<br>解决方案：</p>
+<h2 id="12月12日">12月12日</h2>
+<p>12号是论坛 ，上午去听了闪存存储和应用论坛，下午串场先去听了西瓜哥讲的第二存储，之后都在闪存国际合作论坛。下午早早的去占座，坐到了VIP后面一排，然而下午各位大牛们讲的都是他们公司的产品，商业自吹，没有上午的有意思……虽然讲的都是各大公司的大牛！</p>
+<h3 id="1阿里巴巴用户态单机存储引擎与ssd演进">1.阿里巴巴用户态单机存储引擎与SSD演进</h3>
+<p>——刘攀 阿里巴巴</p>
+<p>用户态核心难点：<br>
+设备管理：重建设备管理运维体系<br>
+内存管理：实现虚拟地址映射虚实<br>
+进程通信：实现共享内存回收、死锁处理、内存互踩<br>
+提出了一个FusionEngine框架：协议、运维工具、测试平台等</p>
+<p>用户态文件系统<br>
+痛点：元数据更新频繁，日志双写。<br>
+解决方案：</p>
 <ul>
 <li>1、针对分布式存储的特点，定制化用户态文件系统</li>
 <li>2、全新的数据格式，元数据更新频率降低到ext4的1/1000</li>
 </ul>
-<p>下面介绍一下open channel SSD——AliFlash V3<br><img src="/img/article/2018中国存储与数据峰会参会总结/5.png" alt=""></p>
+<p>下面介绍一下open channel SSD——AliFlash V3<br>
+<img src="/lv/img/article/2018%E4%B8%AD%E5%9B%BD%E5%AD%98%E5%82%A8%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B3%B0%E4%BC%9A%E5%8F%82%E4%BC%9A%E6%80%BB%E7%BB%93/5.png" alt=""></p>
 <p>Open Channel SSD(OCS)：这样控制器只负责Flash数据传输、ECC、RAID、垃圾回收引擎、错误处理、坏块管理等工作，而FTL层的设计由Host自己根据需求实现。这样也方便用几个控制器组成一个大的SSD，甚至阵列</p>
-<h2 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h2><blockquote>
-<p>不同的技术有不同的对象，来解决不同的问题<br>考虑方案的时候往往是在特定场合下的，针对特定的问题，但是不妨碍我们去追求一种perfect、适合几乎所有应用场景的技术<br>最大的体会就是要清楚自己所研究的领域有哪些先进技术，未来发展趋势如何</p>
+<h2 id="i-want-to-say">�I want to say�</h2>
+<blockquote>
+<p>不同的技术有不同的对象，来解决不同的问题<br>
+考虑方案的时候往往是在特定场合下的，针对特定的问题，但是不妨碍我们去追求一种perfect、适合几乎所有应用场景的技术<br>
+最大的体会就是要清楚自己所研究的领域有哪些先进技术，未来发展趋势如何</p>
 </blockquote>
 <p>这是第一次去听这样大型的会议，学习了很多，了解了很多，体会了很多，这一趟北京之行收获满满！也满足了再次去北京天安门广场的心愿，记得上一次去的时候是上小学前一年，当时还没有那么多的感触，只是感觉天安门广场宏伟壮观！转眼过去16年了！哇！再次看到的时候，跑过去正好一排护旗手走向前方，当国歌响起，护旗手撒开国旗的时候，迎着未升起的太阳，瞬间就起鸡皮疙瘩了，无法用言语来形容当时的心情！！</p>
 
@@ -391,7 +459,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#12月11日"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#12&#x6708;11&#x65E5;" class="headerlink" title="12&#x6708;11&#x65E5;"></a>12&#x6708;11&#x65E5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#12018到2022数据中心ssd的新故事"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#1-2018&#x5230;2022&#x6570;&#x636E;&#x4E2D;&#x5FC3;SSD&#x7684;&#x65B0;&#x6545;&#x4E8B;" class="headerlink" title="1.2018&#x5230;2022&#x6570;&#x636E;&#x4E2D;&#x5FC3;SSD&#x7684;&#x65B0;&#x6545;&#x4E8B;"></a>1.2018&#x5230;2022&#x6570;&#x636E;&#x4E2D;&#x5FC3;SSD&#x7684;&#x65B0;&#x6545;&#x4E8B;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text"><a href="#&#x95EA;&#x5B58;" class="headerlink" title="&#x95EA;&#x5B58;"></a>&#x95EA;&#x5B58;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#qlc"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text"><a href="#QLC" class="headerlink" title="QLC"></a>QLC</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存价格趋势"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text"><a href="#&#x95EA;&#x5B58;&#x4EF7;&#x683C;&#x8D8B;&#x52BF;" class="headerlink" title="&#x95EA;&#x5B58;&#x4EF7;&#x683C;&#x8D8B;&#x52BF;"></a>&#x95EA;&#x5B58;&#x4EF7;&#x683C;&#x8D8B;&#x52BF;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#summary"><span class="toc-nav-number">1.1.4.</span> <span class="toc-nav-text"><a href="#summary" class="headerlink" title="summary"></a>summary</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2存储新势力华为全系列nvme全闪存发布会"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#2-&#x5B58;&#x50A8;&#x65B0;&#x52BF;&#x529B;&#x2014;&#x2014;&#x534E;&#x4E3A;&#x5168;&#x7CFB;&#x5217;NVMe&#x5168;&#x95EA;&#x5B58;&#x53D1;&#x5E03;&#x4F1A;" class="headerlink" title="2.&#x5B58;&#x50A8;&#x65B0;&#x52BF;&#x529B;&#x2014;&#x2014;&#x534E;&#x4E3A;&#x5168;&#x7CFB;&#x5217;NVMe&#x5168;&#x95EA;&#x5B58;&#x53D1;&#x5E03;&#x4F1A;"></a>2.&#x5B58;&#x50A8;&#x65B0;&#x52BF;&#x529B;&#x2014;&#x2014;&#x534E;&#x4E3A;&#x5168;&#x7CFB;&#x5217;NVMe&#x5168;&#x95EA;&#x5B58;&#x53D1;&#x5E03;&#x4F1A;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3新存储-驱数据-领未来"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><a href="#3-&#x65B0;&#x5B58;&#x50A8;&#x3001;&#x9A71;&#x6570;&#x636E;&#x3001;&#x9886;&#x672A;&#x6765;" class="headerlink" title="3.&#x65B0;&#x5B58;&#x50A8;&#x3001;&#x9A71;&#x6570;&#x636E;&#x3001;&#x9886;&#x672A;&#x6765;"></a>3.&#x65B0;&#x5B58;&#x50A8;&#x3001;&#x9A71;&#x6570;&#x636E;&#x3001;&#x9886;&#x672A;&#x6765;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#技术"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text"><a href="#&#x6280;&#x672F;" class="headerlink" title="&#x6280;&#x672F;"></a>&#x6280;&#x672F;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#紫光西部数据产品"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text"><a href="#&#x7D2B;&#x5149;&#x897F;&#x90E8;&#x6570;&#x636E;&#x4EA7;&#x54C1;" class="headerlink" title="&#x7D2B;&#x5149;&#x897F;&#x90E8;&#x6570;&#x636E;&#x4EA7;&#x54C1;"></a>&#x7D2B;&#x5149;&#x897F;&#x90E8;&#x6570;&#x636E;&#x4EA7;&#x54C1;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4打造硬核存储构筑数字化基石"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text"><a href="#4-&#x6253;&#x9020;&#x201C;&#x786C;&#x6838;&#x201D;&#x5B58;&#x50A8;&#xFF0C;&#x6784;&#x7B51;&#x6570;&#x5B57;&#x5316;&#x57FA;&#x77F3;" class="headerlink" title="4.&#x6253;&#x9020;&#x201C;&#x786C;&#x6838;&#x201D;&#x5B58;&#x50A8;&#xFF0C;&#x6784;&#x7B51;&#x6570;&#x5B57;&#x5316;&#x57FA;&#x77F3;"></a>4.&#x6253;&#x9020;&#x201C;&#x786C;&#x6838;&#x201D;&#x5B58;&#x50A8;&#xFF0C;&#x6784;&#x7B51;&#x6570;&#x5B57;&#x5316;&#x57FA;&#x77F3;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#存储介质"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text"><a href="#&#x5B58;&#x50A8;&#x4ECB;&#x8D28;" class="headerlink" title="&#x5B58;&#x50A8;&#x4ECB;&#x8D28;"></a>&#x5B58;&#x50A8;&#x4ECB;&#x8D28;</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#12月12日"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#12&#x6708;12&#x65E5;" class="headerlink" title="12&#x6708;12&#x65E5;"></a>12&#x6708;12&#x65E5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1阿里巴巴用户态单机存储引擎与ssd演进"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#1-&#x963F;&#x91CC;&#x5DF4;&#x5DF4;&#x7528;&#x6237;&#x6001;&#x5355;&#x673A;&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x4E0E;SSD&#x6F14;&#x8FDB;" class="headerlink" title="1.&#x963F;&#x91CC;&#x5DF4;&#x5DF4;&#x7528;&#x6237;&#x6001;&#x5355;&#x673A;&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x4E0E;SSD&#x6F14;&#x8FDB;"></a>1.&#x963F;&#x91CC;&#x5DF4;&#x5DF4;&#x7528;&#x6237;&#x6001;&#x5355;&#x673A;&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x4E0E;SSD&#x6F14;&#x8FDB;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#12月11日"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">12&#x6708;11&#x65E5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#12018到2022数据中心ssd的新故事"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.2018&#x5230;2022&#x6570;&#x636E;&#x4E2D;&#x5FC3;SSD&#x7684;&#x65B0;&#x6545;&#x4E8B;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">&#x95EA;&#x5B58;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#qlc"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">QLC</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存价格趋势"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text">&#x95EA;&#x5B58;&#x4EF7;&#x683C;&#x8D8B;&#x52BF;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#summary"><span class="toc-nav-number">1.1.4.</span> <span class="toc-nav-text">summary</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2存储新势力华为全系列nvme全闪存发布会"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">2.&#x5B58;&#x50A8;&#x65B0;&#x52BF;&#x529B;&#x2014;&#x2014;&#x534E;&#x4E3A;&#x5168;&#x7CFB;&#x5217;NVMe&#x5168;&#x95EA;&#x5B58;&#x53D1;&#x5E03;&#x4F1A;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3新存储-驱数据-领未来"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">3.&#x65B0;&#x5B58;&#x50A8;&#x3001;&#x9A71;&#x6570;&#x636E;&#x3001;&#x9886;&#x672A;&#x6765;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#技术"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">&#x6280;&#x672F;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#紫光西部数据产品"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">&#x7D2B;&#x5149;&#x897F;&#x90E8;&#x6570;&#x636E;&#x4EA7;&#x54C1;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4打造硬核存储构筑数字化基石"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">4.&#x6253;&#x9020;&#x201C;&#x786C;&#x6838;&#x201D;&#x5B58;&#x50A8;&#xFF0C;&#x6784;&#x7B51;&#x6570;&#x5B57;&#x5316;&#x57FA;&#x77F3;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#存储介质"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">&#x5B58;&#x50A8;&#x4ECB;&#x8D28;</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#12月12日"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">12&#x6708;12&#x65E5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1阿里巴巴用户态单机存储引擎与ssd演进"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">1.&#x963F;&#x91CC;&#x5DF4;&#x5DF4;&#x7528;&#x6237;&#x6001;&#x5355;&#x673A;&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x4E0E;SSD&#x6F14;&#x8FDB;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#xFFFD;I want to say&#xFFFD;</span></a></li></ol>
         
         </div>
       </aside>

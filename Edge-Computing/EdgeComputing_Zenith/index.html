@@ -71,13 +71,13 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/zenith_bg.jpg')
+            background-image: url('/lv/img/article_header/zenith_bg.jpg')
             /*post*/
         
     }
     
     #signature{
-        background-image: url('/lv/img/signature/BeanTechSign-white.png');
+        background-image: url('/lv/lv/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -156,14 +156,14 @@
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
@@ -220,48 +220,72 @@
                 post-container">
 
                 <p>介绍一种在边缘计算中的共享资源分配模型。 <a href="http://xueshu.baidu.com/s?wd=paperuri%3A%2835eedc5032f2ab14412eb9d03f44c4db%29&amp;filter=sc_long_sign&amp;tn=SE_xueshusource_2kduw22v&amp;sc_vurl=http%3A%2F%2Fieeexplore.ieee.org%2Fdocument%2F8029256%2F&amp;ie=utf-8&amp;sc_us=2927924244757260204" target="_blank" rel="noopener">原文链接</a></p>
-<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><p>@Authors：Jinlai Xu，Balaji Palanisamy，Heiko Ludwig，Qingyang Wang<br>@Published in: IEEE International Conference on Edge Computing<br>@Presented by: Yina Lv , Time: Qct 10, 2018<br>@Action：October 10, 2018 11:55 PM</p>
+<h2 id=""><a id="more"></a></h2>
+<p>@Authors：Jinlai Xu，Balaji Palanisamy，Heiko Ludwig，Qingyang Wang<br>
+@Published in: IEEE International Conference on Edge Computing<br>
+@Presented by: Yina Lv , Time: Qct 10, 2018<br>
+@Action：October 10, 2018 11:55 PM</p>
 <hr>
-<h3 id="schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h3><ul>
+<h3 id="schema">Schema</h3>
+<ul>
 <li>首先，提出Zenith，一种解耦的资源分配模型，它管理在边缘分布的计算资源的分配，而与服务提供商端执行的服务供应管理无关。</li>
 <li>其次，基于该模型，开发了基于拍卖的资源共享合同建立和分配机制，以确保ECIP（边缘计算基础设施提供商）和SP（服务提供商）的真实性和效用最大化。</li>
 <li>第三，我们开发了一种延迟感知任务调度机制，该机制将合同中提交的资源分配给工作负载中的特定作业。</li>
 <li>最后，我们通过广泛的实验来评估所提出的技术，这些实验证明了所提出模型的有效性，可扩展性和性能。</li>
 </ul>
-<h3 id="introduce"><a href="#Introduce" class="headerlink" title="Introduce"></a>Introduce</h3><ul>
-<li><p>在物联网领域，一些对时间敏感的应用需求在不断上升，例如，基于位置的增强现实游戏、实时智能电网管理、使用可穿戴设备的实施导航等。<br><img src="/img/article/EdgeComputing_Zenith/Model.png" alt=""></p>
+<h3 id="introduce">Introduce</h3>
+<ul>
+<li>
+<p>在物联网领域，一些对时间敏感的应用需求在不断上升，例如，基于位置的增强现实游戏、实时智能电网管理、使用可穿戴设备的实施导航等。<br>
+<img src="/lv/img/article/EdgeComputing_Zenith/Model.png" alt=""></p>
 </li>
-<li><p>而在边缘计算模型中，提供了额外的基础架构层，以填补物联网设备和后端计算基础架构之间的延迟差距。</p>
+<li>
+<p>而在边缘计算模型中，提供了额外的基础架构层，以填补物联网设备和后端计算基础架构之间的延迟差距。</p>
 </li>
-<li>在上述的边缘计算模型中，代表计算基础设施的Ad hoc和分布式集合的小规模微数据中心在管理和有效资源共享方面需要改进，以实现全球资源的有效分配。</li>
+<li>
+<p>在上述的边缘计算模型中，代表计算基础设施的Ad hoc和分布式集合的小规模微数据中心在管理和有效资源共享方面需要改进，以实现全球资源的有效分配。</p>
+</li>
 </ul>
-<h3 id="problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h3><ul>
+<h3 id="problems">Problems</h3>
+<ul>
 <li>限制了成本效益的提高</li>
 <li>延时高</li>
 <li>系统总体利用率低</li>
 </ul>
-<h3 id="model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><ul>
-<li>在本文中，提出了一种在边缘计算平台中分配资源的新模型——<strong>Zenith</strong>。将基础架构（ECI）的管理和服务管理分离，使ECI独立于服务供应商（SP）的服务供应和服务管理，而由边缘计算基础架构供应商（ECIP）管理，并且SP与ECIP建立资源共享合同。基于已经建立的合同，SP采用<strong>延迟感知调度和资源供应算法</strong>，使任务能够完成并满足其延迟要求。</li>
-<li><p>下面是Zenith的架构和模型<br><img src="/img/article/EdgeComputing_Zenith/WVD.png" alt=""></p>
+<h3 id="model">Model</h3>
 <ul>
-<li>在这幅图中，我们考虑这样一个问题：每个MDC管理哪些request呢？<ul>
+<li>
+<p>在本文中，提出了一种在边缘计算平台中分配资源的新模型——<strong>Zenith</strong>。将基础架构（ECI）的管理和服务管理分离，使ECI独立于服务供应商（SP）的服务供应和服务管理，而由边缘计算基础架构供应商（ECIP）管理，并且SP与ECIP建立资源共享合同。基于已经建立的合同，SP采用<strong>延迟感知调度和资源供应算法</strong>，使任务能够完成并满足其延迟要求。</p>
+</li>
+<li>
+<p>下面是Zenith的架构和模型<br>
+<img src="/lv/img/article/EdgeComputing_Zenith/WVD.png" alt=""></p>
+</li>
+<li>
+<p>在这幅图中，我们考虑这样一个问题：每个MDC管理哪些request呢？</p>
+<ul>
 <li>采取延迟最小，这是个NP-hard问题，因此我们将延迟最小化问题转化为地域划分问题，这种方式称为WVD（Weighted Voronoi Diagrams）</li>
 <li>WVD方法在GIS、sensor networks 和wireless networks广泛应用</li>
 <li>MDC根据historical workload来调整自身管理区域大小</li>
 </ul>
 </li>
-</ul>
+<li>
+<p>Zenith的资源分配策略</p>
 </li>
-<li><p>Zenith的资源分配策略</p>
-<ul>
-<li><strong>SP</strong> ：buys resources, pay for the contract and has the right to observe the performance of the resource that is allocated to it.</li>
-<li><strong>ECIP</strong> ：sells resources, it must guarantee the performance of the resources which are leased to the buyers. It collects the payments from the buyers.</li>
-<li><strong>Coordinator</strong> ：a third-party service which is trusted by the ECIPs and SPs in the system and it is responsible for providing a platform for the ECIPs to trade resources with the SPs.</li>
-<li><strong>contract manager</strong> ：a component associated with both the SP and ECIP to manage the resource sharing contracts agreed by them.</li>
-</ul>
+<li>
+<p><strong>SP</strong> ：buys resources, pay for the contract and has the right to observe the performance of the resource that is allocated to it.</p>
+</li>
+<li>
+<p><strong>ECIP</strong> ：sells resources, it must guarantee the performance of the resources which are leased to the buyers. It collects the payments from the buyers.</p>
+</li>
+<li>
+<p><strong>Coordinator</strong> ：a third-party service which is trusted by the ECIPs and SPs in the system and it is responsible for providing a platform for the ECIPs to trade resources with the SPs.</p>
+</li>
+<li>
+<p><strong>contract manager</strong> ：a component associated with both the SP and ECIP to manage the resource sharing contracts agreed by them.</p>
 </li>
 </ul>
-<p><img src="/img/article/EdgeComputing_Zenith/resource.png" alt=""></p>
+<p><img src="/lv/img/article/EdgeComputing_Zenith/resource.png" alt=""></p>
 <ul>
 <li>每个红色表示的MDC中有很多的server，每个server中有很多的container，用于处理请求的设备资源</li>
 <li>蓝色表示的ECIP组成ECIF（edge computing infrastructure federation）</li>
@@ -271,34 +295,50 @@
 <li>所谓按需租用：service command越大-&gt;workload越高-&gt;需要的container也多</li>
 <li>签订的contract由contract manager管理</li>
 </ul>
-<h3 id="bidding-strategy"><a href="#Bidding-Strategy" class="headerlink" title="Bidding Strategy"></a>Bidding Strategy</h3><ul>
-<li><p>For SP, the bidding strategy is to bid by the true value that the SP believes for the resources, which is represented by the utility function we discussed above.<br><img src="/img/article/EdgeComputing_Zenith/gs.png" alt=""></p>
+<h3 id="bidding-strategy">Bidding Strategy</h3>
+<ul>
+<li>
+<p>For SP, the bidding strategy is to bid by the true value that the SP believes for the resources, which is represented by the utility function we discussed above.<br>
+<img src="/lv/img/article/EdgeComputing_Zenith/gs.png" alt=""></p>
 </li>
-<li><p>For MDC, the sell bid is set to the operating cost, which means if the bid wins, the MDC can at least break even the cost.</p>
+<li>
+<p>For MDC, the sell bid is set to the operating cost, which means if the bid wins, the MDC can at least break even the cost.</p>
 </li>
 </ul>
-<h3 id="mcafee-mechanismthe-winning-bids-decision-algorithm"><a href="#McAfee-mechanism：The-winning-bids-decision-algorithm" class="headerlink" title="McAfee mechanism：The winning bids decision algorithm"></a>McAfee mechanism：The winning bids decision algorithm</h3><p><img src="/img/article/EdgeComputing_Zenith/bid.png" alt=""></p>
+<h3 id="mcafee-mechanismthe-winning-bids-decision-algorithm">McAfee mechanism：The winning bids decision algorithm</h3>
+<p><img src="/lv/img/article/EdgeComputing_Zenith/bid.png" alt=""></p>
 <ul>
 <li>Step1：SP估计每个区域r中每个位置的工作量，以获得估计的工作量</li>
 <li>Step2: 协调员使用算法1为每个区域r决定中标，每个获胜者和MDC的所有者建立合同</li>
 <li>Step3: 如果MDC没有销售完所有的资源，此时这轮的拍卖结束，那么MDC参加下一轮的拍卖</li>
 </ul>
-<h3 id="experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><ul>
-<li>通过广泛的实验评估所提出的技术，实验中考虑了三个性能指标：工作响应时间，满足响应时间的成功率，资源利用率。通过改变三个参数来测试以上性能：每个MDC中服务器的数目，MDC的数目，响应时间的约束。实验结果表明，所提出的模型无论是性能、有效性还是扩展性均比CEC和Cloud的要好。<ul>
+<h3 id="experiment">Experiment</h3>
+<ul>
+<li>
+<p>通过广泛的实验评估所提出的技术，实验中考虑了三个性能指标：工作响应时间，满足响应时间的成功率，资源利用率。通过改变三个参数来测试以上性能：每个MDC中服务器的数目，MDC的数目，响应时间的约束。实验结果表明，所提出的模型无论是性能、有效性还是扩展性均比CEC和Cloud的要好。</p>
+<ul>
 <li>CEC：每个MDC由一个SP拥有，MDC的workload仅来自拥有MDC的SP</li>
 <li>Cloud：传统的云计算，workload位于左右两端的大型数据处理中心</li>
 </ul>
 </li>
-<li><p>Exp1:study the impact of the number of servers in MDCs on the average response time of tasks, the average utilization at the MDCs and the overall success rate of the tasks.<br><img src="/img/article/EdgeComputing_Zenith/exp1.png" alt=""></p>
+<li>
+<p>Exp1:study the impact of the number of servers in MDCs on the average response time of tasks, the average utilization at the MDCs and the overall success rate of the tasks.<br>
+<img src="/lv/img/article/EdgeComputing_Zenith/exp1.png" alt=""></p>
 </li>
-<li><p>Exp2:study the impact of the number of MDCs in the geographic map.<br><img src="/img/article/EdgeComputing_Zenith/exp4.png" alt=""></p>
+<li>
+<p>Exp2:study the impact of the number of MDCs in the geographic map.<br>
+<img src="/lv/img/article/EdgeComputing_Zenith/exp4.png" alt=""></p>
 </li>
-<li><p>Exp3:analyze the impact of different response time constraints on the perceived performance efficiency.<br><img src="/img/article/EdgeComputing_Zenith/exp3.png" alt=""></p>
+<li>
+<p>Exp3:analyze the impact of different response time constraints on the perceived performance efficiency.<br>
+<img src="/lv/img/article/EdgeComputing_Zenith/exp3.png" alt=""></p>
 </li>
-<li><p>该实验证明了所提出的模型的有效性，可扩展性和性能效率。</p>
+<li>
+<p>该实验证明了所提出的模型的有效性，可扩展性和性能效率。</p>
 </li>
 </ul>
-<h3 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h3><p>大家对于投标拍卖策略有明确看法的可以在下面留言或者Email哦，期待和大家的学术交流~</p>
+<h3 id="i-want-to-say">“I want to say”</h3>
+<p>大家对于投标拍卖策略有明确看法的可以在下面留言或者Email哦，期待和大家的学术交流~</p>
 
                 
 
@@ -387,7 +427,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#" class="headerlink" title=""></a><a id="more"></a></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#schema"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#introduce"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#Introduce" class="headerlink" title="Introduce"></a>Introduce</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#problems"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#model"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text"><a href="#Model" class="headerlink" title="Model"></a>Model</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#bidding-strategy"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text"><a href="#Bidding-Strategy" class="headerlink" title="Bidding Strategy"></a>Bidding Strategy</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mcafee-mechanismthe-winning-bids-decision-algorithm"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text"><a href="#McAfee-mechanism&#xFF1A;The-winning-bids-decision-algorithm" class="headerlink" title="McAfee mechanism&#xFF1A;The winning bids decision algorithm"></a>McAfee mechanism&#xFF1A;The winning bids decision algorithm</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#experiment"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a id="more"></a></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#schema"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Schema</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#introduce"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Introduce</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#problems"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Problems</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#model"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Model</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#bidding-strategy"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">Bidding Strategy</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mcafee-mechanismthe-winning-bids-decision-algorithm"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">McAfee mechanism&#xFF1A;The winning bids decision algorithm</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#experiment"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">Experiment</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a></li></ol></li></ol>
         
         </div>
       </aside>

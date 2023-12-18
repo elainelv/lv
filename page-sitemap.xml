@@ -7,15 +7,29 @@
     </url>
     
     <url>
-        <loc>http://elainelv.com/tags/</loc>
-        <lastmod>2023-06-11T12:13:02.676Z</lastmod>
+        <loc>http://elainelv.com/archive/</loc>
+        <lastmod>2023-12-18T12:38:03.574Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>http://elainelv.com/recommend/</loc>
-        <lastmod>2022-07-31T08:15:33.222Z</lastmod>
+        <lastmod>2023-12-18T12:38:02.732Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>http://elainelv.com/tags/</loc>
+        <lastmod>2023-12-18T12:38:02.513Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>http://elainelv.com/404.html</loc>
+        <lastmod>2023-12-18T12:07:50.857Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -23,20 +37,6 @@
     <url>
         <loc>http://elainelv.com/photos/</loc>
         <lastmod>2020-07-26T16:30:05.984Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://elainelv.com/archive/</loc>
-        <lastmod>2019-02-12T11:27:59.527Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://elainelv.com/404.html</loc>
-        <lastmod>2019-02-10T08:56:19.022Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

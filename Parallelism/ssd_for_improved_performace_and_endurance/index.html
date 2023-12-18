@@ -71,13 +71,13 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/ssdparallel.jpg')
+            background-image: url('/lv/img/article_header/ssdparallel.jpg')
             /*post*/
         
     }
     
     #signature{
-        background-image: url('/lv/img/signature/BeanTechSign-white.png');
+        background-image: url('/lv/lv/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -156,14 +156,14 @@
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
@@ -220,17 +220,18 @@
                 post-container">
 
                 <ol>
-<li>讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响<ol>
+<li>讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响</li>
 <li>评估了使用与开发四层并行性密切相关的不同分配方案对performance和endurance的影响</li>
-<li>研究了利用SSD中并行性的最优先级<br><a href="http://www-users.cselabs.umn.edu/classes/Spring-2017/csci5980/files/SSD/SSD-Multi-Channel-Parallelism.pdf" target="_blank" rel="noopener">原文链接</a><a id="more"></a>
-</li>
+<li>研究了利用SSD中并行性的最优先级<br>
+<a href="http://www-users.cselabs.umn.edu/classes/Spring-2017/csci5980/files/SSD/SSD-Multi-Channel-Parallelism.pdf" target="_blank" rel="noopener">原文链接</a></li>
 </ol>
-</li>
-</ol>
+<a id="more"></a>
 <blockquote>
-<p>最近看的paper都是关于SSD结构啦，性能研究啦之类的，仔细去读的话，还是感觉蛮有意思的，不过这块内容涉及到底层系统，需要一定的知识储备。比如channel，chip，die，plane等的层层嵌套关系。<br>在本文中对于这些基础概念作了详细的说明，这篇文章是发表在国际顶级A类期刊TOC上的文章，昨天看了一个下午加晚上，今天继续坚持将它看完，下面一起来了解下吧~</p>
+<p>最近看的paper都是关于SSD结构啦，性能研究啦之类的，仔细去读的话，还是感觉蛮有意思的，不过这块内容涉及到底层系统，需要一定的知识储备。比如channel，chip，die，plane等的层层嵌套关系。<br>
+在本文中对于这些基础概念作了详细的说明，这篇文章是发表在国际顶级A类期刊TOC上的文章，昨天看了一个下午加晚上，今天继续坚持将它看完，下面一起来了解下吧~</p>
 </blockquote>
-<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p><strong>Motivation</strong></p>
+<h3 id="要点">要点</h3>
+<p><strong>Motivation</strong></p>
 <ol>
 <li>advanced commands 在plane-level并发和die-level并发中使用，我们需要考虑哪些问题？</li>
 <li>如果考虑advanced commands 和多级并发，如何设计静态分配和动态分配方案？这两种方案的performance和endurance区别？如何选择合适的分配方案？</li>
@@ -238,14 +239,16 @@
 </ol>
 <hr>
 <ul>
-<li><p>近年来，ssd发展迅速，但其价格昂贵，采用了很多种方法来降低价格，主要在</p>
+<li>
+<p>近年来，ssd发展迅速，但其价格昂贵，采用了很多种方法来降低价格，主要在</p>
 <ol>
 <li>increase the per-unit capacity</li>
 <li>improve the reliability</li>
 <li>address the random-write performance penalty for enterprise quality Flash memory storage</li>
 </ol>
 </li>
-<li><p>根据文章题目，我们要研究的ssd的performance和endurance，那么影响这两个参数的有三个内在的因素：</p>
+<li>
+<p>根据文章题目，我们要研究的ssd的performance和endurance，那么影响这两个参数的有三个内在的因素：</p>
 <ol>
 <li>advanced commands （高级命令）</li>
 <li>allocation schemes（分配策略）</li>
@@ -254,22 +257,33 @@
 </li>
 </ul>
 <p>在这篇文章中，研究表明前两项的因素和第三项因素密切相关</p>
-<h4 id="advanced-commands"><a href="#Advanced-commands" class="headerlink" title="Advanced commands"></a><strong>Advanced commands</strong></h4><ul>
+<h4 id="advanced-commands"><strong>Advanced commands</strong></h4>
+<ul>
 <li>操作：read ，write ， erase</li>
 <li>commands： copyback ， multiplane ，interleave</li>
 <li>要合理的使用commands，比如不合理的使用copyback命令会显著增加擦除计数和平均响应时间</li>
 </ul>
-<h4 id="allocation-schemes"><a href="#allocation-schemes" class="headerlink" title="allocation schemes"></a><strong>allocation schemes</strong></h4><ul>
-<li>动态分配和静态分配<br>动态分配：更为灵活，更适应并发<br>静态分配：逻辑页和物理页之间可以通过公式计算<br>在所有工作负载下，静态分配在处理读请求方面始终表现最佳，而在大多数工作负载下，动态分配在写、总体性能和耐力方面都优于其他分配。</li>
+<h4 id="allocation-schemes"><strong>allocation schemes</strong></h4>
+<ul>
+<li>动态分配和静态分配<br>
+动态分配：更为灵活，更适应并发<br>
+静态分配：逻辑页和物理页之间可以通过公式计算<br>
+在所有工作负载下，静态分配在处理读请求方面始终表现最佳，而在大多数工作负载下，动态分配在写、总体性能和耐力方面都优于其他分配。</li>
 </ul>
-<h4 id="priority-order-of-ssd-parallelism-levels"><a href="#priority-order-of-ssd-parallelism-levels" class="headerlink" title="priority order of ssd parallelism levels"></a><strong>priority order of ssd parallelism levels</strong></h4><p>可以并发执行的四层：channel-level，chip-level，die-level，plane-level</p>
+<h4 id="priority-order-of-ssd-parallelism-levels"><strong>priority order of ssd parallelism levels</strong></h4>
+<p>可以并发执行的四层：channel-level，chip-level，die-level，plane-level</p>
 <p><code>高级命令</code>利用最后两个级别的并行性；<code>分配方案</code>可以有效地利用多个级别的并行性，并确定它们的优先级顺序。评价结果表明，在四层并行性中，往往存在一个最优先级顺序。不正确的优先级顺序会导致高达60%的性能下降</p>
 <hr>
-<h3 id="关于闪存"><a href="#关于闪存" class="headerlink" title="关于闪存"></a>关于闪存</h3><h4 id="闪存类型"><a href="#闪存类型" class="headerlink" title="闪存类型"></a>闪存类型</h4><p>闪存分为两种类型：NOR-Flash Memory和NAND-Flash Memory</p>
+<h3 id="关于闪存">关于闪存</h3>
+<h4 id="闪存类型">闪存类型</h4>
+<p>闪存分为两种类型：NOR-Flash Memory和NAND-Flash Memory</p>
 <ul>
-<li>区别：<br>NOR-Flash Memory：字节级随机访问，用于只读型应用，比如存储固件代码<br>NAND-Flash Memory：页面级随机访问；高存储密度，大容量，低开销；用于通用型应用，比如用户信息存储</li>
+<li>区别：<br>
+NOR-Flash Memory：字节级随机访问，用于只读型应用，比如存储固件代码<br>
+NAND-Flash Memory：页面级随机访问；高存储密度，大容量，低开销；用于通用型应用，比如用户信息存储</li>
 </ul>
-<h4 id="ssd控制器逻辑架构"><a href="#ssd控制器逻辑架构" class="headerlink" title="ssd控制器逻辑架构"></a>ssd控制器逻辑架构</h4><p>为了增加存储密度，Flash制造商将几个Flash chips聚合到一个名为Package的模块中。在package中的所有chips共享相同的8/16-bit-I/O总线，但将chip enable(CE)和ready/busy(R/B)控制信号分开</p>
+<h4 id="ssd控制器逻辑架构">ssd控制器逻辑架构</h4>
+<p>为了增加存储密度，Flash制造商将几个Flash chips聚合到一个名为Package的模块中。在package中的所有chips共享相同的8/16-bit-I/O总线，但将chip enable(CE)和ready/busy(R/B)控制信号分开</p>
 <ul>
 <li>每个<code>chips</code> 有很多个dies组成</li>
 <li>每个<code>die</code>有很多个planes组成，每个die有一个R/B信号，只在advanced commands中起作用</li>
@@ -282,7 +296,8 @@
 <li>chip是具有独立CE和R/B信号的基本服务单元</li>
 <li>die是chip的组成组件，只有R/B信号</li>
 </ul>
-<h4 id="flash典型的物理特征"><a href="#flash典型的物理特征" class="headerlink" title="flash典型的物理特征"></a>flash典型的物理特征</h4><p>1.<code>write-after-erase</code></p>
+<h4 id="flash典型的物理特征">flash典型的物理特征</h4>
+<p>1.<code>write-after-erase</code></p>
 <ul>
 <li>在一个写操作之后，这个页必须被先擦除才能再次使用，也即写操作不能就地更新</li>
 </ul>
@@ -292,23 +307,34 @@
 <li>一个典型的erase操作上线大概为10k-100k</li>
 </ul>
 <hr>
-<h3 id="关于ssd"><a href="#关于SSD" class="headerlink" title="关于SSD"></a>关于SSD</h3><p>Flash memory SSD是一个嵌入式系统，主要是由存储部件（Flash memory chips）和控制部件（embedded CPU）组成，称之为SSD控制器，如下图<br><img src="/img/article/ssd_for_improved_performace_and_endurance/1.png" alt=""></p>
-<p>SSD控制器必须提供主机接口和Flash通道接口之间的连接。一般来说，对于一个SSD，只有一个主机接口可以与主机连接，例如PATA，SATA、SAS、PCI-E等；<br>相比之下，有多个Flash通道接口可以连接SSD控制器内的多个独立通道，以提高SSD的容量并提高其I/O性能<br>基于Flash chip控制信号和数据信号的不同共享方式，有多种实现Flash存储通道接口的方法。<br>下图设计的SSD控制器致力于高性能，称为<code>独立信道</code><br><img src="/img/article/ssd_for_improved_performace_and_endurance/2.png" alt=""></p>
-<p><img src="/img/article/ssd_for_improved_performace_and_endurance/3.png" alt=""></p>
+<h3 id="关于ssd">关于SSD</h3>
+<p>Flash memory SSD是一个嵌入式系统，主要是由存储部件（Flash memory chips）和控制部件（embedded CPU）组成，称之为SSD控制器，如下图<br>
+<img src="/lv/img/article/ssd_for_improved_performace_and_endurance/1.png" alt=""></p>
+<p>SSD控制器必须提供主机接口和Flash通道接口之间的连接。一般来说，对于一个SSD，只有一个主机接口可以与主机连接，例如PATA，SATA、SAS、PCI-E等；<br>
+相比之下，有多个Flash通道接口可以连接SSD控制器内的多个独立通道，以提高SSD的容量并提高其I/O性能<br>
+基于Flash chip控制信号和数据信号的不同共享方式，有多种实现Flash存储通道接口的方法。<br>
+下图设计的SSD控制器致力于高性能，称为<code>独立信道</code><br>
+<img src="/lv/img/article/ssd_for_improved_performace_and_endurance/2.png" alt=""></p>
+<p><img src="/lv/img/article/ssd_for_improved_performace_and_endurance/3.png" alt=""></p>
 <p>Flash通道控制器不仅消耗逻辑单元资源，而且消耗用户I/O引脚资源。</p>
-<p>在表1中列出了Flash channel所需的所有信号。如果我们在一个channel中使用四个chip，每个channel将消耗21个用户I/O引脚。<br>因此，独立的Flash通道号受到有限的逻辑单元和用户I/O引脚资源的限制。</p>
-<h4 id="ssd的并行性"><a href="#SSD的并行性" class="headerlink" title="SSD的并行性"></a>SSD的并行性</h4><p>在SSD中有四级并行性：</p>
+<p>在表1中列出了Flash channel所需的所有信号。如果我们在一个channel中使用四个chip，每个channel将消耗21个用户I/O引脚。<br>
+因此，独立的Flash通道号受到有限的逻辑单元和用户I/O引脚资源的限制。</p>
+<h4 id="ssd的并行性">SSD的并行性</h4>
+<p>在SSD中有四级并行性：</p>
 <ol>
 <li>channel level（among channels）</li>
 <li>chip level(among chips in a channel)</li>
 <li>die level(among dies in a chip)</li>
 <li>plane level(among planes in a die)</li>
 </ol>
-<p><img src="/img/article/ssd_for_improved_performace_and_endurance/4.png" alt=""></p>
+<p><img src="/lv/img/article/ssd_for_improved_performace_and_endurance/4.png" alt=""></p>
 <p>如果一个请求同时被channel0和channel1服务，那么要求channel-level的并行性，其他三个level同理。</p>
-<p>事实上，除了channel-level parallelism外，其他三个层次的并行性可以提高独立信道的利用率。<br>同时，由于目前异步Flash I/O总线的技术限制，最大带宽为40 MB/秒。因此，通过利用<code>chip-level</code>、<code>die-level</code>和<code>plane-level</code>并行，就有可能实现这一最大带宽。</p>
+<p>事实上，除了channel-level parallelism外，其他三个层次的并行性可以提高独立信道的利用率。<br>
+同时，由于目前异步Flash I/O总线的技术限制，最大带宽为40 MB/秒。因此，通过利用<code>chip-level</code>、<code>die-level</code>和<code>plane-level</code>并行，就有可能实现这一最大带宽。</p>
 <hr>
-<h3 id="基本命令和高级命令"><a href="#基本命令和高级命令" class="headerlink" title="基本命令和高级命令"></a>基本命令和高级命令</h3><h4 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h4><p>三种basic Command：read、write、erase</p>
+<h3 id="基本命令和高级命令">基本命令和高级命令</h3>
+<h4 id="基本命令">基本命令</h4>
+<p>三种basic Command：read、write、erase</p>
 <ul>
 <li>一个<code>read</code>命令主要是从一个target page中抓取数据</li>
 <li>一个<code>write</code>命令写数据到一个target page</li>
@@ -319,9 +345,12 @@
 <li>数据传输</li>
 <li>在target page上读数据到plane data register或者从plane data register写数据到target page</li>
 </ol>
-<p>通过将命令代码写入命令寄存器以及将请求的地址写入地址寄存器来启动所有命令。<br><img src="/img/article/ssd_for_improved_performace_and_endurance/5.png" alt=""></p>
+<p>通过将命令代码写入命令寄存器以及将请求的地址写入地址寄存器来启动所有命令。<br>
+<img src="/lv/img/article/ssd_for_improved_performace_and_endurance/5.png" alt=""></p>
 <p>地址是指请求的target data在chip内的位置。如图4所示，A Flash chip地址分为五部分：die、plane、block、page、in-page。在block中，页面必须按照页面地址的升序连续写入。Random-page-address是禁止的，我们称此限制为<code>Ra</code></p>
-<h4 id="高级命令"><a href="#高级命令" class="headerlink" title="高级命令"></a>高级命令</h4><p>大多数Flash制造商提供高级命令，如copyback，multiplane，interleave，以进一步提高SSD的性能。<br>高级命令是basic read, program 和 erase commands的扩展，但有一些使用限制</p>
+<h4 id="高级命令">高级命令</h4>
+<p>大多数Flash制造商提供高级命令，如copyback，multiplane，interleave，以进一步提高SSD的性能。<br>
+高级命令是basic read, program 和 erase commands的扩展，但有一些使用限制</p>
 <ol>
 <li><code>Copyback(Internal Data Move)</code></li>
 </ol>
@@ -330,7 +359,7 @@
 <li>该命令可节省两次数据传输时间</li>
 <li>源页和目标页必须具有相同的die和plane地址，它们的地址必须是奇数或偶数。如图3所示，copyback命令操作只能将数据从第0页到第2页，或从第1页到第3页，以此类推。禁止将数据从0页移动到第1页或第3页。我们称之为限制<code>Rb</code></li>
 </ul>
-<ol>
+<ol start="2">
 <li><code>Multiplane</code></li>
 </ol>
 <ul>
@@ -340,8 +369,8 @@
 <li>执行multiplane读/写操作的pages必须具有相同的die、block和page地址</li>
 <li>blocks执行一个multiplane erase操作必须有相同的die和block地址，如图3，只有来自plane0的page1和来自相同的die的plane1的page1才能通过使用multiplane 的读/写操作同时读写。读/写来自plane0的page1和来自plane1的page3，使用multiplane 读/写操作是禁止的，称为限制<code>Rc</code></li>
 </ul>
-<p><img src="/img/article/ssd_for_improved_performace_and_endurance/6.png" alt=""></p>
-<ol>
+<p><img src="/lv/img/article/ssd_for_improved_performace_and_endurance/6.png" alt=""></p>
+<ol start="3">
 <li><code>Interleave</code></li>
 </ol>
 <ul>
@@ -351,15 +380,20 @@
 <li>interleave write command如图5b所示</li>
 </ul>
 <hr>
-<h3 id="allocation-schemes"><a href="#Allocation-Schemes" class="headerlink" title="Allocation Schemes"></a>Allocation Schemes</h3><p>——分配方案确定如何选择空闲物理页以适应要写入SSD的逻辑页</p>
-<p>为了定位特定的物理页，除了知道die address，plane address，block address和page address外，必须知道channel address和chip address，如图4展示的格式<br>SSD的完整地址的格式如图6所示<br><img src="/img/article/ssd_for_improved_performace_and_endurance/7.png" alt=""></p>
+<h3 id="allocation-schemes">Allocation Schemes</h3>
+<p>——分配方案确定如何选择空闲物理页以适应要写入SSD的逻辑页</p>
+<p>为了定位特定的物理页，除了知道die address，plane address，block address和page address外，必须知道channel address和chip address，如图4展示的格式<br>
+SSD的完整地址的格式如图6所示<br>
+<img src="/lv/img/article/ssd_for_improved_performace_and_endurance/7.png" alt=""></p>
 <ul>
-<li><p>静态分配</p>
+<li>
+<p>静态分配</p>
 <ol>
 <li>首先按照公式计算逻辑页对应于哪个channel、chip和plane，若已占有则分配给plane的任何空闲物理页面</li>
 </ol>
 </li>
-<li><p>动态分配</p>
+<li>
+<p>动态分配</p>
 <ol>
 <li>将逻辑页分配给整个ssd的任何空闲物理页</li>
 <li>当写入请求到达时，动态分配方案通过考虑几个因素来选择空闲的物理页面，例如channels和chips的空闲/繁忙状态、blocks的擦除计数、 并行级的优先级顺序等等</li>
@@ -367,13 +401,19 @@
 </li>
 </ul>
 <hr>
-<p><strong>*</strong>platform和experiment，可以参看论文，此处省略3千字……<strong>*</strong></p>
+<p><strong><strong><em>platform和experiment，可以参看论文，此处省略3千字……</em></strong></strong></p>
 <hr>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>SSD中有四种并行级，分别是<code>channel-level parallelism</code>, <code>chip-level parallelism</code>, <code>die-level parallelism</code>, <code>plane-level parallelism</code></p>
+<h3 id="总结">总结</h3>
+<p>SSD中有四种并行级，分别是<code>channel-level parallelism</code>, <code>chip-level parallelism</code>, <code>die-level parallelism</code>, <code>plane-level parallelism</code></p>
 <ol>
-<li>讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响</li>
-<li>评估了使用与开发四层并行性密切相关的不同分配方案对performance和endurance的影响</li>
-<li><p>研究了利用SSD中并行性的最优先级，实验分析如下：</p>
+<li>
+<p>讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响</p>
+</li>
+<li>
+<p>评估了使用与开发四层并行性密切相关的不同分配方案对performance和endurance的影响</p>
+</li>
+<li>
+<p>研究了利用SSD中并行性的最优先级，实验分析如下：</p>
 <ul>
 <li>有两种使用高级命令的推荐方法，使用Copyback、mpw和interleave命令与使用Copyback命令wisely，MPW指挥blindly，interleave命令 ubiquitously效果一样</li>
 <li>静态分配算法在读方面性能是最好的；在大多数工作负载下，动态分配在写和总体性能以及耐力方面表现最好</li>
@@ -382,21 +422,12 @@
 </ul>
 </li>
 </ol>
-<h3 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h3><blockquote>
+<h3 id="i-want-to-say">�I want to say�</h3>
+<blockquote>
 <p>临近期中，事情比较多，不过坚持看paper写博文转眼已经快两个月辣，坚持这件小事说难也不难嘛！fighting✌</p>
 </blockquote>
 <p>看完啦，送您一首歌！</p>
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=2872197&auto=0&height=66"></iframe>
-
-
-
-
-
-
-
-
-
-
 
                 
 
@@ -485,7 +516,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#要点"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x8981;&#x70B9;" class="headerlink" title="&#x8981;&#x70B9;"></a>&#x8981;&#x70B9;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#advanced-commands"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#Advanced-commands" class="headerlink" title="Advanced commands"></a><strong>Advanced commands</strong></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#allocation-schemes"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#allocation-schemes" class="headerlink" title="allocation schemes"></a><strong>allocation schemes</strong></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#priority-order-of-ssd-parallelism-levels"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><a href="#priority-order-of-ssd-parallelism-levels" class="headerlink" title="priority order of ssd parallelism levels"></a><strong>priority order of ssd parallelism levels</strong></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于闪存"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#&#x5173;&#x4E8E;&#x95EA;&#x5B58;" class="headerlink" title="&#x5173;&#x4E8E;&#x95EA;&#x5B58;"></a>&#x5173;&#x4E8E;&#x95EA;&#x5B58;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存类型"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#&#x95EA;&#x5B58;&#x7C7B;&#x578B;" class="headerlink" title="&#x95EA;&#x5B58;&#x7C7B;&#x578B;"></a>&#x95EA;&#x5B58;&#x7C7B;&#x578B;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd控制器逻辑架构"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><a href="#ssd&#x63A7;&#x5236;&#x5668;&#x903B;&#x8F91;&#x67B6;&#x6784;" class="headerlink" title="ssd&#x63A7;&#x5236;&#x5668;&#x903B;&#x8F91;&#x67B6;&#x6784;"></a>ssd&#x63A7;&#x5236;&#x5668;&#x903B;&#x8F91;&#x67B6;&#x6784;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#flash典型的物理特征"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text"><a href="#flash&#x5178;&#x578B;&#x7684;&#x7269;&#x7406;&#x7279;&#x5F81;" class="headerlink" title="flash&#x5178;&#x578B;&#x7684;&#x7269;&#x7406;&#x7279;&#x5F81;"></a>flash&#x5178;&#x578B;&#x7684;&#x7269;&#x7406;&#x7279;&#x5F81;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于ssd"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x5173;&#x4E8E;SSD" class="headerlink" title="&#x5173;&#x4E8E;SSD"></a>&#x5173;&#x4E8E;SSD</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd的并行性"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text"><a href="#SSD&#x7684;&#x5E76;&#x884C;&#x6027;" class="headerlink" title="SSD&#x7684;&#x5E76;&#x884C;&#x6027;"></a>SSD&#x7684;&#x5E76;&#x884C;&#x6027;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基本命令和高级命令"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#&#x57FA;&#x672C;&#x547D;&#x4EE4;&#x548C;&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;" class="headerlink" title="&#x57FA;&#x672C;&#x547D;&#x4EE4;&#x548C;&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;"></a>&#x57FA;&#x672C;&#x547D;&#x4EE4;&#x548C;&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#基本命令"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text"><a href="#&#x57FA;&#x672C;&#x547D;&#x4EE4;" class="headerlink" title="&#x57FA;&#x672C;&#x547D;&#x4EE4;"></a>&#x57FA;&#x672C;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#高级命令"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text"><a href="#&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;" class="headerlink" title="&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;"></a>&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#allocation-schemes"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#Allocation-Schemes" class="headerlink" title="Allocation Schemes"></a>Allocation Schemes</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">6.</span> <span class="toc-nav-text"><a href="#&#x603B;&#x7ED3;" class="headerlink" title="&#x603B;&#x7ED3;"></a>&#x603B;&#x7ED3;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">7.</span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#要点"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x8981;&#x70B9;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#advanced-commands"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><strong>Advanced commands</strong></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#allocation-schemes"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><strong>allocation schemes</strong></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#priority-order-of-ssd-parallelism-levels"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><strong>priority order of ssd parallelism levels</strong></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于闪存"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x5173;&#x4E8E;&#x95EA;&#x5B58;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#闪存类型"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">&#x95EA;&#x5B58;&#x7C7B;&#x578B;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd控制器逻辑架构"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">ssd&#x63A7;&#x5236;&#x5668;&#x903B;&#x8F91;&#x67B6;&#x6784;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#flash典型的物理特征"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">flash&#x5178;&#x578B;&#x7684;&#x7269;&#x7406;&#x7279;&#x5F81;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关于ssd"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x5173;&#x4E8E;SSD</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ssd的并行性"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">SSD&#x7684;&#x5E76;&#x884C;&#x6027;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基本命令和高级命令"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x57FA;&#x672C;&#x547D;&#x4EE4;&#x548C;&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#基本命令"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">&#x57FA;&#x672C;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#高级命令"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">&#x9AD8;&#x7EA7;&#x547D;&#x4EE4;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#allocation-schemes"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">Allocation Schemes</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">&#x603B;&#x7ED3;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">&#xFFFD;I want to say&#xFFFD;</span></a></li></ol>
         
         </div>
       </aside>

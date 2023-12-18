@@ -71,13 +71,13 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('img/header_img/tree.jpg') 
+            background-image: url('lv/img/header_img/tree.jpg') 
             /*config*/
         
     }
     
     #signature{
-        background-image: url('/lv/img/signature/BeanTechSign-white.png');
+        background-image: url('/lv/lv/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -148,14 +148,14 @@
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
@@ -229,7 +229,8 @@
             本文对FLUSH进行块设备接口重构，提出一种RFLUSH命令原文链接
 
 导语
-前面多篇paper讲述了HDD和SSD，想必若和我一起学习的小伙伴已经对这方面有一定的了解了，那么对于这两类存储介质，都有易失的缓冲区。其中，HDD的缓冲区可将多个写请求聚合到一起，然后再一并写入到硬盘中，从而减少寻道时间；SSD的缓冲区则是为了优化随机写性能和/或进行磨损均衡，或者也可能是对于Multi-Stre......
+
+前面多篇paper讲述了HDD和SSD，想必若和我一起学习的小伙伴已经对这方面有一定的了解了，那么对于这两类存储介质，都有易失的缓冲区。其中，HDD的缓冲区可将多个写请求聚合到一起，然后再一并写入到硬盘中，从而减少寻道时间；SSD的缓冲区则是为了优化随机写性能和/或进行磨损均衡，或者也可能是对于Multi-Str......
         </div>
     </a>
     
@@ -258,8 +259,10 @@
         </h3>
         <div class="post-content-preview">
             继续上次NVMe的学习，在上次的博文中，我和大家分享了NVMe中的两大重要的角色SQ和CQ，那么在这次的博文中，我们要一起探讨的是第三个重要的角色DB，话不多说！直接进入主题吧~
+
 导语
-还没学习过NVMe之SQ与CQ的请戳这里,上次也提到了DB的功能，即host发送命令时，不是直接往SSD中发送命令，而是把准备好的命令放到内存中的SQ，通过写SSD中的DB寄存器来通知SSD,这里再提一哈，S......
+
+还没学习过NVMe之SQ与CQ的请戳这里,上次也提到了DB的功能，即host发送命令时，不是直接往SSD中发送命令，而是把准备好的命令放到内存中的SQ，通过写SSD中的DB寄存器来通知SSD,这里再提一哈......
         </div>
     </a>
     
@@ -287,9 +290,12 @@
             
         </h3>
         <div class="post-content-preview">
-            这一篇是前段时间遗留下来没有做完整讲述的paper，今天写了一个详细的博文供大家学习参考！讲述的多流技术不同于以往要么是应用级别的分流，也不是块级别的分流，而是文件系统的分流技术。FStream: Managing Flash Streams in the File SystemPPT
+            这一篇是前段时间遗留下来没有做完整讲述的paper，今天写了一个详细的博文供大家学习参考！
+讲述的多流技术不同于以往要么是应用级别的分流，也不是块级别的分流，而是文件系统的分流技术。
+FStream: Managing Flash Streams in the File System
+PPT
 
-在看本文前可以先看我之前的博文Multi-Stream SSD，了解一下Multi-Stream SSD......
+在看本文前可以先看我之前的博文Multi-Stream SSD，了解一下Multi-Stream ......
         </div>
     </a>
     
@@ -349,12 +355,15 @@
 
 去北京参加了2018中国存储与数据峰会，总得整理一下听的内容呀，供大家了解了解~
 
-12月11日中午到达，听了下午的会议，下面挑几个介绍一哈
-1.2018到2022数据中心SSD的新故事——Memblaze产品副总裁 张泰乐
+12月11日
+中午到达，听了下午的会议，下面挑几个介绍一哈
+1.2018到2022数据中心SSD的新故事
+——Memblaze产品副总裁 张泰乐
 
 张泰乐本人在NVMe、3D NAND 以及全球 SSD 市场发展和演进等多个领域有深入的研究和独到的见解，是不折不扣的业内专家
 
-闪存闪存是数据中心存储的未来，从......
+闪存
+闪存是数据中心存储的未......
         </div>
     </a>
     
@@ -382,9 +391,14 @@
             
         </h3>
         <div class="post-content-preview">
-            最先由三星公司提出的多流SSD技术，这篇主要介绍多流SSD原文链接PPT作者报告视频
+            最先由三星公司提出的多流SSD技术，这篇主要介绍多流SSD
+原文链接
+PPT
+作者报告视频
 
-最近在看Multi-Stream SSD方面的paper，比如上一篇博文中提到的FStream和vStream等等，了解了他们的ideas后，我们也有新的ideas。尝试着改代码！昨晚有了点思绪后，今天改了好多但是后来发现还是存在很多的问题，没法继续改下去了……明天去参加2018中国存储与数据峰会,有时间......
+
+最近在看Multi-Stream SSD方面的paper，比如上一篇博文中提到的FStream和vStream等等，了解了他们的ideas后，我们也有新的ideas。尝试着改代码！昨晚有了点思绪后，今天改了好多但是后来发现还是存在很多的问题，没法继续改下去了……
+明天去参加2018中国存储与数据峰......
         </div>
     </a>
     
@@ -413,12 +427,15 @@
         </h3>
         <div class="post-content-preview">
             
-FStream: Managing Flash Streams in the File SystemPPT
-High-Performance Transaction Processing in Journaling File SystemsPPT
+FStream: Managing Flash Streams in the File System
+PPT
+High-Performance Transaction Processing in Journaling File Systems
+PPT
 vStream Virtual Stream Management for Multi-streamed SSDs
 
 
-多流ssd笔记对于GC回......
+多流ssd笔记
+对于......
         </div>
     </a>
     
@@ -483,13 +500,12 @@ vStream Virtual Stream Management for Multi-streamed SSDs
             
 讨论了使用 die-level 和 plane-level parallelism相关的advanced commands对performance和endurance的影响
 评估了使用与开发四层并行性密切相关的不同分配方案对performance和endurance的影响
-研究了利用SSD中并行性的最优先级原文链接
+研究了利用SSD中并行性的最优先级
+原文链接
 
 
 
-
-
-最近看的paper都是关于SSD结构啦，性能研究啦之类的，仔细去......
+最近看的paper都是关于SSD结构啦，性能研究啦之类的，仔细去读......
         </div>
     </a>
     
@@ -520,7 +536,8 @@ vStream Virtual Stream Management for Multi-streamed SSDs
             本文主要讨论FLASH阵列的组织以及管理逻辑磁盘和物理闪存地址之间的映射所需的算法,是解决围绕SSD逻辑元件的设计和布局的许多重要问题的论文原文链接
 
 
-@Author: Nitin Agrawal，Vijayan Prabhakaran，Ted Wobber…@Publiced in: 2008 USENIX Annual Technical Conference, Boston, MA,......
+@Author: Nitin Agrawal，Vijayan Prabhakaran，Ted Wobber…
+@Publiced in: 2008 USENIX Annual Technical Conference, Boston, MA......
         </div>
     </a>
     
@@ -585,23 +602,23 @@ vStream Virtual Stream Management for Multi-streamed SSDs
             
         
             
-            <a href="/lv/tags/#Graph Database" title="Graph Database" rel="2">Graph Database</a>
-            
-        
-            
         
             
             <a href="/lv/tags/#Lifetime" title="Lifetime" rel="7">Lifetime</a>
             
         
             
+            <a href="/lv/tags/#Graph Database" title="Graph Database" rel="2">Graph Database</a>
+            
+        
+            
+            <a href="/lv/tags/#Edge Computing" title="Edge Computing" rel="2">Edge Computing</a>
+            
         
             
             <a href="/lv/tags/#SSD" title="SSD" rel="2">SSD</a>
             
         
-            
-            <a href="/lv/tags/#Edge Computing" title="Edge Computing" rel="2">Edge Computing</a>
             
         
             
@@ -612,8 +629,6 @@ vStream Virtual Stream Management for Multi-streamed SSDs
         
             
             <a href="/lv/tags/#Process Variation" title="Process Variation" rel="2">Process Variation</a>
-            
-        
             
         
             
@@ -649,9 +664,9 @@ vStream Virtual Stream Management for Multi-streamed SSDs
             
         
             
-        
-            
             <a href="/lv/tags/#Parallelism" title="Parallelism" rel="2">Parallelism</a>
+            
+        
             
         
             
@@ -668,6 +683,8 @@ vStream Virtual Stream Management for Multi-streamed SSDs
         
             
             <a href="/lv/tags/#NVMe" title="NVMe" rel="6">NVMe</a>
+            
+        
             
         
             
