@@ -145,6 +145,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -152,18 +155,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -227,11 +227,8 @@
 <li>由于垃圾回收引起的负载不均衡</li>
 </ol>
 <p>针对上述问题，本文讲述了三方面的特征：1. FTL任务之间公平地调度闪存操作 2. 根据系统的状态，动态调整FTL任务之间的占比 3. 平衡所有chip的负载（对一些non-binding requests，动态调整写入的chip，以平衡chip之间的负载均衡）</p>
-<h3 id="qos-aware-flash-memory-controller-qosfc">QoS-aware flash memory controller (QoSFC)</h3>
-<p><img src="/lv/img/article/Qosaware/QoSFC.png" alt="0e5ca30f689452e772f1c9ccbfda4633.png"><br>
-为了充分利用现有SSD上的嵌入式处理器，host stream和GC stream并发执行。所谓host stream就是从Host request handler发出的，而GC stream是从Garbage collector发出的。stream ID标记在每个请求上</p>
-<h4 id="fair-share-scheduler">Fair Share Scheduler</h4>
-<blockquote>
+<h3 id="qos-aware-flash-memory-controller-qosfc"><a href="#QoS-aware-flash-memory-controller-QoSFC" class="headerlink" title="QoS-aware flash memory controller (QoSFC)"></a>QoS-aware flash memory controller (QoSFC)</h3><p><img src="/lv/img/article/Qosaware/QoSFC.png" alt="0e5ca30f689452e772f1c9ccbfda4633.png"><br>为了充分利用现有SSD上的嵌入式处理器，host stream和GC stream并发执行。所谓host stream就是从Host request handler发出的，而GC stream是从Garbage collector发出的。stream ID标记在每个请求上</p>
+<h4 id="fair-share-scheduler"><a href="#Fair-Share-Scheduler" class="headerlink" title="Fair Share Scheduler"></a>Fair Share Scheduler</h4><blockquote>
 <p>根据stream的权重对请求进行调度</p>
 </blockquote>
 <p><code>FSS</code>：</p>
@@ -241,35 +238,22 @@
 <li>向LLFC发出命令并接收响应</li>
 </ol>
 <p><code>LLFC</code>：处理到闪存芯片的IO活动和物理信号，并向FSS隐藏许多NAND闪存命令、地址、数据周期和时间细节。</p>
-<p><code>virtual time</code>：工作值（操作延迟）/所属流的权重；因此含有更高权重的流所得的虚拟时间增加得更慢，这样就比其他流运行得更为频繁。故其可以控制流的速度，因此可以根据 virtual time来调度<br>
-每当来自两个流的请求争夺共享资源(channel或chip)时，FSS选择stream进展最少的请求，也就是选择虚拟时间小的流中的请求进行处理</p>
-<p>下面来看一个例子：<br>
-<img src="/lv/img/article/Qosaware/req.png" alt="30530365fbcb556d89b9891a3a463df7.png"></p>
-<p>$\operatorname{Req}<em>{i}^{\mathrm{S}}\left(\mathrm{C}</em>{\mathrm{n}}\right)$表示来自stream S到chip n中的第i个请求<br>
-需要注意的是当请求到达时，若channel和chip都空闲，那么直接执行；如果有请求正在处理，那么进入channel队列，并且局部虚拟时间的计算为队列前面请求预计完成时间的总和</p>
-<h4 id="dynamic-share-allocator">Dynamic Share Allocator</h4>
-<blockquote>
-<p>根据系统状态对流权重进行动态调整<br>
-当空闲块充足时，host stream的权重应该更高；当空闲块不足时，GC stream的权重应该更高</p>
+<p><code>virtual time</code>：工作值（操作延迟）/所属流的权重；因此含有更高权重的流所得的虚拟时间增加得更慢，这样就比其他流运行得更为频繁。故其可以控制流的速度，因此可以根据 virtual time来调度<br>每当来自两个流的请求争夺共享资源(channel或chip)时，FSS选择stream进展最少的请求，也就是选择虚拟时间小的流中的请求进行处理</p>
+<p>下面来看一个例子：<br><img src="/lv/img/article/Qosaware/req.png" alt="30530365fbcb556d89b9891a3a463df7.png"></p>
+<p>$\operatorname{Req}_{i}^{\mathrm{S}}\left(\mathrm{C}_{\mathrm{n}}\right)$表示来自stream S到chip n中的第i个请求<br>需要注意的是当请求到达时，若channel和chip都空闲，那么直接执行；如果有请求正在处理，那么进入channel队列，并且局部虚拟时间的计算为队列前面请求预计完成时间的总和</p>
+<h4 id="dynamic-share-allocator"><a href="#Dynamic-Share-Allocator" class="headerlink" title="Dynamic Share Allocator"></a>Dynamic Share Allocator</h4><blockquote>
+<p>根据系统状态对流权重进行动态调整<br>当空闲块充足时，host stream的权重应该更高；当空闲块不足时，GC stream的权重应该更高</p>
 </blockquote>
-<p>因此，DSA使用系统中的空闲块数作为feedback，通过一个简单的PID controller来控制流的权重<br>
-在t时刻，DSA计算误差值e(t)和控制变量u(t)如下：<br>
-<img src="/lv/img/article/Qosaware/gs.png" alt="1f835169136263c36a085293d6f9e400.png"><br>
-其中targfree是空闲块的目标数目，numfree(t)是时间t处的空闲块数，kp、ki和kd是控制系数。<br>
-从而，可以得到host stream和GC stream为<br>
-$w_{H O S T}=\frac{n u m_{f r e e}(t)}{n u m_{f r e e}(t)+u(t)} \quad w_{G C}=1-w_{H O S T}$</p>
-<h4 id="non-binding-request-handler">Non-binding Request Handler</h4>
-<blockquote>
-<p>均衡chip之间的负载<br>
-根据每个芯片的估计排队延迟，动态分配用于写入请求的目标chip，选择最小延迟的chip：</p>
+<p>因此，DSA使用系统中的空闲块数作为feedback，通过一个简单的PID controller来控制流的权重<br>在t时刻，DSA计算误差值e(t)和控制变量u(t)如下：<br><img src="/lv/img/article/Qosaware/gs.png" alt="1f835169136263c36a085293d6f9e400.png"><br>其中targfree是空闲块的目标数目，numfree(t)是时间t处的空闲块数，kp、ki和kd是控制系数。<br>从而，可以得到host stream和GC stream为<br>$w_{H O S T}=\frac{n u m_{f r e e}(t)}{n u m_{f r e e}(t)+u(t)} \quad w_{G C}=1-w_{H O S T}$</p>
+<h4 id="non-binding-request-handler"><a href="#Non-binding-Request-Handler" class="headerlink" title="Non-binding Request Handler"></a>Non-binding Request Handler</h4><blockquote>
+<p>均衡chip之间的负载<br>根据每个芯片的估计排队延迟，动态分配用于写入请求的目标chip，选择最小延迟的chip：</p>
 <ol>
 <li>给定 stream ID S</li>
 <li>估计队列延迟 $d^{q} m, n$，表示stream m ，chip n上所有操作的延迟总和</li>
 <li>chip n上当前请求的估计完成时间 $t^{c p l}_{n}$</li>
 </ol>
 </blockquote>
-<p>下述方程表示chip n中估计完成时间和归一化估计队列延迟之和为最小<br>
-$\operatorname{argmin}<em>{n}\left(t^{c p l}</em>{n}+\sum_{i} \frac{w_{i}}{w_{S}} \cdot d^{q}_{i, n}\right)$</p>
+<p>下述方程表示chip n中估计完成时间和归一化估计队列延迟之和为最小<br>$\operatorname{argmin}_{n}\left(t^{c p l}_{n}+\sum_{i} \frac{w_{i}}{w_{S}} \cdot d^{q}_{i, n}\right)$</p>
 <p>在最坏的情况下，如果来自竞争流的请求被连续调度，则无法保证请求何时可以启动。因为NRH不能提前知道实际的调度顺序</p>
 
                 
@@ -365,7 +349,7 @@ $\operatorname{argmin}<em>{n}\left(t^{c p l}</em>{n}+\sum_{i} \frac{w_{i}}{w_{S}
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#qos-aware-flash-memory-controller-qosfc"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">QoS-aware flash memory controller (QoSFC)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#fair-share-scheduler"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Fair Share Scheduler</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#dynamic-share-allocator"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Dynamic Share Allocator</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#non-binding-request-handler"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Non-binding Request Handler</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#qos-aware-flash-memory-controller-qosfc"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#QoS-aware-flash-memory-controller-QoSFC" class="headerlink" title="QoS-aware flash memory controller (QoSFC)"></a>QoS-aware flash memory controller (QoSFC)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#fair-share-scheduler"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><a href="#Fair-Share-Scheduler" class="headerlink" title="Fair Share Scheduler"></a>Fair Share Scheduler</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#dynamic-share-allocator"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><a href="#Dynamic-Share-Allocator" class="headerlink" title="Dynamic Share Allocator"></a>Dynamic Share Allocator</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#non-binding-request-handler"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text"><a href="#Non-binding-Request-Handler" class="headerlink" title="Non-binding Request Handler"></a>Non-binding Request Handler</span></a></li></ol></li></ol>
         
         </div>
       </aside>

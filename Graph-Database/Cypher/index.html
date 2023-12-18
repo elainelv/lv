@@ -145,6 +145,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -152,18 +155,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -219,29 +219,21 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>介绍图数据库中属性图的查询语言——Cypher，这是一篇CCF A类文章，发表于数据库顶会SIGMOD，讲得很详细很不错！<a href="http://people.csail.mit.edu/jshun/6886-s18/papers/Cypher.pdf" target="_blank" rel="noopener">原文链接</a></p>
-<a id="more"></a>
+                <p>介绍图数据库中属性图的查询语言——Cypher，这是一篇CCF A类文章，发表于数据库顶会SIGMOD，讲得很详细很不错！<a href="http://people.csail.mit.edu/jshun/6886-s18/papers/Cypher.pdf" target="_blank" rel="noopener">原文链接</a><br><a id="more"></a></p>
 <hr>
-<p>@Authors：Nadime Francis，Alastair Green，Paolo Guagliardo<br>
-@Published in: SIGMOD Conference 2018: 1433-1445<br>
-@Presented by: Yina Lv , Time: Qct 10, 2018<br>
-@Action：October 11, 2018 9:21 AM</p>
+<p>@Authors：Nadime Francis，Alastair Green，Paolo Guagliardo<br>@Published in: SIGMOD Conference 2018: 1433-1445<br>@Presented by: Yina Lv , Time: Qct 10, 2018<br>@Action：October 11, 2018 9:21 AM</p>
 <hr>
-<h2 id="schema">Schema</h2>
-<ul>
+<h2 id="schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h2><ul>
 <li>介绍了属性图和Cypher语言的语法结构</li>
 <li>以事例的形式讲述Cypher查询过程</li>
 <li>Cypher中的核心元素：数据模型和查询语言</li>
 <li>pattern matching</li>
 <li>比较Cypher语言和其他数据库查询语言的特征，描述其扩展性、先进性，并将发展成Cypher10</li>
 </ul>
-<h2 id="1introduce">1.Introduce</h2>
-<h3 id="11-property-graph-database">1.1 Property graph database</h3>
-<ul>
+<h2 id="1introduce"><a href="#1-Introduce" class="headerlink" title="1.Introduce"></a>1.Introduce</h2><h3 id="11-property-graph-database"><a href="#1-1-Property-graph-database" class="headerlink" title="1.1 Property graph database"></a>1.1 Property graph database</h3><ul>
 <li><code>Property graph database</code>such as Neo4j，JanusGraph and Sparksee have become more widespread in industry and academia.</li>
 <li>used in multiple domains, such as master data and knowledge management, recommendation engines,fraud detection, IT operations and network management, authorization and access control , bioinformatics , social networks, software system analysis , and in investigative journalism.</li>
-<li><strong>Benefits:</strong>
-<ul>
+<li><strong>Benefits:</strong><ul>
 <li>explicit support for modeling graph data</li>
 <li>native indexing</li>
 <li>storage for fast graph traversal operations</li>
@@ -250,16 +242,13 @@
 </ul>
 </li>
 </ul>
-<h3 id="12-cypher">1.2 Cypher</h3>
-<ul>
-<li>
-<p><code>Cypher</code>: a well-established language for querying and updating property graph databases</p>
+<h3 id="12-cypher"><a href="#1-2-Cypher" class="headerlink" title="1.2 Cypher"></a>1.2 Cypher</h3><ul>
+<li><p><code>Cypher</code>: a well-established language for querying and updating property graph databases</p>
 <ul>
 <li>began life in the Neo4j product, but has now been implemented commercially in other products such as SAP HANA Graph, Redis Graph, Agens Graph (over PostgreSQL) and Memgraph.</li>
 <li>Cypher is also used in several research projects (e.g., Ingraph ,Gradoop , and Cytosm) as well as in recent or incubating open-source projects, such as Cypher for Apache Spark and Cypher over Gremlin.</li>
 <li>Cypher是线性查询，输入property graph，输出table</li>
-<li>数据更新：
-<ul>
+<li>数据更新：<ul>
 <li><code>CREATE</code>: creating new nodes and relationships</li>
 <li><code>DELETE</code>: moving entities</li>
 <li><code>SET</code>: updating properties</li>
@@ -269,75 +258,60 @@
 </ul>
 </li>
 </ul>
-<h2 id="2example">2.Example</h2>
-<p><strong>Graph Schema：</strong><br>
-<img src="/lv/img/article/Cypher/schema1.png" alt=""></p>
+<h2 id="2example"><a href="#2-Example" class="headerlink" title="2.Example"></a>2.Example</h2><p><strong>Graph Schema：</strong><br><img src="/lv/img/article/Cypher/schema1.png" alt=""> </p>
 <ul>
 <li>PS:图中有三个label，分别是<code>researcher</code>、<code>Student</code>、<code>Publication</code>，三种关系:<code>SUPERVISES</code>、<code>AUTHORS</code>、<code>CITES</code></li>
 <li>研究员有指导的学生，研究员发表刊物，那么就是某刊物的作者，刊物之间可以互相引用。</li>
 <li>CITES我画成了自循环，但是大家这样理解比较合适：一个刊物可以被另外一个刊物引用。</li>
 </ul>
-<p><strong>Big graph:(整个数据库的属性图如下)</strong><br>
-<img src="/lv/img/article/Cypher/graph.png" alt=""></p>
-<h3 id="21-查询示例语句如下">2.1 查询示例语句如下：</h3>
-<p><img src="/img/article/Cypher/query1.png" alt=""></p>
+<p><strong>Big graph:(整个数据库的属性图如下)</strong><br><img src="/lv/img/article/Cypher/graph.png" alt=""></p>
+<h3 id="21-查询示例语句如下"><a href="#2-1-查询示例语句如下：" class="headerlink" title="2.1 查询示例语句如下："></a>2.1 查询示例语句如下：</h3><p><img src="/img/article/Cypher/query1.png" alt=""></p>
 <p><strong>Q: 返回图G中每个researcher的name，他们所supervises指向的学生数，以及他们撰写的出版物被其他出版物直接或间接引用的次数。</strong></p>
 <p>我们分析每一个语句的查询结果。</p>
 <ol>
-<li><code>MATCH (r:researcher)</code></li>
-</ol>
+<li><p><code>MATCH (r:researcher)</code></p>
 <ul>
 <li>在这句语句中，r是instance，researcher是label</li>
 </ul>
-<ol start="2">
-<li><code>OPTIONAL MATCH (r)-[:SUPERVISES]-&gt;(s:Student)</code></li>
-</ol>
+</li>
+<li><p><code>OPTIONAL MATCH (r)-[:SUPERVISES]-&gt;(s:Student)</code></p>
 <ul>
 <li><code>OPTIONAL MATCH</code>与<code>MATCH</code>的区别在于，<code>OPTIONAL MATCH</code>会返回查询结果为<code>NULL</code>的记录。</li>
 <li><code>SUPERVISES</code>为关系的<code>label</code>，<code>(r)-[:SUPERVISES]-&gt;(s:Student)</code>表示找出researcher对应指导的学生实例</li>
-<li>1、2两句语句执行结果如下：<br>
-<img src="/lv/img/article/Cypher/result1.png" alt=""></li>
+<li>1、2两句语句执行结果如下：<br><img src="/lv/img/article/Cypher/result1.png" alt=""></li>
 </ul>
-<ol start="3">
-<li><code>WITH r,count(s) AS studentsSupervised</code></li>
-</ol>
+</li>
+<li><p><code>WITH r,count(s) AS studentsSupervised</code></p>
 <ul>
 <li>AS：取别名</li>
 <li>count(s):计算上面找出的学生数</li>
-<li>在with语句前面部分找出的子图作为with语句后面查询的驱动表<br>
-<img src="/lv/img/article/Cypher/result2.png" alt=""></li>
+<li>在with语句前面部分找出的子图作为with语句后面查询的驱动表<br><img src="/lv/img/article/Cypher/result2.png" alt=""></li>
 </ul>
-<ol start="4">
-<li><code>MATCH (r)-[:AUTHORS]-&gt;(p1:Publication)</code></li>
-</ol>
+</li>
+<li><p><code>MATCH (r)-[:AUTHORS]-&gt;(p1:Publication)</code></p>
 <ul>
-<li>n10不写是因为<code>MATCH</code>不返回<code>NULL</code>的记录<br>
-<img src="/lv/img/article/Cypher/result3.png" alt=""></li>
+<li>n10不写是因为<code>MATCH</code>不返回<code>NULL</code>的记录<br><img src="/lv/img/article/Cypher/result3.png" alt=""></li>
 </ul>
-<ol start="5">
-<li><code>OPTIONAL MATCH (p1)-[:CITES*]-&gt;(p2:Publication)</code></li>
-</ol>
+</li>
+<li><p><code>OPTIONAL MATCH (p1)-[:CITES*]-&gt;(p2:Publication)</code></p>
 <ul>
 <li><code>CITES</code>后面的<code>*</code>表示任意步长，当然也可以指定步长，比如<code>CITES*1..3</code>表示跳一步到三步</li>
-<li>结果中的n9有两个是因为n9可以有两条路径达到n2<br>
-<img src="/lv/img/article/Cypher/result4.png" alt=""></li>
+<li>结果中的n9有两个是因为n9可以有两条路径达到n2<br><img src="/lv/img/article/Cypher/result4.png" alt=""></li>
 </ul>
+</li>
+</ol>
 <p>6、7. <code>RETURN r.name,studentsSupervised,count(DISTINCT p2) AS citedCount</code></p>
 <ul>
-<li>返回最后的结果<br>
-<img src="/lv/img/article/Cypher/result5.png" alt=""></li>
+<li>返回最后的结果<br><img src="/lv/img/article/Cypher/result5.png" alt=""></li>
 </ul>
-<h3 id="22-examples-from-industry">2.2 Examples from industry</h3>
-<p><strong>Q1: A real-world query from the network management domain</strong><br>
-<img src="/lv/img/article/Cypher/industry1.png" alt=""></p>
+<h3 id="22-examples-from-industry"><a href="#2-2-Examples-from-industry" class="headerlink" title="2.2 Examples from industry"></a>2.2 Examples from industry</h3><p><strong>Q1: A real-world query from the network management domain</strong><br><img src="/lv/img/article/Cypher/industry1.png" alt=""></p>
 <ul>
 <li>The query returns the component that is depended upon – both directly and indirectly – by the largest number of entities.</li>
 <li><code>order by</code>: 排序，可指定增序还是降序</li>
 <li><code>LIMIT</code>：取几行记录</li>
 <li>MATCH中的箭头可以向左也可以向右</li>
 </ul>
-<p><strong>Q2: A query in the domain of fraud detection</strong><br>
-<img src="/lv/img/article/Cypher/industry2.png" alt=""></p>
+<p><strong>Q2: A query in the domain of fraud detection</strong><br><img src="/lv/img/article/Cypher/industry2.png" alt=""></p>
 <ul>
 <li>pInfo后面三个为label，可以将pInfo理解为节点信息，那么语句的意思就是信息可以是SSN，或者PhoneNumber，或者Address</li>
 <li>WHERE后面跟着的是一些过滤条件，这些过滤条件也可以放在MATCH后面，比如第一个where后面跟着实例的标签，那么也可以写成<code>MATCH (accHolder:AccountHolder)-[:HAS]-&gt;(pInfo:SSN:PhoneNumber:Address)</code></li>
@@ -345,18 +319,13 @@
 <li><code>labels()</code>: 返回一个节点的所有标签，以<code>list</code>的形式返回</li>
 <li><code>count(*)</code>: 用于计算匹配的行数</li>
 </ul>
-<h2 id="3formal-specification">3.FORMAL SPECIFICATION</h2>
-<ul>
-<li>
-<p>The key elements of Cypher are as follows:</p>
-<ul>
+<h2 id="3formal-specification"><a href="#3-FORMAL-SPECIFICATION" class="headerlink" title="3.FORMAL SPECIFICATION"></a>3.FORMAL SPECIFICATION</h2><ul>
+<li>The key elements of Cypher are as follows:<ul>
 <li><code>data model</code>, that includes values, graphs, and tables;</li>
 <li><code>query language</code>, that includes expressions, patterns, clauses, and queries.</li>
 </ul>
 </li>
-<li>
-<p><code>Property graphs</code><br>
-![](/lv/img/article/Cypher/property graph.png)</p>
+<li><p><code>Property graphs</code><br><img src="/lv/img/article/Cypher/property graph.png" alt=""></p>
 <ul>
 <li>We now refer to the property graph in Figure 1 and show how, for a sample of its nodes and relationships, it is formally represented in this model as a graph <code>G = (N, R, src, tgt, ι, λ, τ )</code>.</li>
 <li>N: 实例</li>
@@ -365,7 +334,7 @@
 <li>tgt：从关系到目标节点这样的存储结构</li>
 <li>ι(n1,name)=Nils: 节点1的名字叫Nils，存储(key,value)的形式</li>
 <li>λ(n1)={Student}: 存储节点label</li>
-<li>τ®=AUTHORS: 存储关系的label</li>
+<li>τ(r)=AUTHORS: 存储关系的label</li>
 </ul>
 </li>
 </ul>
@@ -457,7 +426,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#schema"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Schema</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1introduce"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">1.Introduce</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#11-property-graph-database"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">1.1 Property graph database</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#12-cypher"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">1.2 Cypher</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2example"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">2.Example</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#21-查询示例语句如下"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">2.1 &#x67E5;&#x8BE2;&#x793A;&#x4F8B;&#x8BED;&#x53E5;&#x5982;&#x4E0B;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#22-examples-from-industry"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">2.2 Examples from industry</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3formal-specification"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">3.FORMAL SPECIFICATION</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#schema"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1introduce"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#1-Introduce" class="headerlink" title="1.Introduce"></a>1.Introduce</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#11-property-graph-database"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#1-1-Property-graph-database" class="headerlink" title="1.1 Property graph database"></a>1.1 Property graph database</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#12-cypher"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><a href="#1-2-Cypher" class="headerlink" title="1.2 Cypher"></a>1.2 Cypher</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2example"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#2-Example" class="headerlink" title="2.Example"></a>2.Example</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#21-查询示例语句如下"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text"><a href="#2-1-&#x67E5;&#x8BE2;&#x793A;&#x4F8B;&#x8BED;&#x53E5;&#x5982;&#x4E0B;&#xFF1A;" class="headerlink" title="2.1 &#x67E5;&#x8BE2;&#x793A;&#x4F8B;&#x8BED;&#x53E5;&#x5982;&#x4E0B;&#xFF1A;"></a>2.1 &#x67E5;&#x8BE2;&#x793A;&#x4F8B;&#x8BED;&#x53E5;&#x5982;&#x4E0B;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#22-examples-from-industry"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text"><a href="#2-2-Examples-from-industry" class="headerlink" title="2.2 Examples from industry"></a>2.2 Examples from industry</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3formal-specification"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#3-FORMAL-SPECIFICATION" class="headerlink" title="3.FORMAL SPECIFICATION"></a>3.FORMAL SPECIFICATION</span></a></li></ol>
         
         </div>
       </aside>

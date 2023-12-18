@@ -145,6 +145,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -152,18 +155,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -232,34 +232,20 @@
 <p>在发生异常事件时，<strong>守护进程</strong>将报告带有时间戳、所涉及的组件和相应的日志片段</p>
 <p>本文所研究的<strong>数据集</strong>包含上述守护进程收集的故障信息、Smart Log以及修复日志</p>
 <hr>
-<h5 id="rasr故障特征">RASR故障特征</h5>
-<p>收集的与硬件相关的150K failure tickets中有5.6%是RASR错误，主要表现为 Node Unbootable, File System Unmountable, Drive Unfound, Buffer IO Error, and Media Error<br>
-<img src="/lv/img/article/RASR/RASR1.png" alt=""></p>
-<p>通过将RASR故障与修复日志相关联，发现RASR故障中有很大一部分(34.4%)<strong>不是由SSD设备引起的</strong>。<br>
-比如，将SSD插入错误的驱动器插槽，这是一个典型的人为错误，像这样的人为错误占RASR故障的20.1%。<br>
-并且设备的位置以及云服务的类型等都会对SSD错误有所影响</p>
+<h5 id="rasr故障特征"><a href="#RASR故障特征" class="headerlink" title="RASR故障特征"></a>RASR故障特征</h5><p>收集的与硬件相关的150K failure tickets中有5.6%是RASR错误，主要表现为 Node Unbootable, File System Unmountable, Drive Unfound, Buffer IO Error, and Media Error<br><img src="/lv/img/article/RASR/RASR1.png" alt=""></p>
+<p>通过将RASR故障与修复日志相关联，发现RASR故障中有很大一部分(34.4%)<strong>不是由SSD设备引起的</strong>。<br>比如，将SSD插入错误的驱动器插槽，这是一个典型的人为错误，像这样的人为错误占RASR故障的20.1%。<br>并且设备的位置以及云服务的类型等都会对SSD错误有所影响</p>
 <p>为了了解RASR故障产生的根本原因，将从硬件层面、软件层面以及系统管理方面深入研究</p>
 <hr>
-<h5 id="lessons-and-actions-for-hardware-architects">Lessons and Actions for Hardware Architects</h5>
-<p>从硬件的角度来看，主要的影响因素为<strong>节点内SSD堆叠</strong>和<strong>机架内节点的放置</strong><br>
-整个架构如下：<br>
-<img src="/lv/img/article/RASR/RASR2.png" alt=""></p>
+<h5 id="lessons-and-actions-for-hardware-architects"><a href="#Lessons-and-Actions-for-Hardware-Architects" class="headerlink" title="Lessons and Actions for Hardware Architects"></a>Lessons and Actions for Hardware Architects</h5><p>从硬件的角度来看，主要的影响因素为<strong>节点内SSD堆叠</strong>和<strong>机架内节点的放置</strong><br>整个架构如下：<br><img src="/lv/img/article/RASR/RASR2.png" alt=""></p>
 <blockquote>
-<p><strong>有三种不同类型的节点配置：</strong><br>
-<strong>Single setup</strong>: 每个节点存放一块SSD，用来存储临时数据<br>
-<strong>Multiple setup</strong>：每个节点包含了12-18块SSD，用来做持久化存储<br>
-<strong>Hybrid setup</strong>：每个节点包含了2块SSD和12-36块HDD，其中这<u>2块</u>SSD用来缓存写入<br>
-此外，每个节点都有一块SSD作为系统驱动盘<br>
-每一个机架（Rack）由16到48个节点组成，DFS集群跨越12到18个机架。</p>
+<p><strong>有三种不同类型的节点配置：</strong><br><strong>Single setup</strong>: 每个节点存放一块SSD，用来存储临时数据<br><strong>Multiple setup</strong>：每个节点包含了12-18块SSD，用来做持久化存储<br><strong>Hybrid setup</strong>：每个节点包含了2块SSD和12-36块HDD，其中这<u>2块</u>SSD用来缓存写入<br>此外，每个节点都有一块SSD作为系统驱动盘<br>每一个机架（Rack）由16到48个节点组成，DFS集群跨越12到18个机架。</p>
 </blockquote>
 <p>在DFS之上，系统支持三种类型的云服务，包括Block服务、NoSQL服务和Big Data服务。</p>
 <blockquote>
-<p>文中也研究了RASR错误和其他重要因素的关联性，比如上述的云服务类型、不同的SSD模型、在数据中心的位置<br>
-实验显示，模型对RASR错误的影响不大；三种云服务模式中的块服务模式对RASR错误影响最大；放置在不同的数据中心对RASR中不同错误的影响大小是不同的</p>
+<p>文中也研究了RASR错误和其他重要因素的关联性，比如上述的云服务类型、不同的SSD模型、在数据中心的位置<br>实验显示，模型对RASR错误的影响不大；三种云服务模式中的块服务模式对RASR错误影响最大；放置在不同的数据中心对RASR中不同错误的影响大小是不同的</p>
 </blockquote>
 <hr>
-<p>这张图显示的是一个节点内部的结构：<br>
-<img src="/lv/img/article/RASR/RASR3.png" alt=""></p>
+<p>这张图显示的是一个节点内部的结构：<br><img src="/lv/img/article/RASR/RASR3.png" alt=""></p>
 <p>由于Arrhenius定律，<strong>NAND闪存在较高温度下是不可靠的</strong>，将导致出错率上升。而SSD放置可能会影响节点和机架中的气流，进而影响相邻SSD的工作温度，导致异常行为的发生，这就是passive heating（被动加热）</p>
 <p>被动加热主要来源于三方面：</p>
 <ol>
@@ -267,8 +253,7 @@
 <li><strong>Hot Neighbor</strong>：被邻居高负载SSD接触加热</li>
 <li><strong>Hot Air Recirculation</strong>： 当一个节点从机架中移走时，形成的空节点槽，易形成隧道热气流，从而影响周边SSD的温度</li>
 </ol>
-<p>然而随着SSD温度的上升，将导致位错误率也随之上升。实验发现温度和位错误率的关系如下图所示：<br>
-<img src="/lv/img/article/RASR/RASR4.png" alt=""></p>
+<p>然而随着SSD温度的上升，将导致位错误率也随之上升。实验发现温度和位错误率的关系如下图所示：<br><img src="/lv/img/article/RASR/RASR4.png" alt=""></p>
 <p>在55℃下测试128小时后，错误率可上升至57%！！</p>
 <p><strong>解决办法</strong>：</p>
 <ol>
@@ -277,46 +262,34 @@
 </ol>
 <p>虽然通过<strong>常规扫描触发读取刷新有助于抵消被动加热的影响</strong>，但在生产系统上直接部署它还存在其他潜在问题：</p>
 <ol>
-<li>
-<p>首先，常规扫描需要 <code>细粒度的温度监测</code>来检测被动加热。目前，可以通过<em>查询Smart日志来获得SSD的温度</em>。在我们的生产系统中，Smart日志每天都被拉出来，这不足以监测被动加热（实验测得4小时扫描一次效果最好）。提高查询速率需要对分布式监视守护进程进行更改，并可能影响服务质量。虽然一些物理传感器可以检测硬件温度，但是要加到系统有难度</p>
+<li><p>首先，常规扫描需要 <code>细粒度的温度监测</code>来检测被动加热。目前，可以通过<em>查询Smart日志来获得SSD的温度</em>。在我们的生产系统中，Smart日志每天都被拉出来，这不足以监测被动加热（实验测得4小时扫描一次效果最好）。提高查询速率需要对分布式监视守护进程进行更改，并可能影响服务质量。虽然一些物理传感器可以检测硬件温度，但是要加到系统有难度</p>
 </li>
-<li>
-<p>扫描可能会带来更多的 <code>读干扰错误</code>。尽管扫描不必每4小时读取整个盘(比如只需要扫描存储数据的地方)或每4小时盲目执行一次(比如只有当SSD处于被动加热（超过4小时）时的区域)， 由于读取或多或少会受到干扰，SSD仍可能受到越来越多的设备错误的影响。因此，虽然有效，但很难直接将实验中的常规扫描应用于生产系统</p>
+<li><p>扫描可能会带来更多的 <code>读干扰错误</code>。尽管扫描不必每4小时读取整个盘(比如只需要扫描存储数据的地方)或每4小时盲目执行一次(比如只有当SSD处于被动加热（超过4小时）时的区域)， 由于读取或多或少会受到干扰，SSD仍可能受到越来越多的设备错误的影响。因此，虽然有效，但很难直接将实验中的常规扫描应用于生产系统</p>
 </li>
-<li>
-<p>另外，也可以在供应商的支持下<code>实现在FTL中检测和修复被动加热的技术</code></p>
+<li><p>另外，也可以在供应商的支持下<code>实现在FTL中检测和修复被动加热的技术</code></p>
 <ol>
 <li>许多固态硬盘支持FTL中的热限制，这意味着该设备已经密切监控了温度</li>
-<li>FTL非常清楚哪些部分的数据具有高错误率，因此可以通过<strong>主动读取</strong>刷新相应的数据来相应地作出反应<br>
-因此，基于FTL的解决方案可能更有效</li>
+<li>FTL非常清楚哪些部分的数据具有高错误率，因此可以通过<strong>主动读取</strong>刷新相应的数据来相应地作出反应<br>因此，基于FTL的解决方案可能更有效</li>
 </ol>
 </li>
 </ol>
 <hr>
-<h5 id="lessons-and-actions-for-software-engineers">Lessons and Actions for Software Engineers</h5>
-<blockquote>
+<h5 id="lessons-and-actions-for-software-engineers"><a href="#Lessons-and-Actions-for-Software-Engineers" class="headerlink" title="Lessons and Actions for Software Engineers"></a>Lessons and Actions for Software Engineers</h5><blockquote>
 <p><strong>由于过度使用SSD导致位错误率上升</strong>，分析了块服务中的不平衡使用、不平衡的根本原因以及如何缓解不平衡使用</p>
 </blockquote>
 <p><code>服务软件栈中的数据分配方案</code>和<code>云服务中的I/O模式</code>对SSD可靠性和RASR错误起着非常重要的作用</p>
 <p>比如，块服务由基于直接映射的数据分配方案授权，在类似HDFS的分布式文件系统(DFS)之上运行时，可能会导致SSD使用的严重不平衡：<strong>15%-20%的SSD被过度使用，使设备错误增加了77.3%，器件故障率提高了18.7%。</strong></p>
 <hr>
-<p>实验比较过度使用的SSD和平均使用的SSD区别，根据二八定律，在块服务中20%的SSD被标记为过度使用，其余标记为平均使用：<br>
-<img src="/lv/img/article/RASR/RASR5.png" alt=""><br>
-实验发现，过度使用的SSD出错概率更高</p>
+<p>实验比较过度使用的SSD和平均使用的SSD区别，根据二八定律，在块服务中20%的SSD被标记为过度使用，其余标记为平均使用：<br><img src="/lv/img/article/RASR/RASR5.png" alt=""><br>实验发现，过度使用的SSD出错概率更高</p>
 <hr>
 <p><strong>使用不平衡的根本原因：(1)更新策略；（2）用户I/O模式</strong></p>
 <p><img src="/img/article/RASR/RASR6.png" alt=""></p>
 <ol>
 <li>左边灰色部分是未更新的映射表，表示在SSD1中存放了编号为Chunk1的块。右边是软件堆栈查询映射表并<strong>将更新的块写入相同的SSD</strong>(即“SSD 1”上的“Updated chunk1”)，这种方式是<code>就地更新</code></li>
-<li>块服务接收到来自不同用户的I/O请求，而有的用户更新非常频繁，有的则不是<br>
-上述就地更新和多样化的更新策略导致块服务下SSD的不平衡使用</li>
+<li>块服务接收到来自不同用户的I/O请求，而有的用户更新非常频繁，有的则不是<br>上述就地更新和多样化的更新策略导致块服务下SSD的不平衡使用</li>
 </ol>
 <blockquote>
-<p>另外两种服务模式，NoSQL和Big Data？<br>
-与块服务不同，其他两个云服务不会造成严重的使用不平衡，因为它们有不同的更新策略或I/O模式<br>
-特别地，NoSQL服务<code>将小更新合并在一起</code>，并且总是为更新的数据生成一个新的chunk，这样可以映射到不同的SSD。<br>
-在Big Data服务中，<code>更新频率低</code>，读取和添加新数据的频率要高得多<br>
-因此，在NoSQL和Big Data服务下，SSD使用较为平衡</p>
+<p>另外两种服务模式，NoSQL和Big Data？<br>与块服务不同，其他两个云服务不会造成严重的使用不平衡，因为它们有不同的更新策略或I/O模式<br>特别地，NoSQL服务<code>将小更新合并在一起</code>，并且总是为更新的数据生成一个新的chunk，这样可以映射到不同的SSD。<br>在Big Data服务中，<code>更新频率低</code>，读取和添加新数据的频率要高得多<br>因此，在NoSQL和Big Data服务下，SSD使用较为平衡</p>
 </blockquote>
 <hr>
 <p><strong>缓解不平衡使用的方法</strong>：添加一个shared append-only log，与原先方法不同的是这个块现在保存在一个日志中，日志<code>将最新的更新附加到它的末尾</code></p>
@@ -327,28 +300,17 @@
 <li>将更新附加到日志中</li>
 <li>更改映射表将更新的块映射到新的SSD(SSD 2)</li>
 </ol>
-<p>在GC的时候，这些被标记的无效块将被回收<br>
-通过这种方式，减缓了SSD之间的使用差异，因为每个更新的块将根据可用驱动器之间的磨损情况分配。当然，在某些情况下，如果原始SSD恰好是最合适的候选块，更新的块可能仍然映射到原始SSD</p>
+<p>在GC的时候，这些被标记的无效块将被回收<br>通过这种方式，减缓了SSD之间的使用差异，因为每个更新的块将根据可用驱动器之间的磨损情况分配。当然，在某些情况下，如果原始SSD恰好是最合适的候选块，更新的块可能仍然映射到原始SSD</p>
 <hr>
-<h5 id="lessons-and-actions-for-system-administrators">Lessons and Actions for System Administrators</h5>
-<p>观察到并不是所有的RASR错误都是SSD出错引起的，非SSD出错来源主要是（1）人为错误（2）互连故障<br>
-其中，人为错误导致RASR故障的20.5%，包括将设备插入错误的插槽(“时隙检查”)和不正确的配置(“安装选项检查”)<br>
-由更换电缆修复的故障互连线（电缆接线接错了），在SSD之外，占RASR故障的13.9%。</p>
+<h5 id="lessons-and-actions-for-system-administrators"><a href="#Lessons-and-Actions-for-System-Administrators" class="headerlink" title="Lessons and Actions for System Administrators"></a>Lessons and Actions for System Administrators</h5><p>观察到并不是所有的RASR错误都是SSD出错引起的，非SSD出错来源主要是（1）人为错误（2）互连故障<br>其中，人为错误导致RASR故障的20.5%，包括将设备插入错误的插槽(“时隙检查”)和不正确的配置(“安装选项检查”)<br>由更换电缆修复的故障互连线（电缆接线接错了），在SSD之外，占RASR故障的13.9%。</p>
 <blockquote>
-<p>注意，虽然“替换SSD”占RASR故障的31.2%，但由于设备和人工的高成本，我们仍然将其作为修复策略的最后手段。<br>
-因此，我们感兴趣的是，人为错误和错误的相互连接是否可以快速诊断或在很大程度上避免。</p>
+<p>注意，虽然“替换SSD”占RASR故障的31.2%，但由于设备和人工的高成本，我们仍然将其作为修复策略的最后手段。<br>因此，我们感兴趣的是，人为错误和错误的相互连接是否可以快速诊断或在很大程度上避免。</p>
 </blockquote>
 <p><strong>解决办法</strong>：</p>
-<p><strong>1.互连故障</strong><br>
-要解决由互连故障引起的RASR故障(驱动器未发现)，<code>更换SSD与主机之间的电缆</code>是一种有效的方法。<br>
-<img src="/lv/img/article/RASR/RASR8.png" alt=""><br>
-从上述图中可以看到，对于Heavy Group和Light Group，不同的修复策略成功率不同。对于Heavy Group下更换电缆的成功率为70.6%，这个结果表明，如果我们直接更换受到错误严重影响的驱动器的电缆，就可以大大提高第一次尝试的成功率。</p>
-<p><strong>2.人为错误</strong><br>
-SSD有三种不同的用途：系统驱动、存储、缓存<br>
-但是使用的都是同一种接口，从而人为插错插槽的概率很高，因此本文提出One Interface One Purpose (OIOP)，对不同用途的SSD可以使用不同的接口，例如，U2/M.2用于系统驱动器，SATA用于存储</p>
+<p><strong>1.互连故障</strong><br>要解决由互连故障引起的RASR故障(驱动器未发现)，<code>更换SSD与主机之间的电缆</code>是一种有效的方法。<br><img src="/lv/img/article/RASR/RASR8.png" alt=""><br>从上述图中可以看到，对于Heavy Group和Light Group，不同的修复策略成功率不同。对于Heavy Group下更换电缆的成功率为70.6%，这个结果表明，如果我们直接更换受到错误严重影响的驱动器的电缆，就可以大大提高第一次尝试的成功率。</p>
+<p><strong>2.人为错误</strong><br>SSD有三种不同的用途：系统驱动、存储、缓存<br>但是使用的都是同一种接口，从而人为插错插槽的概率很高，因此本文提出One Interface One Purpose (OIOP)，对不同用途的SSD可以使用不同的接口，例如，U2/M.2用于系统驱动器，SATA用于存储</p>
 <p>除了OIOP之外，另一个可能的解决方案是使用<code>状态灯</code>来区分驱动器的功能。</p>
-<h4 id="i-want-to-say">“I want to say”</h4>
-<p>这篇文章主要分析了在分布式架构下，与SSD相关的错误类型，并从硬件、软件以及系统管理员角度进行对其进行研究，分析错误产生的原因以及可以参考的经验。</p>
+<h4 id="i-want-to-say"><a href="#“I-want-to-say”" class="headerlink" title="“I want to say”"></a>“I want to say”</h4><p>这篇文章主要分析了在分布式架构下，与SSD相关的错误类型，并从硬件、软件以及系统管理员角度进行对其进行研究，分析错误产生的原因以及可以参考的经验。</p>
 
                 
 
@@ -443,7 +405,7 @@ SSD有三种不同的用途：系统驱动、存储、缓存<br>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#rasr故障特征"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">RASR&#x6545;&#x969C;&#x7279;&#x5F81;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#lessons-and-actions-for-hardware-architects"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Lessons and Actions for Hardware Architects</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#lessons-and-actions-for-software-engineers"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Lessons and Actions for Software Engineers</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#lessons-and-actions-for-system-administrators"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Lessons and Actions for System Administrators</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number"></span> <span class="toc-nav-text">&#x201C;I want to say&#x201D;</span></a>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#rasr故障特征"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#RASR&#x6545;&#x969C;&#x7279;&#x5F81;" class="headerlink" title="RASR&#x6545;&#x969C;&#x7279;&#x5F81;"></a>RASR&#x6545;&#x969C;&#x7279;&#x5F81;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#lessons-and-actions-for-hardware-architects"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#Lessons-and-Actions-for-Hardware-Architects" class="headerlink" title="Lessons and Actions for Hardware Architects"></a>Lessons and Actions for Hardware Architects</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#lessons-and-actions-for-software-engineers"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#Lessons-and-Actions-for-Software-Engineers" class="headerlink" title="Lessons and Actions for Software Engineers"></a>Lessons and Actions for Software Engineers</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#lessons-and-actions-for-system-administrators"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#Lessons-and-Actions-for-System-Administrators" class="headerlink" title="Lessons and Actions for System Administrators"></a>Lessons and Actions for System Administrators</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number"></span> <span class="toc-nav-text"><a href="#&#x201C;I-want-to-say&#x201D;" class="headerlink" title="&#x201C;I want to say&#x201D;"></a>&#x201C;I want to say&#x201D;</span></a>
         
         </div>
       </aside>

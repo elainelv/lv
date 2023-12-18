@@ -142,13 +142,6 @@
     </url>
 
     <url>
-        <loc>http://elainelv.com/tags/Wear-Leveling/</loc>
-        <lastmod>2023-12-18T12:38:03.204Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://elainelv.com/tags/File-System/</loc>
         <lastmod>2023-12-18T12:38:03.239Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -164,13 +157,6 @@
 
     <url>
         <loc>http://elainelv.com/tags/BBM/</loc>
-        <lastmod>2023-12-18T12:38:03.315Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://elainelv.com/tags/Lifetime/</loc>
         <lastmod>2023-12-18T12:38:03.315Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -212,13 +198,6 @@
     </url>
 
     <url>
-        <loc>http://elainelv.com/tags/tool/</loc>
-        <lastmod>2023-12-18T12:38:03.496Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://elainelv.com/tags/Failure/</loc>
         <lastmod>2023-12-18T12:38:03.530Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -235,6 +214,27 @@
     <url>
         <loc>http://elainelv.com/tags/NVMe/</loc>
         <lastmod>2023-12-18T12:38:03.668Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://elainelv.com/tags/Lifetime/</loc>
+        <lastmod>2023-12-18T12:45:49.224Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://elainelv.com/tags/Wear-Leveling/</loc>
+        <lastmod>2023-12-18T12:45:49.224Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://elainelv.com/tags/tool/</loc>
+        <lastmod>2023-12-18T12:46:18.368Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

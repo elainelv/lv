@@ -145,6 +145,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -152,18 +155,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -219,63 +219,25 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>1.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539739" target="_blank" rel="noopener">Infusing Pub-Sub Storage with Transactions</a><br>
-Liana V. Rodriguez, Florida International University; John Bent, Tim Shaffer, Seagate Technology; Raju Rangaswami, Florida International University<br>
-开发新插件来扩展主机存储系统的功能集。</p>
-<p>2.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539740" target="_blank" rel="noopener">ScalaRAID: Optimizing Linux Software RAID System for Next-Generation Storage</a><br>
-Shushu Yi, Nanjing University; Yanning Yang, Beijing University of Posts and Telecommunications; Yunxiao Tang, Zixuan Zhou, Junzhe Li, Peking University; Yue Chen, Beijing University of Posts and Telecommunications; Myoungsoo Jung, KAIST; Jie Zhang, Peking University<br>
-RAID用于改善现有存储系统的性能、容量和可靠性。 但是，我们观察到 Linux 软件 RAID (mdraid) 的锁定机制实施不佳。 为了解决这个问题，我们提出了ScalaRAID，它细化了锁的角色域并设计了一种新的数据结构来防止不同的线程抢占RAID资源。 通过这样做，ScalaRAID 可以最大限度地提高线程级并行性并减少 I/O 请求处理的时间消耗。 我们的评估结果表明，与 mdraid 相比，ScalaRAID 可以将吞吐量提高 89.4%，同时将 99.99% 的延迟降低 85.4%。</p>
-<p>3.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539741" target="_blank" rel="noopener">Lifetime-Leveling LSM-Tree Compaction for ZNS SSD</a><br>
-Jeeyoon Jung, Dongkun Shin, Sungkyunkwan University<br>
-Log-Structured Merge (LSM) 树被认为ZNS存储设备，因为对 LSM-tree 的写入请求是顺序的。 但是，区域可能会在 LSM-tree 压缩期间部分失效和碎片化。 部分无效区域不能被利用，因此空间放大变得显着。 为了回收无效空间，需要主机管理的垃圾回收（GC），这会增加 ZNS 存储的写入放大并降低 I/O 性能。<br>
-本文引入了为 ZNS SSD 量身定制的生命周期压缩（LL-compaction），它可以通过使区域中的已排序字符串表具有相似的生命周期来缓解没有 GC 的空间放大。 在我们使用 LevelDB 的实验中，LL-compaction 通过删除 GC 实现了 1.7 倍的性能提升。</p>
-<p>4.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539742" target="_blank" rel="noopener">PiF: In-Flash Acceleration for Data-Intensive Applications</a><br>
-Myoungjun Chun, Jaeyong Lee, Sanggu Lee, Seoul National University; Myungsuk Kim, Kyungpook National University; Jihong Kim, Seoul National University<br>
-为了最大限度地减少从存储到主机的不必要的数据移动，已经提出了将计算单元移动到存储内以实现存内计算(PiS)技术。本文提出了一种极端版本的PiS解决方案，称为processing-in-flash(PiF)，该方案将计算移动到实际存储数据的闪存芯片内。并提出了一种新颖的闪存芯片架构CoX。使用基于CoX芯片的原型PiF SSD，证明了基于PiF的SSD在加速数据密集型应用方面很有前景。</p>
-<p>5.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539743" target="_blank" rel="noopener">Compaction-Aware Zone Allocation for LSM based Key-Value Store on ZNS SSDs</a><br>
-Hee-Rock Lee, Chang-Gyu Lee, Seungjin Lee, Youngjae Kim, Sogang University<br>
-ZNS SSD 下，设备内的GC功能交给了应用程序处理，从而提供高效GC。同时，RocksDB for ZNS SSD 使用基于 Lifetime 的区域分配算法（LIZA），通过 ZenFS（用户级文件系统）将失效时间（lifetimes）相近的数据放置在同一个 zone，降低GC期间的写放大。<br>
-然而，LIZA 通过根据 LSM-tree 的层次结构级别预测每个 SSTable 的生命周期来分配区域，由于对 SSTable 生命周期的预测不准确，因此在最小化写入放大问题方面效率非常低。<br>
-基于我们观察到 LSM-tree 中 SSTables 的删除时间完全由压缩过程决定，本文提出了一种新的 Compaction-Aware Zone Allocation algorithm (CAZA)，允许在合并后一起删除新创建的 SSTables。 CAZA 在 RocksDB 的 ZenFS 中实现，与 LIZA 相比，CAZA 显着降低了 WA 开销。</p>
-<p>6.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539744" target="_blank" rel="noopener">What You Can’t Forget: Exploiting Parallelism for Zoned Namespaces</a><br>
-Hanyeoreum Bae, Jiseon Kim, Miryeong Kwon, Myoungsoo Jung, KAIST<br>
-本文讨论了 ZNS 的主要优点，并说明了为什么 ZNS 在缩小其区域可写容量时会被剥夺内部并行性。 本文使用了两块量产的ZNS SSD，并定量分析了区间干扰导致的性能下降问题。提出一种IO调度方法来改善带宽和延迟。</p>
-<p>7.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539745" target="_blank" rel="noopener">Hello Bytes, Bye Blocks: PCIe Storage Meets Compute Express Link for Memory Expansion (CXL-SSD)</a><br>
-Myoungsoo Jung, KAIST<br>
-Compute express Link (CXL) 是第一个支持不同处理器、加速器和内存设备类型的高速缓存一致性互连的开放式多协议方法。 尽管 CXL 主要管理 CPU 内存空间和附加设备上的内存之间的数据一致性，但我们认为将现有的块存储改造为具有成本效益的大规模工作内存也是有用的。 具体来说，本文从内存扩展器的角度检查了 CXL 的三种不同子协议。 然后，它建议哪种设备类型可以成为 PCIe 存储的最佳选择，以将其块语义桥接到内存兼容的字节语义。 然后我们讨论如何将存储集成的内存扩展器集成到现有系统中，并推测它对系统性能的影响有多大。 最后，我们访问了各种 CXL 网络拓扑，并探索了有效管理存储集成、基于 CXL 的内存扩展的新机会</p>
-<p>8.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539746" target="_blank" rel="noopener">File Fragmentation from the Perspective of I/O Control</a><br>
-Jonggyu Park, Sungkyunkwan University; Young Ik Eom, Dept. of Electrical and Computer Engineering / College of Computing and Informatics, Sungkyunkwan University<br>
-关于文件碎片的文章。多个应用程序运行时，Linux 内核支持的所有基于权重的 I/O 控制机制在遇到碎片时均无法实现公平的 I/O 共享。本文表明碎片整理可以防止请求拆分和设备级资源冲突来迅速解决此类故障。</p>
-<p>9.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539747" target="_blank" rel="noopener">When Poll is More Energy Efficient than Interrupt</a><br>
-Bryan Harris, Nihat Altiparmak, University of Louisville<br>
-一篇探讨轮询比中断更节能的论文。</p>
-<p>10.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539748" target="_blank" rel="noopener">Rethinking Block Storage Encryption with Virtual Disks</a><br>
-Danny Harnik, IBM Research; Oded Naor, Technion; Effi Ofer, Or Ozeri, IBM Research<br>
-磁盘加密等数据安全性考虑。</p>
-<p>11.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539749" target="_blank" rel="noopener">Alohomora: Protecting Files from Ransomware Attacks Using Fine-Grained I/O Whitelisting</a><br>
-Sanggu Lee, Yoona Kim, Dusol Lee, Inhyuk Choi, Jihong Kim, Seoul National University<br>
-关于勒索软件修改SSD文件问题。</p>
-<p>12.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539750" target="_blank" rel="noopener">Wear Leveling in SSDs Considered Harmful</a><br>
-Ziyang Jiao, Syracuse University; Janki Bhimani, Florida International University; Bryan S. Kim, Syracuse University<br>
-这篇文章测试分析了现有几种均衡磨损算法的表现情况（写放大以及块擦除次数的累计分布），结果表明在某些场景下并不能完全保障闪存块之间的擦除计数趋于一致。采用均衡磨损反而会表现异常，即采用均衡磨损算法不仅仅带来较高的写放大而影响SSD寿命，还表现出不均衡的块擦除计数分布。基于此，作者提出一种不采用均衡磨损的容量差异的方法。</p>
-<p>13.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539751" target="_blank" rel="noopener">LambdaObjects: Re-aggregating storage and execution for cloud computing</a><br>
-Kai Mast, Andrea Arpaci-Dusseau, Remzi Arpaci-Dusseau, University of Wisconsin-Madison</p>
-<p>14.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539752" target="_blank" rel="noopener">Cache-coherent Accelerators for Persistent Memory Crash-consistency</a><br>
-Ankit Bhardwaj, Todd Thornley, Vinita Pawar, University of Utah; Reto Achermann, University of British Columbia; Gerd Zellweger, VMware Research; Ryan Stutsman, University of Utah</p>
-<p>15.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539753" target="_blank" rel="noopener">Fair I/O Scheduler for Alleviating Read/Write Interference by Forced Unit Access in Flash Memory</a><br>
-Jieun Kim, Dohyun Kim, Youjip Won, KAIST<br>
-在过去的几年里，采用 NVM Express 的企业级固态硬盘因其高性能而被广泛使用。 多个租户和进程共享一个 SSD 是很常见的。 为多种应用提供公平的 SSD 性能已成为一个重要问题。 我们观察到带有 FUA 标志的写请求由于 SSD 内部读/写干扰而延迟了读请求的处理。 为了减轻读取请求的性能下降，我们提出了 TABS，即 NVMe SSD 的 per-Type fAir 带宽 I/O 调度程序。</p>
-<p>16.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539754" target="_blank" rel="noopener">A Principled Approach for Selecting Block I/O Traces</a><br>
-Omkar Desai, Syracuse University; Seungmin Shin, Eunji Lee, Soongsil University; Bryan S. Kim, Syracuse University<br>
-目前SNIA网站上开源的负载非常多，但通常不清楚要运行哪些负载以进行实验评估。本文开发了一个负载分析工具IOTap。如果IOTap分析的两个负载是相似的，那么对它们进行基准测试不仅是多余的，而且还会强调负载的特定特征，从而扭曲整体评估。IOTap可以用于不偏不倚地选择I/O负载，以公平地评估存储系统。</p>
-<p>17.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539755" target="_blank" rel="noopener">When F2FS Meets Address Remapping</a><br>
-Yongmyung Lee, Jong-Hyeok Park, Jonggyu Park, Hyunho Gwak, Dongkun Shin, Sungkyunkwan University; Young Ik Eom, Dept. of Electrical and Computer Engineering / College of Computing and Informatics, Sungkyunkwan University; Sang-Won Lee, Sungkyunkwan University</p>
-<p>18.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539756" target="_blank" rel="noopener">Understanding Configuration Dependencies of File Systems</a><br>
-Tabassum Mahmud, Duo Zhang, Om Rameshwar Gatla, Mai Zheng, Iowa State University</p>
-<p>19.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539757" target="_blank" rel="noopener">Generating Realistic Wear Distributions for SSDs</a><br>
-Ziyang Jiao, Bryan S. Kim, Syracuse University<br>
-由于固态硬盘随着使用磨损等会出现老化现象，从而导致闪存数据错误率增加而影响性能。而现有的模拟器都没有很好地考虑这一现象。要么是通过预处理的方式来获取真实的磨损状态（耗时长），要么是预先设置统一的P/E值（不符合实际，现代SSD中即便采用均衡磨损，块之间的擦除次数也存在差异）。因此，本文提出Fast-Forwardable SSD(FF-SSD)，一种基于机器学习的SSD老化框架，可以产生具有代表性的未来磨损状态。在一个典型的SSD模型中，许多组件执行重复的工作。例如，GC可能会在一段时间内不断地选择几个热块作为victim块。同样，在SSD的生命周期内，定期计算WL的触发条件。因此，可以从过去的执行中学习到SSD内的行为，以预测未来的SSD的内部状态。<br>
-FF-SSD 已开源：<a href="https://github.com/ZiyangJiao/FF-SSD" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FF-SSD</a>.</p>
+                <p>1.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539739" target="_blank" rel="noopener">Infusing Pub-Sub Storage with Transactions</a><br>Liana V. Rodriguez, Florida International University; John Bent, Tim Shaffer, Seagate Technology; Raju Rangaswami, Florida International University<br>开发新插件来扩展主机存储系统的功能集。</p>
+<p>2.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539740" target="_blank" rel="noopener">ScalaRAID: Optimizing Linux Software RAID System for Next-Generation Storage</a><br>Shushu Yi, Nanjing University; Yanning Yang, Beijing University of Posts and Telecommunications; Yunxiao Tang, Zixuan Zhou, Junzhe Li, Peking University; Yue Chen, Beijing University of Posts and Telecommunications; Myoungsoo Jung, KAIST; Jie Zhang, Peking University<br>RAID用于改善现有存储系统的性能、容量和可靠性。 但是，我们观察到 Linux 软件 RAID (mdraid) 的锁定机制实施不佳。 为了解决这个问题，我们提出了ScalaRAID，它细化了锁的角色域并设计了一种新的数据结构来防止不同的线程抢占RAID资源。 通过这样做，ScalaRAID 可以最大限度地提高线程级并行性并减少 I/O 请求处理的时间消耗。 我们的评估结果表明，与 mdraid 相比，ScalaRAID 可以将吞吐量提高 89.4%，同时将 99.99% 的延迟降低 85.4%。</p>
+<p>3.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539741" target="_blank" rel="noopener">Lifetime-Leveling LSM-Tree Compaction for ZNS SSD</a><br>Jeeyoon Jung, Dongkun Shin, Sungkyunkwan University<br>Log-Structured Merge (LSM) 树被认为ZNS存储设备，因为对 LSM-tree 的写入请求是顺序的。 但是，区域可能会在 LSM-tree 压缩期间部分失效和碎片化。 部分无效区域不能被利用，因此空间放大变得显着。 为了回收无效空间，需要主机管理的垃圾回收（GC），这会增加 ZNS 存储的写入放大并降低 I/O 性能。<br>本文引入了为 ZNS SSD 量身定制的生命周期压缩（LL-compaction），它可以通过使区域中的已排序字符串表具有相似的生命周期来缓解没有 GC 的空间放大。 在我们使用 LevelDB 的实验中，LL-compaction 通过删除 GC 实现了 1.7 倍的性能提升。</p>
+<p>4.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539742" target="_blank" rel="noopener">PiF: In-Flash Acceleration for Data-Intensive Applications</a><br>Myoungjun Chun, Jaeyong Lee, Sanggu Lee, Seoul National University; Myungsuk Kim, Kyungpook National University; Jihong Kim, Seoul National University<br>为了最大限度地减少从存储到主机的不必要的数据移动，已经提出了将计算单元移动到存储内以实现存内计算(PiS)技术。本文提出了一种极端版本的PiS解决方案，称为processing-in-flash(PiF)，该方案将计算移动到实际存储数据的闪存芯片内。并提出了一种新颖的闪存芯片架构CoX。使用基于CoX芯片的原型PiF SSD，证明了基于PiF的SSD在加速数据密集型应用方面很有前景。</p>
+<p>5.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539743" target="_blank" rel="noopener">Compaction-Aware Zone Allocation for LSM based Key-Value Store on ZNS SSDs</a><br>Hee-Rock Lee, Chang-Gyu Lee, Seungjin Lee, Youngjae Kim, Sogang University<br>ZNS SSD 下，设备内的GC功能交给了应用程序处理，从而提供高效GC。同时，RocksDB for ZNS SSD 使用基于 Lifetime 的区域分配算法（LIZA），通过 ZenFS（用户级文件系统）将失效时间（lifetimes）相近的数据放置在同一个 zone，降低GC期间的写放大。<br>然而，LIZA 通过根据 LSM-tree 的层次结构级别预测每个 SSTable 的生命周期来分配区域，由于对 SSTable 生命周期的预测不准确，因此在最小化写入放大问题方面效率非常低。<br>基于我们观察到 LSM-tree 中 SSTables 的删除时间完全由压缩过程决定，本文提出了一种新的 Compaction-Aware Zone Allocation algorithm (CAZA)，允许在合并后一起删除新创建的 SSTables。 CAZA 在 RocksDB 的 ZenFS 中实现，与 LIZA 相比，CAZA 显着降低了 WA 开销。</p>
+<p>6.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539744" target="_blank" rel="noopener">What You Can’t Forget: Exploiting Parallelism for Zoned Namespaces</a><br>Hanyeoreum Bae, Jiseon Kim, Miryeong Kwon, Myoungsoo Jung, KAIST<br>本文讨论了 ZNS 的主要优点，并说明了为什么 ZNS 在缩小其区域可写容量时会被剥夺内部并行性。 本文使用了两块量产的ZNS SSD，并定量分析了区间干扰导致的性能下降问题。提出一种IO调度方法来改善带宽和延迟。</p>
+<p>7.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539745" target="_blank" rel="noopener">Hello Bytes, Bye Blocks: PCIe Storage Meets Compute Express Link for Memory Expansion (CXL-SSD)</a><br>Myoungsoo Jung, KAIST<br>Compute express Link (CXL) 是第一个支持不同处理器、加速器和内存设备类型的高速缓存一致性互连的开放式多协议方法。 尽管 CXL 主要管理 CPU 内存空间和附加设备上的内存之间的数据一致性，但我们认为将现有的块存储改造为具有成本效益的大规模工作内存也是有用的。 具体来说，本文从内存扩展器的角度检查了 CXL 的三种不同子协议。 然后，它建议哪种设备类型可以成为 PCIe 存储的最佳选择，以将其块语义桥接到内存兼容的字节语义。 然后我们讨论如何将存储集成的内存扩展器集成到现有系统中，并推测它对系统性能的影响有多大。 最后，我们访问了各种 CXL 网络拓扑，并探索了有效管理存储集成、基于 CXL 的内存扩展的新机会</p>
+<p>8.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539746" target="_blank" rel="noopener">File Fragmentation from the Perspective of I/O Control</a><br>Jonggyu Park, Sungkyunkwan University; Young Ik Eom, Dept. of Electrical and Computer Engineering / College of Computing and Informatics, Sungkyunkwan University<br>关于文件碎片的文章。多个应用程序运行时，Linux 内核支持的所有基于权重的 I/O 控制机制在遇到碎片时均无法实现公平的 I/O 共享。本文表明碎片整理可以防止请求拆分和设备级资源冲突来迅速解决此类故障。</p>
+<p>9.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539747" target="_blank" rel="noopener">When Poll is More Energy Efficient than Interrupt</a><br>Bryan Harris, Nihat Altiparmak, University of Louisville<br>一篇探讨轮询比中断更节能的论文。</p>
+<p>10.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539748" target="_blank" rel="noopener">Rethinking Block Storage Encryption with Virtual Disks</a><br>Danny Harnik, IBM Research; Oded Naor, Technion; Effi Ofer, Or Ozeri, IBM Research<br>磁盘加密等数据安全性考虑。</p>
+<p>11.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539749" target="_blank" rel="noopener">Alohomora: Protecting Files from Ransomware Attacks Using Fine-Grained I/O Whitelisting</a><br>Sanggu Lee, Yoona Kim, Dusol Lee, Inhyuk Choi, Jihong Kim, Seoul National University<br>关于勒索软件修改SSD文件问题。</p>
+<p>12.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539750" target="_blank" rel="noopener">Wear Leveling in SSDs Considered Harmful</a><br>Ziyang Jiao, Syracuse University; Janki Bhimani, Florida International University; Bryan S. Kim, Syracuse University<br>这篇文章测试分析了现有几种均衡磨损算法的表现情况（写放大以及块擦除次数的累计分布），结果表明在某些场景下并不能完全保障闪存块之间的擦除计数趋于一致。采用均衡磨损反而会表现异常，即采用均衡磨损算法不仅仅带来较高的写放大而影响SSD寿命，还表现出不均衡的块擦除计数分布。基于此，作者提出一种不采用均衡磨损的容量差异的方法。</p>
+<p>13.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539751" target="_blank" rel="noopener">LambdaObjects: Re-aggregating storage and execution for cloud computing</a><br>Kai Mast, Andrea Arpaci-Dusseau, Remzi Arpaci-Dusseau, University of Wisconsin-Madison</p>
+<p>14.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539752" target="_blank" rel="noopener">Cache-coherent Accelerators for Persistent Memory Crash-consistency</a><br>Ankit Bhardwaj, Todd Thornley, Vinita Pawar, University of Utah; Reto Achermann, University of British Columbia; Gerd Zellweger, VMware Research; Ryan Stutsman, University of Utah</p>
+<p>15.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539753" target="_blank" rel="noopener">Fair I/O Scheduler for Alleviating Read/Write Interference by Forced Unit Access in Flash Memory</a><br>Jieun Kim, Dohyun Kim, Youjip Won, KAIST<br>在过去的几年里，采用 NVM Express 的企业级固态硬盘因其高性能而被广泛使用。 多个租户和进程共享一个 SSD 是很常见的。 为多种应用提供公平的 SSD 性能已成为一个重要问题。 我们观察到带有 FUA 标志的写请求由于 SSD 内部读/写干扰而延迟了读请求的处理。 为了减轻读取请求的性能下降，我们提出了 TABS，即 NVMe SSD 的 per-Type fAir 带宽 I/O 调度程序。</p>
+<p>16.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539754" target="_blank" rel="noopener">A Principled Approach for Selecting Block I/O Traces</a><br>Omkar Desai, Syracuse University; Seungmin Shin, Eunji Lee, Soongsil University; Bryan S. Kim, Syracuse University<br>目前SNIA网站上开源的负载非常多，但通常不清楚要运行哪些负载以进行实验评估。本文开发了一个负载分析工具IOTap。如果IOTap分析的两个负载是相似的，那么对它们进行基准测试不仅是多余的，而且还会强调负载的特定特征，从而扭曲整体评估。IOTap可以用于不偏不倚地选择I/O负载，以公平地评估存储系统。</p>
+<p>17.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539755" target="_blank" rel="noopener">When F2FS Meets Address Remapping</a><br>Yongmyung Lee, Jong-Hyeok Park, Jonggyu Park, Hyunho Gwak, Dongkun Shin, Sungkyunkwan University; Young Ik Eom, Dept. of Electrical and Computer Engineering / College of Computing and Informatics, Sungkyunkwan University; Sang-Won Lee, Sungkyunkwan University</p>
+<p>18.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539756" target="_blank" rel="noopener">Understanding Configuration Dependencies of File Systems</a><br>Tabassum Mahmud, Duo Zhang, Om Rameshwar Gatla, Mai Zheng, Iowa State University</p>
+<p>19.<a href="https://dl.acm.org/doi/pdf/10.1145/3538643.3539757" target="_blank" rel="noopener">Generating Realistic Wear Distributions for SSDs</a><br>Ziyang Jiao, Bryan S. Kim, Syracuse University<br>由于固态硬盘随着使用磨损等会出现老化现象，从而导致闪存数据错误率增加而影响性能。而现有的模拟器都没有很好地考虑这一现象。要么是通过预处理的方式来获取真实的磨损状态（耗时长），要么是预先设置统一的P/E值（不符合实际，现代SSD中即便采用均衡磨损，块之间的擦除次数也存在差异）。因此，本文提出Fast-Forwardable SSD(FF-SSD)，一种基于机器学习的SSD老化框架，可以产生具有代表性的未来磨损状态。在一个典型的SSD模型中，许多组件执行重复的工作。例如，GC可能会在一段时间内不断地选择几个热块作为victim块。同样，在SSD的生命周期内，定期计算WL的触发条件。因此，可以从过去的执行中学习到SSD内的行为，以预测未来的SSD的内部状态。<br>FF-SSD 已开源：<a href="https://github.com/ZiyangJiao/FF-SSD" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FF-SSD</a>.</p>
 
                 
 

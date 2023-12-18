@@ -147,6 +147,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -154,18 +157,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -221,38 +221,25 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h2 id="引子">引子</h2>
-<p>今年FAST 22 best paper文章为Improving the Reliability of Next Generation SSDs using WOM-v Codes，文章解读可以查看下一篇博文。去考古了几篇探索WOM编码的文章，主要为怎么借助于比特翻转的约束（1-&gt;0），实现多次重编程操作来改善闪存擦除次数有限的问题。不过都是针对SLC闪存或者MLC闪存。也有文章实测MLC闪存重编程的可能性以及教训。</p>
+                <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>今年FAST 22 best paper文章为Improving the Reliability of Next Generation SSDs using WOM-v Codes，文章解读可以查看下一篇博文。去考古了几篇探索WOM编码的文章，主要为怎么借助于比特翻转的约束（1-&gt;0），实现多次重编程操作来改善闪存擦除次数有限的问题。不过都是针对SLC闪存或者MLC闪存。也有文章实测MLC闪存重编程的可能性以及教训。</p>
 <ul>
 <li>Rivest et al. <a href="https://dl.acm.org/doi/pdf/10.1145/800070.802182" target="_blank" rel="noopener">How to reuse a write-once memory</a>, ACM STOC, 1982</li>
 <li>Yadgar et al. <a href="https://www.usenix.org/conference/fast15/technical-sessions/presentation/yadgar" target="_blank" rel="noopener">Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes</a>, FAST’15</li>
 <li>Margaglia et al. <a href="https://storageconference.us/2015/Papers/05.Margaglia.pdf" target="_blank" rel="noopener">Improving MLC flash performance and endurance with extended P/E cycles</a>, MSST’15</li>
 <li>Margaglia et al. <a href="https://www.usenix.org/conference/fast16/technical-sessions/presentation/margaglia" target="_blank" rel="noopener">The Devil is in the Details, Implemening Flash Page Reuse with WOM Code</a>, FAST’16</li>
 </ul>
-<h2 id="1-how-to-reuse-a-write-once-memory">1. How to reuse a write-once memory</h2>
-<blockquote>
+<h2 id="1-how-to-reuse-a-write-once-memory"><a href="#1-How-to-reuse-a-write-once-memory" class="headerlink" title="1. How to reuse a write-once memory"></a>1. How to reuse a write-once memory</h2><blockquote>
 <p>Rivest et al., ACM STOC, 1982</p>
 </blockquote>
-<p>最早提出WOM，是一种二进制WOM编码，用于早期打孔卡和光盘。由于SLC也是仅表示0/1，因此也适用于SLC闪存。<br>
-<strong>WOM</strong>：按代组织的冗余编码，其中代数是指WOM兼容的更新数量。下表显示了将2位数据字对应编码为3位码字的2代WOM码。每一代的每个码字中的1是前几代中所有不同码字的1的superset。因此，每个码字总是可以根据 WOM 约束更新为下一代的不同码字。<br>
-<img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/21.png" alt=""></p>
+<p>最早提出WOM，是一种二进制WOM编码，用于早期打孔卡和光盘。由于SLC也是仅表示0/1，因此也适用于SLC闪存。<br><strong>WOM</strong>：按代组织的冗余编码，其中代数是指WOM兼容的更新数量。下表显示了将2位数据字对应编码为3位码字的2代WOM码。每一代的每个码字中的1是前几代中所有不同码字的1的superset。因此，每个码字总是可以根据 WOM 约束更新为下一代的不同码字。<br><img src="/lv/img/article/WOM系列/21.png" alt=""></p>
 <blockquote>
 <p>前几年Gala等人在WOM上做了一些优化，并考虑如何将其应用在MLC闪存中以及获得的一些Lessons。</p>
 </blockquote>
-<h2 id="2-write-once-get-50-free-saving-ssd-erase-costs-using-wom-codes">2. Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes</h2>
-<blockquote>
-<p>Gala Yadgar, Eitan Yaakobi and et al., FAST '15</p>
+<h2 id="2-write-once-get-50-free-saving-ssd-erase-costs-using-wom-codes"><a href="#2-Write-Once-Get-50-Free-Saving-SSD-Erase-Costs-Using-WOM-Codes" class="headerlink" title="2. Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes"></a>2. Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes</h2><blockquote>
+<p>Gala Yadgar, Eitan Yaakobi and et al., FAST ‘15</p>
 </blockquote>
-<p><strong>传统WOM特点</strong><br>
-1）页面大小随着编码而增加；<br>
-2）无效的页面在执行第二次写入时无需擦除可以被“重用”；<br>
-3）第二次写前需要读取。<br>
-<strong>典型WOM使用的缺点</strong><br>
-1）容量开销：WOM编码需要29%-50%的额外存储空间；<br>
-2）性能开销：第二次写之前需要读取；读放大，每次多读29%-50%的比特；<br>
-3）兼容性：需要对物理页面大小进行修改；<br>
-4）应用性：编码/解码复杂度高。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/1.png" alt=""></p>
+<p><strong>传统WOM特点</strong><br>1）页面大小随着编码而增加；<br>2）无效的页面在执行第二次写入时无需擦除可以被“重用”；<br>3）第二次写前需要读取。<br><strong>典型WOM使用的缺点</strong><br>1）容量开销：WOM编码需要29%-50%的额外存储空间；<br>2）性能开销：第二次写之前需要读取；读放大，每次多读29%-50%的比特；<br>3）兼容性：需要对物理页面大小进行修改；<br>4）应用性：编码/解码复杂度高。</p>
+<p><img src="/lv/img/article/WOM系列/1.png" alt=""></p>
 <p>【<strong><code>Reusable SSD</code></strong>】</p>
 <ul>
 <li>在擦除操作之前执行额外的编程操作</li>
@@ -261,88 +248,54 @@
 <li>保留容量（逻辑容量不影响）</li>
 <li>接口不变</li>
 </ul>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/2.png" alt=""></p>
+<p><img src="/lv/img/article/WOM系列/2.png" alt=""></p>
 <p>【<strong><code>Polar WOM编码</code></strong>】</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/3.png" alt=""></p>
+<p><img src="/lv/img/article/WOM系列/3.png" alt=""></p>
 <p>特点：容量开销，具有不可忽略的失败概率。</p>
 <ul>
 <li>表2.f：100%成功，但需要编程三个物理页面来表示单个逻辑页面，这在大多数闪存中不能同时完成（本文发表时流行2-plane，目前4-plane可能可以实现）。</li>
-<li>表2.a：需要两个物理页面表示单次覆盖写，但在实践中成功率为0%。<br>
-本文采用表2.d(95%成功率，存储开销210%)，通过利用ECC容错空间来解决部分容量开销；利用Plane级别并行写，来解决第二次覆盖写两个无效页面的性能开销。</li>
+<li>表2.a：需要两个物理页面表示单次覆盖写，但在实践中成功率为0%。<br>本文采用表2.d(95%成功率，存储开销210%)，通过利用ECC容错空间来解决部分容量开销；利用Plane级别并行写，来解决第二次覆盖写两个无效页面的性能开销。</li>
 </ul>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/4.png" alt=""></p>
-<p>利用页面的备用区域，并将其划分为两个部分。在第一个较小的部分中，我们存储了第一次写的ECC。在第二个更大的部分中，我们存储第二次写的ECC和第二次写入的一些编码数据。<br>
-1）通过限制第一次写的ECC的大小，就限制了它的强度。因此，当块的误码率增加超过新ECC的纠错能力时，我们必须禁用二写，而SSD只使用第一写正常操作。<br>
-2）WOM计算失败的可能性很小。当这种情况发生时，我们只需重试编码；如果失败，我们将逻辑数据作为第一次写入。<br>
-本文选用表2(d)，210%的存储容量，成功率为95%。假设每个页面都有9%的备用区，并分配2.5%用于存储第一次写入的ECC。剩余的6.5%存储5%的WOM码与ECC，相当于页面大小的4%的ECC。总之，这两个物理页面及其备用区提供的总容量相当于逻辑页面大小的210%。<br>
-页面大小的2.5%的ECC大约足以满足块生命周期的前30%，之后我们禁用第二次写入。</p>
+<p><img src="/lv/img/article/WOM系列/4.png" alt=""></p>
+<p>利用页面的备用区域，并将其划分为两个部分。在第一个较小的部分中，我们存储了第一次写的ECC。在第二个更大的部分中，我们存储第二次写的ECC和第二次写入的一些编码数据。<br>1）通过限制第一次写的ECC的大小，就限制了它的强度。因此，当块的误码率增加超过新ECC的纠错能力时，我们必须禁用二写，而SSD只使用第一写正常操作。<br>2）WOM计算失败的可能性很小。当这种情况发生时，我们只需重试编码；如果失败，我们将逻辑数据作为第一次写入。<br>本文选用表2(d)，210%的存储容量，成功率为95%。假设每个页面都有9%的备用区，并分配2.5%用于存储第一次写入的ECC。剩余的6.5%存储5%的WOM码与ECC，相当于页面大小的4%的ECC。总之，这两个物理页面及其备用区提供的总容量相当于逻辑页面大小的210%。<br>页面大小的2.5%的ECC大约足以满足块生命周期的前30%，之后我们禁用第二次写入。</p>
 <p>WOM码要求在物理页面上有足够的（≥50%）零位，以便应用第二次写入。因此，我们确保在第一次写时被编程的存储不超过一半。如果第一个写数据页有太多的1，我们将在物理页上编写它的补码，并使用一个额外的位来标记这个修改(bit flipping)。</p>
 <p>【<strong>理论擦除次数优化</strong>】</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/5.png" alt=""></p>
+<p><img src="/lv/img/article/WOM系列/5.png" alt=""></p>
 <p>【<strong>设计</strong>】</p>
 <ul>
-<li>
-<p>如何解决写放大带来的性能下降，第二次写需要同时写两个页面？<br>
-通过2-Plane并行化避免延迟。并且这部分写放大通过OPS解决。因此重用的块数量不能超过OPS大小。</p>
+<li><p>如何解决写放大带来的性能下降，第二次写需要同时写两个页面？<br>通过2-Plane并行化避免延迟。并且这部分写放大通过OPS解决。因此重用的块数量不能超过OPS大小。</p>
 </li>
-<li>
-<p>采用第二次写的页面，一个逻辑页面映射到两个物理页面，会增加映射表大小，如何解决？<br>
-为了做到这一点，我们要求在第二次写入中，逻辑页面被写在两个回收活动块中具有相同偏移量的两个物理页面上。然后采用一个额外的映射表block map来记录块对。</p>
+<li><p>采用第二次写的页面，一个逻辑页面映射到两个物理页面，会增加映射表大小，如何解决？<br>为了做到这一点，我们要求在第二次写入中，逻辑页面被写在两个回收活动块中具有相同偏移量的两个物理页面上。然后采用一个额外的映射表block map来记录块对。</p>
 </li>
-<li>
-<p>如何解决写前读无效页面？<br>
-由于第二次编写之前都需要读取，因此可以预取解决这一问题。</p>
+<li><p>如何解决写前读无效页面？<br>由于第二次编写之前都需要读取，因此可以预取解决这一问题。</p>
 </li>
-<li>
-<p>如何执行GC？<br>
-如果GC选中的victim块是reused/一个plane中剩余clean不足2/总的recycled块超过2R，当前选中的victim块将会擦除来释放空间，否则，可进行第二次写入。</p>
+<li><p>如何执行GC？<br>如果GC选中的victim块是reused/一个plane中剩余clean不足2/总的recycled块超过2R，当前选中的victim块将会擦除来释放空间，否则，可进行第二次写入。</p>
 </li>
-<li>
-<p>如何写入选择clean块和recycled块？<br>
-考虑数据的访问特征，用热写数据来填充recycled块（可以尽快回收，最大限度地减少重用块的容量没有充分利用的时间）。冷数据正常写。</p>
+<li><p>如何写入选择clean块和recycled块？<br>考虑数据的访问特征，用热写数据来填充recycled块（可以尽快回收，最大限度地减少重用块的容量没有充分利用的时间）。冷数据正常写。</p>
 </li>
-<li>
-<p>如何解决第二次覆盖写失败？也就是说，第二次写需要写比特0，而所选无效页面对应位置为1。<br>
-1）第二次写入失败之后（5%的可能性，选表2.d），则将数据重写到clean块；<br>
-2）用ECC容错空间来纠错这些无法覆盖的位。</p>
+<li><p>如何解决第二次覆盖写失败？也就是说，第二次写需要写比特0，而所选无效页面对应位置为1。<br>1）第二次写入失败之后（5%的可能性，选表2.d），则将数据重写到clean块；<br>2）用ECC容错空间来纠错这些无法覆盖的位。</p>
 </li>
 </ul>
-<p>【<strong>实验结果</strong>】<br>
-实验测试平台为Disksim。擦除操作次数减少33%。性能改善15%（企业级场景28%OPS），35%（消费级场景7%OPS）。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/7.png" alt=""></p>
-<h2 id="3-improving-mlc-flash-performance-and-endurance-with-extended-pe-cycles">3. Improving MLC flash performance and endurance with extended P/E cycles</h2>
-<blockquote>
+<p>【<strong>实验结果</strong>】<br>实验测试平台为Disksim。擦除操作次数减少33%。性能改善15%（企业级场景28%OPS），35%（消费级场景7%OPS）。</p>
+<p><img src="/lv/img/article/WOM系列/7.png" alt=""></p>
+<h2 id="3-improving-mlc-flash-performance-and-endurance-with-extended-pe-cycles"><a href="#3-Improving-MLC-flash-performance-and-endurance-with-extended-P-E-cycles" class="headerlink" title="3. Improving MLC flash performance and endurance with extended P/E cycles"></a>3. Improving MLC flash performance and endurance with extended P/E cycles</h2><blockquote>
 <p>Margaglia et al.,MSST’15</p>
 </blockquote>
-<p>【<strong>问题</strong>】对于需要重编程的存储元来说，第一次编程不能设置任意值。先前WOM编码的约束是只要确保编程时比特在一个方向上翻转（例如1→0），就可以安全编程多次。本文将此假设称为WOM约束(WOM constraint)，并将符合该约束的数据称为WOM兼容(WOM compatible)。WOM约束是基于穿孔卡和光盘的行为，但也适用于SLC芯片，因为它们只有两种状态。以前的工作展示了如何通过编码或专门的数据结构来实现WOM兼容的数据模式。然而，WOM约束不能直接应用于MLC flash，因为每个存储元都有4个状态，编码为2位。因此，当某一位被重新编程时，存储元电压状态就会被修改，这可能会破坏另一位的值（编程干扰）。<br>
-【<strong>方法</strong>】在本文中，讨论extended P/E cycles对MLC闪存的适用性。主要贡献是识别和定义了MLC技术所施加的附加约束，称之为practical MLC WOM constraints。<br>
-【<strong>实验</strong>】相对于之前关于WOM的工作（要么是针对SLC闪存，要么是基于模拟），本文在openSSD上实测（配备35nm MLC闪存），评估表明，与传统贪婪垃圾回收策略下的P/E相比，该技术减少擦除操作高达85%，延迟加速高达67%。</p>
+<p>【<strong>问题</strong>】对于需要重编程的存储元来说，第一次编程不能设置任意值。先前WOM编码的约束是只要确保编程时比特在一个方向上翻转（例如1→0），就可以安全编程多次。本文将此假设称为WOM约束(WOM constraint)，并将符合该约束的数据称为WOM兼容(WOM compatible)。WOM约束是基于穿孔卡和光盘的行为，但也适用于SLC芯片，因为它们只有两种状态。以前的工作展示了如何通过编码或专门的数据结构来实现WOM兼容的数据模式。然而，WOM约束不能直接应用于MLC flash，因为每个存储元都有4个状态，编码为2位。因此，当某一位被重新编程时，存储元电压状态就会被修改，这可能会破坏另一位的值（编程干扰）。<br>【<strong>方法</strong>】在本文中，讨论extended P/E cycles对MLC闪存的适用性。主要贡献是识别和定义了MLC技术所施加的附加约束，称之为practical MLC WOM constraints。<br>【<strong>实验</strong>】相对于之前关于WOM的工作（要么是针对SLC闪存，要么是基于模拟），本文在openSSD上实测（配备35nm MLC闪存），评估表明，与传统贪婪垃圾回收策略下的P/E相比，该技术减少擦除操作高达85%，延迟加速高达67%。</p>
 <blockquote>
 <p>本文的覆盖写通过SATA接口接受覆盖命令实现。因此，它将生成WOM兼容数据的责任委托给应用程序。其他方法已经被提出：Odehat.和Yadgar等人提出在FTL内部使用WOM代码来执行重编程操作。</p>
 </blockquote>
-<p>【<strong>MLC存储元状态转换</strong>】为了更好地理解MLC闪存中重编程操作的含义，本文提出一个典型的MLC的存储元状态图。该过程包括取几个连接的低/高页面，并通过编程一个属于低页面或高页面的单个位来遍历每个状态转换，然后读取这两个页面的内容。目标是每次都编程一个位。一旦提取了完整的状态图，我们就用全页写操作来验证它。由于ECC不能在全页操作中被禁用，所以通过翻转更多的位来确保过载ECC的校正能力。以这种方式执行的全页操作的验证确认了该图。<br>
-<strong><code>观察1</code></strong>：是实际上有 5 个状态而不是 4 个，因为位被编程的顺序会影响单元在未来编程操作中的行为。Erased State 中在两个位上都映射为 1。鉴于此前提，理想情况下，MLC 可以使用 WOM 约束重新编程，根据该约束，编程 0 始终是安全的。不幸的是，图中突出显示的一些转换打破了这一假设。<br>
-在转换 6 中，低位即使需要编程为0，还是维持1。<br>
-在转换11中，高页面需要编程为0，但还是维持在1。<br>
-在转换7中，将高位编程为 0 时，会导致编程干扰（影响低位）。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/22.png" alt=""></p>
+<p>【<strong>MLC存储元状态转换</strong>】为了更好地理解MLC闪存中重编程操作的含义，本文提出一个典型的MLC的存储元状态图。该过程包括取几个连接的低/高页面，并通过编程一个属于低页面或高页面的单个位来遍历每个状态转换，然后读取这两个页面的内容。目标是每次都编程一个位。一旦提取了完整的状态图，我们就用全页写操作来验证它。由于ECC不能在全页操作中被禁用，所以通过翻转更多的位来确保过载ECC的校正能力。以这种方式执行的全页操作的验证确认了该图。<br><strong><code>观察1</code></strong>：是实际上有 5 个状态而不是 4 个，因为位被编程的顺序会影响单元在未来编程操作中的行为。Erased State 中在两个位上都映射为 1。鉴于此前提，理想情况下，MLC 可以使用 WOM 约束重新编程，根据该约束，编程 0 始终是安全的。不幸的是，图中突出显示的一些转换打破了这一假设。<br>在转换 6 中，低位即使需要编程为0，还是维持1。<br>在转换11中，高页面需要编程为0，但还是维持在1。<br>在转换7中，将高位编程为 0 时，会导致编程干扰（影响低位）。</p>
+<p><img src="/lv/img/article/WOM系列/22.png" alt=""></p>
 <p>【<strong>重编程的困难</strong>】闪存制造商按顺序编程闪存块，每个页面只能编程一次。由于图2中所示的块组织，按顺序对页面进行编程意味着低页总是在高页之前进行编程。第一个编程操作到达低页，并使用转换0或1。第二个编程操作到达高页，并使用转换2、4或5。所有这些转换都是安全的。另一方面，当我们允许对块的所有页面进行重编程操作时，我们假设MLC闪存的任何一个页面，或者两个页面，都可能已经被编程过。因此，它们的存储元可以处于任何状态。在这种情况下，要避免有问题的转换就变得非常困难。</p>
-<p><strong><code>观察2</code></strong>：在编程高页之前，确实可以根据WOM的约束条件重新编程低页。通过这种方式，只使用转换0、1和3(注意，WOM约束确保转换3中，0不能编程到1。这些转换都是安全的。当低页被重新编程时（从状态Erased/1开始），仍然可以使用转换2、4或5对高页进行编程。<br>
-WOM兼容数据的组合，以及这种编程顺序确保了与MLC提供的实际WOM约束的兼容性，有效地实现了MLC闪存芯片上的扩展P/E周期。</p>
+<p><strong><code>观察2</code></strong>：在编程高页之前，确实可以根据WOM的约束条件重新编程低页。通过这种方式，只使用转换0、1和3(注意，WOM约束确保转换3中，0不能编程到1。这些转换都是安全的。当低页被重新编程时（从状态Erased/1开始），仍然可以使用转换2、4或5对高页进行编程。<br>WOM兼容数据的组合，以及这种编程顺序确保了与MLC提供的实际WOM约束的兼容性，有效地实现了MLC闪存芯片上的扩展P/E周期。</p>
 <p>【<strong>FTL设计</strong>】基于上述观察，将块分为write block和overwrite block。write block使用的方式不变。Overwrite block编写的方式分为两步：1）只使用低页并允许重新编程操作；2）禁止对低页的编程访问，对高页依次编程。此时，低页仍然可以被读取，并且它们包含的数据不会被破坏。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/23.png" alt=""></p>
-<p>当写入选择clean块时，先编程低页面。<br>
-对于垃圾回收，可以选择full write block或者full OW block。原因是如果容量不够用时选择回收full write block，那么full OW block累积越来越多时，将会导致整体容量不够用。如果此时full write block存的都是有效数据，那么将导致严重的写放大。为了避免这种情况，当clean块不足时，可以选择full OW块服务写数据而不是触发GC。对于seal的full overwrite 块，其低页面不再被重编程，直接使用高页面。<br>
-如何选择full OW块？通过选择有效页面数量最少的overwrite块。原因是有效页面越少，将来被覆盖写的概率越小。<br>
-如果full OW块被使用完了，并且此时需要clean块来存储数据。因此必须回收一个块。此时如果full write block中有效数据量很多。那么可以选择full OW block。因为full OW block中的有效数据最大值要比full write block小一半。因此，有效数据量很可能也很少。但是，这也意味着高页面在没有被使用的前提下，被擦除了。<br>
-因此，有两种选取victim块的策略：1）对于overwrite块，只统计低页面中有效页面的数量，没有被使用的高页面直接作为无效页面进行统计；2）高页面作为有效页面进行统计。</p>
-<h2 id="4-the-devil-is-in-the-details-implemening-flash-page-reuse-with-wom-code">4. The Devil is in the Details, Implemening Flash Page Reuse with WOM Code</h2>
-<blockquote>
-<p>Fabio Margaglia, Gala Yadgar and et al., FAST '16</p>
+<p><img src="/lv/img/article/WOM系列/23.png" alt=""></p>
+<p>当写入选择clean块时，先编程低页面。<br>对于垃圾回收，可以选择full write block或者full OW block。原因是如果容量不够用时选择回收full write block，那么full OW block累积越来越多时，将会导致整体容量不够用。如果此时full write block存的都是有效数据，那么将导致严重的写放大。为了避免这种情况，当clean块不足时，可以选择full OW块服务写数据而不是触发GC。对于seal的full overwrite 块，其低页面不再被重编程，直接使用高页面。<br>如何选择full OW块？通过选择有效页面数量最少的overwrite块。原因是有效页面越少，将来被覆盖写的概率越小。<br>如果full OW块被使用完了，并且此时需要clean块来存储数据。因此必须回收一个块。此时如果full write block中有效数据量很多。那么可以选择full OW block。因为full OW block中的有效数据最大值要比full write block小一半。因此，有效数据量很可能也很少。但是，这也意味着高页面在没有被使用的前提下，被擦除了。<br>因此，有两种选取victim块的策略：1）对于overwrite块，只统计低页面中有效页面的数量，没有被使用的高页面直接作为无效页面进行统计；2）高页面作为有效页面进行统计。</p>
+<h2 id="4-the-devil-is-in-the-details-implemening-flash-page-reuse-with-wom-code"><a href="#4-The-Devil-is-in-the-Details-Implemening-Flash-Page-Reuse-with-WOM-Code" class="headerlink" title="4. The Devil is in the Details, Implemening Flash Page Reuse with WOM Code"></a>4. The Devil is in the Details, Implemening Flash Page Reuse with WOM Code</h2><blockquote>
+<p>Fabio Margaglia, Gala Yadgar and et al., FAST ‘16</p>
 </blockquote>
-<p>【<strong>引言</strong>】考虑如何将WOM编码应用到MLC闪存中。SLC闪存可以和二进制WOM使用，单个存储元可以按照比特位一一对应起来。然而MLC更复杂，重编程会导致同个字线中的页面干扰等问题。<br>
-闪存芯片不支持通过其标准接口进行重新编程。因此，重编程对存储元的状态转换和持久性的影响不能从标准文档中得到，而需要用专门的硬件进行实验。本文用几个最先进的闪存芯片进行了一系列的实验，以评估重编程MLC闪存页面的限制，以及重编程对芯片的寿命、可靠性和能源消耗的影响。<br>
-实验使用SigNASII商用NAND闪存测试仪。该测试器允许软件控制物理编程的闪存块和其中的页面。通过禁用ECC硬件，能够检查每个存储元的状态，并计算每个页面中的位错误。</p>
+<p>【<strong>引言</strong>】考虑如何将WOM编码应用到MLC闪存中。SLC闪存可以和二进制WOM使用，单个存储元可以按照比特位一一对应起来。然而MLC更复杂，重编程会导致同个字线中的页面干扰等问题。<br>闪存芯片不支持通过其标准接口进行重新编程。因此，重编程对存储元的状态转换和持久性的影响不能从标准文档中得到，而需要用专门的硬件进行实验。本文用几个最先进的闪存芯片进行了一系列的实验，以评估重编程MLC闪存页面的限制，以及重编程对芯片的寿命、可靠性和能源消耗的影响。<br>实验使用SigNASII商用NAND闪存测试仪。该测试器允许软件控制物理编程的闪存块和其中的页面。通过禁用ECC硬件，能够检查每个存储元的状态，并计算每个页面中的位错误。</p>
 <p>【<strong>5个Lesson</strong>】</p>
 <ul>
 <li>在MLC闪存中，页面重编程使用是可能的；</li>
@@ -351,35 +304,23 @@ WOM兼容数据的组合，以及这种编程顺序确保了与MLC提供的实�
 <li>重编程使得能耗增加；</li>
 <li>重编程对延迟的影响有限。</li>
 </ul>
-<p><strong>1.MLC闪存中，重编程的可能性和限制</strong><br>
-闪存重编程严格受到Vth只能增加的限制，除非块被擦除。同时，WOM编码确保重编程只尝试将每个位的值从1-&gt;0。我们需要考虑1）阈值电压和数值的对应关系；2）编程干扰。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/8.png" alt=""></p>
-<p>考虑MLC闪存，两个页面都编程好的情况下，进行重编程。满足编码约束（1-&gt;0）。红虚线表示不符合要求的状态转换，实际转换为红色实线。<br>
-1）<strong>LHL</strong>：重编程LSB页面。其中，有两个状态转换失败。<br>
-一个可能原因是编程电压不够高（因为是编程LSB页面，可能最高编程电压达不到P2和P3），不足以将Vth从ER-&gt;P3和从P1-&gt;P2；<br>
-2）<strong>LHH</strong>：重编程MSB页面。其中，有两个状态转换失败。<br>
-从P3-&gt;P2是不可能的，因为它需要减少Vth。<br>
-LHH方案中的另一个问题发生在状态P1中，当我们试图保持已经编程的高位不变时。由于一个未知的干扰，破坏了相应的低页上的数据（1-&gt;0），使其状态变为从P1变为P2。<br>
-上面1）和2）中的三个问题可以通过一定方式解决。例如，P3-&gt;P2，可以改变电压映射来解决。<br>
-3）<strong>LHH</strong>：修改状态映射的另一种方法是修改WOM编码，1-&gt;0的约束改为0-&gt;1的约束。<br>
-缺点是它破坏了低页，因此只有当低页上的数据无效，或者在重新编程之前复制到其他地方时，才能重用高页。这种重编程也破坏了与重编程的页面相邻的高页面。<br>
-4）<strong>LLH</strong>：LHL和LHH方案的问题促使了Margaglia等人Improving MLC flash performance and endurance with extended P/E cycles,引入LLH重编程方案。分两轮编程。在第一轮中，只有低页被编程。第二轮将在大部分低页失效之后进行。该块中的所有页面都按顺序编程，即重新编程一个低页，然后第一次编程相应的高页，然后进入下一对页面。<br>
-<strong><code>LLH缺点：第一轮编程时没有用到MSB页面，导致容量只用了一半。</code></strong></p>
+<p><strong>1.MLC闪存中，重编程的可能性和限制</strong><br>闪存重编程严格受到Vth只能增加的限制，除非块被擦除。同时，WOM编码确保重编程只尝试将每个位的值从1-&gt;0。我们需要考虑1）阈值电压和数值的对应关系；2）编程干扰。</p>
+<p><img src="/lv/img/article/WOM系列/8.png" alt=""></p>
+<p>考虑MLC闪存，两个页面都编程好的情况下，进行重编程。满足编码约束（1-&gt;0）。红虚线表示不符合要求的状态转换，实际转换为红色实线。<br>1）<strong>LHL</strong>：重编程LSB页面。其中，有两个状态转换失败。<br>一个可能原因是编程电压不够高（因为是编程LSB页面，可能最高编程电压达不到P2和P3），不足以将Vth从ER-&gt;P3和从P1-&gt;P2；<br>2）<strong>LHH</strong>：重编程MSB页面。其中，有两个状态转换失败。<br>从P3-&gt;P2是不可能的，因为它需要减少Vth。<br>LHH方案中的另一个问题发生在状态P1中，当我们试图保持已经编程的高位不变时。由于一个未知的干扰，破坏了相应的低页上的数据（1-&gt;0），使其状态变为从P1变为P2。<br>上面1）和2）中的三个问题可以通过一定方式解决。例如，P3-&gt;P2，可以改变电压映射来解决。<br>3）<strong>LHH</strong>：修改状态映射的另一种方法是修改WOM编码，1-&gt;0的约束改为0-&gt;1的约束。<br>缺点是它破坏了低页，因此只有当低页上的数据无效，或者在重新编程之前复制到其他地方时，才能重用高页。这种重编程也破坏了与重编程的页面相邻的高页面。<br>4）<strong>LLH</strong>：LHL和LHH方案的问题促使了Margaglia等人Improving MLC flash performance and endurance with extended P/E cycles,引入LLH重编程方案。分两轮编程。在第一轮中，只有低页被编程。第二轮将在大部分低页失效之后进行。该块中的所有页面都按顺序编程，即重新编程一个低页，然后第一次编程相应的高页，然后进入下一对页面。<br><strong><code>LLH缺点：第一轮编程时没有用到MSB页面，导致容量只用了一半。</code></strong></p>
 <blockquote>
 <p>Lesson1：在MLC闪存中重用页面是可能的，但只能利用一半的页面。</p>
 </blockquote>
 <p><strong>2. 重编程对BER的影响</strong></p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/9.png" alt=""></p>
+<p><img src="/lv/img/article/WOM系列/9.png" alt=""></p>
 <ul>
 <li>LLH重编程会增加BER错误率，不过当P/E较小时，闪存可靠性好，即使由于LLH增加BER也不会有太大影响，还是在ECC纠错能力范围内。</li>
 <li>LLH重编程对长期影响是有限的，当第二部分采用baseline编程方式时，可以看到前期采用LLH编程所带来的磨损错误率影响不大（事实上，磨损影响最大的是擦除操作）。因此，仅在块的生命周期开始时重用闪存页的方案可以提高其利用率，而不会降低其长期可靠性。</li>
 </ul>
 <blockquote>
-<p>Lesson2：块的前期生命阶段可以采用页面重用，其页面可以安全重用的部分取决于其芯片的特性。<br>
-本文使用闪存前40%的寿命，采用LLH。</p>
+<p>Lesson2：块的前期生命阶段可以采用页面重用，其页面可以安全重用的部分取决于其芯片的特性。<br>本文使用闪存前40%的寿命，采用LLH。</p>
 </blockquote>
 <p><strong>3. FTL设计</strong></p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/10.png" alt=""></p>
+<p><img src="/lv/img/article/WOM系列/10.png" alt=""></p>
 <ul>
 <li><strong>WOM编码</strong>：采用Reusable SSD中的WOM编码方式，编码失败率为0.25%。</li>
 <li><strong>冷热数据分离</strong>：冷数据照常采用Used块，只有热数据存放在partiallyused和Reused块；</li>
@@ -387,45 +328,31 @@ LHH方案中的另一个问题发生在状态P1中，当我们试图保持已经
 <li>LLH FTL中擦除次数的减少取决于负载的热数据量，以及在重用PartiallyUsed块上保留的有效页面的数量。</li>
 </ul>
 <p><strong>理论上可以降低的擦除操作次数</strong></p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/11.png" alt=""></p>
-<p><strong>实验测试–擦除次数减少</strong></p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/12.png" alt=""></p>
-<p><strong>实验测试–寿命</strong><br>
-假设所有块在其生命周期的前40%中被重用，即在 0.4T 周期内。在每个周期中，在这些块上写入5/4N个逻辑页面，总共0.4T*(5/4N) = 0.5T N。假设我们可以使用剩余的 0.6T 周期，我们将额外写入0.6TN个页面。写入数据总量为1.1T N，相比常规编程增加10%。但是，还需要考虑LLH重编程带来的长期磨损（表4），减少5%–6% 意味着擦除的减少转化为4%–5%的寿命改善。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/13.png" alt=""></p>
+<p><img src="/lv/img/article/WOM系列/11.png" alt=""></p>
+<p><strong>实验测试—擦除次数减少</strong></p>
+<p><img src="/lv/img/article/WOM系列/12.png" alt=""></p>
+<p><strong>实验测试—寿命</strong><br>假设所有块在其生命周期的前40%中被重用，即在 0.4T 周期内。在每个周期中，在这些块上写入5/4N个逻辑页面，总共0.4T*(5/4N) = 0.5T N。假设我们可以使用剩余的 0.6T 周期，我们将额外写入0.6TN个页面。写入数据总量为1.1T N，相比常规编程增加10%。但是，还需要考虑LLH重编程带来的长期磨损（表4），减少5%–6% 意味着擦除的减少转化为4%–5%的寿命改善。</p>
+<p><img src="/lv/img/article/WOM系列/13.png" alt=""></p>
 <blockquote>
 <p>Lesson3：由于存储 WOM 编码数据的页面利用率低，以及重编程的长期磨损影响，擦除的减少并不一定会转化为显着的寿命增加。寿命的增加很大程度上取决于芯片特性。</p>
 </blockquote>
-<p><strong>4. I/O性能</strong><br>
-<strong>实验测试–I/O响应时间</strong></p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/14.png" alt=""></p>
+<p><strong>4. I/O性能</strong><br><strong>实验测试—I/O响应时间</strong></p>
+<p><img src="/lv/img/article/WOM系列/14.png" alt=""></p>
 <blockquote>
 <p>Lesson4：擦除的减少并不一定意味着I/O响应时间或能耗的减少。这些是由垃圾回收期间移动的数据总量决定的。另外，重编程导致的读写操作对延迟影响不大。</p>
 </blockquote>
-<p><strong>5. 能耗</strong><br>
-闪存读取、写和擦除操作消耗不同数量的能量，这也取决于操作是在高页面还是在低页面上执行，以及它的数据模式。计算A16芯片上以下每个操作所消耗的能量。</p>
-<p><img src="/lv/img/article/WOM%E7%B3%BB%E5%88%97/15.png" alt=""></p>
+<p><strong>5. 能耗</strong><br>闪存读取、写和擦除操作消耗不同数量的能量，这也取决于操作是在高页面还是在低页面上执行，以及它的数据模式。计算A16芯片上以下每个操作所消耗的能量。</p>
+<p><img src="/lv/img/article/WOM系列/15.png" alt=""></p>
 <p>这些结果表明，页面重用比基线消耗了更多的总体能量。这与之前的研究显示可能节省能源形成了对比。这些研究假设能量与被编程存储元的数量成正比，这在第一次和第二次写的中是等价的。然而，硬件评估表明，重新编程的页面数量是能源消耗的主要因素。LLH中编程更多的低页面，编程低页面所需要的能耗比高页面要少。但使用WOM编码需要对每个逻辑写入进行额外的读取和页面重编程。节省下来的擦除的低能耗并不能抵消这些操作所消耗的额外能量。然而，我们注意到，当页面重用减少了FTL的内部写入时，可能会节省一些能源。</p>
 <blockquote>
 <p>Lesson5：使用WOM编码的数据，附加的闪存操作所消耗的能量大于保存的擦除操作所需的能量（重编程后的电压都比较高，耗能）。只有通过它们减少在闪存芯片上执行的写操作的次数（减少GC时，后台产生的写操作），才能节省能源。</p>
 </blockquote>
-<h2 id="关于wom总结思考">关于WOM总结思考</h2>
-<ul>
-<li>
-<p>重编程技术容量损失主要有两方面：<br>
-1）WOM本身的写放大，编码后的码字比原始数据要长；<br>
-2）覆盖写技术，导致第一轮只利用低页面，从而逻辑上损失对高页面的使用，导致逻辑容量减少。</p>
+<h2 id="关于wom总结思考"><a href="#关于WOM总结思考" class="headerlink" title="关于WOM总结思考"></a>关于WOM总结思考</h2><ul>
+<li><p>重编程技术容量损失主要有两方面：<br>1）WOM本身的写放大，编码后的码字比原始数据要长；<br>2）覆盖写技术，导致第一轮只利用低页面，从而逻辑上损失对高页面的使用，导致逻辑容量减少。</p>
 </li>
-<li>
-<p>关于WOM编码导致的容量下降问题的解决方法：<br>
-1）限制部分块采用WOM编码（例如存放频繁更新的热数据）；<br>
-2）采用压缩技术，将数据编码并压缩后再写入；<br>
-3）编码产生的写放大部分借用OPS来解决，避免用户感知；</p>
+<li><p>关于WOM编码导致的容量下降问题的解决方法：<br>1）限制部分块采用WOM编码（例如存放频繁更新的热数据）；<br>2）采用压缩技术，将数据编码并压缩后再写入；<br>3）编码产生的写放大部分借用OPS来解决，避免用户感知；</p>
 </li>
-<li>
-<p>关于页面重用的FTL设计：<br>
-1）考虑到容量使用和页面重用的性能；<br>
-2）考虑到页面重用前回收部分编程块中有效页面数量；</p>
+<li><p>关于页面重用的FTL设计：<br>1）考虑到容量使用和页面重用的性能；<br>2）考虑到页面重用前回收部分编程块中有效页面数量；</p>
 </li>
 </ul>
 
@@ -522,7 +449,7 @@ LHH方案中的另一个问题发生在状态P1中，当我们试图保持已经
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5F15;&#x5B50;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-how-to-reuse-a-write-once-memory"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">1. How to reuse a write-once memory</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-write-once-get-50-free-saving-ssd-erase-costs-using-wom-codes"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">2. Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-improving-mlc-flash-performance-and-endurance-with-extended-pe-cycles"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">3. Improving MLC flash performance and endurance with extended P/E cycles</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-the-devil-is-in-the-details-implemening-flash-page-reuse-with-wom-code"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">4. The Devil is in the Details, Implemening Flash Page Reuse with WOM Code</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#关于wom总结思考"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">&#x5173;&#x4E8E;WOM&#x603B;&#x7ED3;&#x601D;&#x8003;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#引子"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5F15;&#x5B50;" class="headerlink" title="&#x5F15;&#x5B50;"></a>&#x5F15;&#x5B50;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-how-to-reuse-a-write-once-memory"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#1-How-to-reuse-a-write-once-memory" class="headerlink" title="1. How to reuse a write-once memory"></a>1. How to reuse a write-once memory</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-write-once-get-50-free-saving-ssd-erase-costs-using-wom-codes"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#2-Write-Once-Get-50-Free-Saving-SSD-Erase-Costs-Using-WOM-Codes" class="headerlink" title="2. Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes"></a>2. Write Once, Get 50% Free Saving SSD Erase Costs Using WOM Codes</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-improving-mlc-flash-performance-and-endurance-with-extended-pe-cycles"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#3-Improving-MLC-flash-performance-and-endurance-with-extended-P-E-cycles" class="headerlink" title="3. Improving MLC flash performance and endurance with extended P/E cycles"></a>3. Improving MLC flash performance and endurance with extended P/E cycles</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-the-devil-is-in-the-details-implemening-flash-page-reuse-with-wom-code"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><a href="#4-The-Devil-is-in-the-Details-Implemening-Flash-Page-Reuse-with-WOM-Code" class="headerlink" title="4. The Devil is in the Details, Implemening Flash Page Reuse with WOM Code"></a>4. The Devil is in the Details, Implemening Flash Page Reuse with WOM Code</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#关于wom总结思考"><span class="toc-nav-number">6.</span> <span class="toc-nav-text"><a href="#&#x5173;&#x4E8E;WOM&#x603B;&#x7ED3;&#x601D;&#x8003;" class="headerlink" title="&#x5173;&#x4E8E;WOM&#x603B;&#x7ED3;&#x601D;&#x8003;"></a>&#x5173;&#x4E8E;WOM&#x603B;&#x7ED3;&#x601D;&#x8003;</span></a></li></ol>
         
         </div>
       </aside>

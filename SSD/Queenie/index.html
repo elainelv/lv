@@ -71,7 +71,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/passd_bg.png')
+            background-image: url('/lv/img/article_header/passd_bg.png')
             /*post*/
         
     }
@@ -145,6 +145,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -152,18 +155,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -223,21 +223,20 @@
 <blockquote>
 <p>本文发表于SYSTOR 22，由芝加哥大学和普林斯顿大学以及NetApp合作发表。</p>
 </blockquote>
-<p>SSD是一个黑盒子，用户无法获取内部信息，从而无法根据SSD内部使用情况进行优化。例如，页面不对齐问题，写缓冲flush问题等。本文发布了一款应用层的探测工具，可以测试获取SSD内部的十个属性。基于这款应用层探测工具，作者测试了来自7个生产厂商的21块SSD，并获取它们的十个属性情况。从测试结果中也获得了一些有意思的发现，并提出一些优化方法。<br>
-工具已开源：<a href="https://github.com/ucare-uchicago/Queenie" target="_blank" rel="noopener">https://github.com/ucare-uchicago/Queenie</a></p>
+<p>SSD是一个黑盒子，用户无法获取内部信息，从而无法根据SSD内部使用情况进行优化。例如，页面不对齐问题，写缓冲flush问题等。本文发布了一款应用层的探测工具，可以测试获取SSD内部的十个属性。基于这款应用层探测工具，作者测试了来自7个生产厂商的21块SSD，并获取它们的十个属性情况。从测试结果中也获得了一些有意思的发现，并提出一些优化方法。<br>工具已开源：<a href="https://github.com/ucare-uchicago/Queenie" target="_blank" rel="noopener">https://github.com/ucare-uchicago/Queenie</a></p>
 <p><img src="/lv/img/article/Queenie/Queenie-1.png" alt=""></p>
 <p>十个属性如下所示：</p>
 <ul>
-<li>P1 Page size：读写的基本单元。----了解内部页面大小有助于应用程序正确对齐 I/O，避免对齐开销。</li>
-<li>P2 Page type：存储元类型（SLC/MLC/TLC）及如何将页面偏移量映射到MLC/TLC单元的低/中/高位。----了解页面类型可以考虑将热数据放置在低位页面来改善性能。</li>
+<li>P1 Page size：读写的基本单元。——了解内部页面大小有助于应用程序正确对齐 I/O，避免对齐开销。</li>
+<li>P2 Page type：存储元类型（SLC/MLC/TLC）及如何将页面偏移量映射到MLC/TLC单元的低/中/高位。——了解页面类型可以考虑将热数据放置在低位页面来改善性能。</li>
 <li>P3 Chunk size：设备内部的条带单元。此信息可以帮助应用程序了解顺序读/写的吞吐量。</li>
-<li>P4 Stripe width：可以在芯片级别上进行内部并行化的chunk数量。----了解此属性允许应用程序更好地利用内部带宽，例如，如何重新设计数据库以更好地映射到SSD内部并行度。</li>
-<li>P5 Channel/chip layout：通道数以及每通道芯片数。----了解某个通道的争议带来的高延迟问题。</li>
-<li>P6 Read performance consistency：读取性能一致性是关于SSD是否具有有利的读取大小并“惩罚”那些不遵循的，例如，SSD是否可以以最小的对齐开销处理非分页、扇区读取，以及是否将大型读取分成较小的读取。----优点：本文后续通过测试读性能和读请求大小之间的关系，发现不对齐问题以及某些读请求size区间带来的读延迟尖峰问题。因此，通过此属性的探测可以优化读性能。</li>
-<li>P7 Read buffer capacity：用于缓存读取的RAM或SLC容量（出于成本效益，一些较新的QLC驱动器使用SLC作为缓冲区）。随着NAND读取速度的加快，我们检查供应商是否仍在设备内部使用读取缓存。----优点：缓存对性能至关重要。了解这些信息可以暗示更高层的缓存设计。</li>
-<li>P8 Write buffer capacity：缓存写请求的容量。写缓存满了之后会触发flush操作。----了解写缓冲区的大小，可以帮助预测flush的时间和潜在的垃圾回收。</li>
-<li>P9 Write parallelism：写并行性，表明写缓存一次可以吸收的并行写请求的数量。----如何针对写负载应用实现SSD的特定优化，同时揭示某些SSD中写处理的缺陷。</li>
-<li>P10 Internal flush window：设备需要将整个写缓冲区轻轻存储到底层 NAND 而不引起严重争用（例如，低负载下的后台刷新）的时间量。----优点：由于这种内部刷新通常会引起更少的争用和更短的阻塞时间，因此可以设计一种减轻缓冲区刷新干扰的解决方案。</li>
+<li>P4 Stripe width：可以在芯片级别上进行内部并行化的chunk数量。——了解此属性允许应用程序更好地利用内部带宽，例如，如何重新设计数据库以更好地映射到SSD内部并行度。</li>
+<li>P5 Channel/chip layout：通道数以及每通道芯片数。——了解某个通道的争议带来的高延迟问题。</li>
+<li>P6 Read performance consistency：读取性能一致性是关于SSD是否具有有利的读取大小并“惩罚”那些不遵循的，例如，SSD是否可以以最小的对齐开销处理非分页、扇区读取，以及是否将大型读取分成较小的读取。——优点：本文后续通过测试读性能和读请求大小之间的关系，发现不对齐问题以及某些读请求size区间带来的读延迟尖峰问题。因此，通过此属性的探测可以优化读性能。</li>
+<li>P7 Read buffer capacity：用于缓存读取的RAM或SLC容量（出于成本效益，一些较新的QLC驱动器使用SLC作为缓冲区）。随着NAND读取速度的加快，我们检查供应商是否仍在设备内部使用读取缓存。——优点：缓存对性能至关重要。了解这些信息可以暗示更高层的缓存设计。</li>
+<li>P8 Write buffer capacity：缓存写请求的容量。写缓存满了之后会触发flush操作。——了解写缓冲区的大小，可以帮助预测flush的时间和潜在的垃圾回收。</li>
+<li>P9 Write parallelism：写并行性，表明写缓存一次可以吸收的并行写请求的数量。——如何针对写负载应用实现SSD的特定优化，同时揭示某些SSD中写处理的缺陷。</li>
+<li>P10 Internal flush window：设备需要将整个写缓冲区轻轻存储到底层 NAND 而不引起严重争用（例如，低负载下的后台刷新）的时间量。——优点：由于这种内部刷新通常会引起更少的争用和更短的阻塞时间，因此可以设计一种减轻缓冲区刷新干扰的解决方案。</li>
 </ul>
 <p>对于上述十个属性的获取方式非常简单，例如page size可以发送2个连续sector，并通过改变这两个sector的偏移来探测页面边界（偏移从0开始），如果这两个连续sector分布在两个page，那么偏移即是page size；对于写缓存大小，则可以发送写请求，检测写延迟，两次延迟尖峰之间的写入量就是写缓存容量。其余数据的探测方式可以查看论文。</p>
 <p><strong>探测结果</strong></p>
@@ -251,8 +250,7 @@
 <li>只有1块SSD，A800GP，使用了一个内部读缓存。读缓存的消失可能是由于NAND速度的提高以及高层DRAM缓冲区。</li>
 <li>在N2TI中，更少的并发读取令人惊讶地导致更高的读延迟：某些驱动器可能会优先考虑吞吐量。</li>
 </ol>
-<h3 id="i-want-to-say">“I WANT TO SAY”</h3>
-<blockquote>
+<h3 id="i-want-to-say"><a href="#“I-WANT-TO-SAY”" class="headerlink" title="“I WANT TO SAY”"></a>“I WANT TO SAY”</h3><blockquote>
 <p>这篇文章提出了一个可以探测SSD内部属性的工具，能够帮助我们去了解SSD内部的属性，从而结合应用层可以实现更好的优化。</p>
 </blockquote>
 
@@ -345,7 +343,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x201C;I WANT TO SAY&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x201C;I-WANT-TO-SAY&#x201D;" class="headerlink" title="&#x201C;I WANT TO SAY&#x201D;"></a>&#x201C;I WANT TO SAY&#x201D;</span></a></li></ol>
         
         </div>
       </aside>

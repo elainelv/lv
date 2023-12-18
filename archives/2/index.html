@@ -137,6 +137,9 @@
                     
 
                         
+                    
+
+                        
                         <li>
                             <a href="/lv/archive/">Archives</a>
                         </li>
@@ -144,18 +147,15 @@
                     
 
                         
-                    
-
-                        
                         <li>
-                            <a href="/lv/recommend/">Recommend</a>
+                            <a href="/lv/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/lv/tags/">Tags</a>
+                            <a href="/lv/recommend/">Recommend</a>
                         </li>
                         
                     
@@ -226,8 +226,7 @@
             
         </h3>
         <div class="post-content-preview">
-            引子
-随着数据大小呈指数级增长，对具有更小单元尺寸和更高接口速度的高密度闪存的需求也在增加。TLC NAND已在非易失性存储器市场占据主导地位，但QLC NAND正在成为低成本和高密度存储的合适替代品。然而，尽管QLC具有成本效益，但其市场份额并没有迅速增加，这不仅是因为其可靠性较差，而且还因为其缓慢的顺序和随机读取性能。而高性能是QLC NAND闪存进入主流系统的关键推动因素。当然，随着发......
+            引子随着数据大小呈指数级增长，对具有更小单元尺寸和更高接口速度的高密度闪存的需求也在增加。TLC NAND已在非易失性存储器市场占据主导地位，但QLC NAND正在成为低成本和高密度存储的合适替代品。然而，尽管QLC具有成本效益，但其市场份额并没有迅速增加，这不仅是因为其可靠性较差，而且还因为其缓慢的顺序和随机读取性能。而高性能是QLC NAND闪存进入主流系统的关键推动因素。当然，随着发展......
         </div>
     </a>
     
@@ -259,10 +258,9 @@
             
         </h3>
         <div class="post-content-preview">
-            引子
-本工作发表于FAST 2022, 来自韩国首尔大学Jihong老师团队。致力于解决目前高密度闪存中由于制程差异导致的WL间可靠性差异。本文提出GuardedErase。研究表明闪存磨损主要来源于擦除操作，因此提出在擦除操作执行过程中，保护天生抗磨性较弱的WL，从而增加整体可擦除次数。本文动机实验在160 TLC闪存上测试，实验在MQsim上模拟。实验结果表明，寿命平均可改善21%。
+            引子本工作发表于FAST 2022, 来自韩国首尔大学Jihong老师团队。致力于解决目前高密度闪存中由于制程差异导致的WL间可靠性差异。本文提出GuardedErase。研究表明闪存磨损主要来源于擦除操作，因此提出在擦除操作执行过程中，保护天生抗磨性较弱的WL，从而增加整体可擦除次数。本文动机实验在160 TLC闪存上测试，实验在MQsim上模拟。实验结果表明，寿命平均可改善21%。
 
-......
+G......
         </div>
     </a>
     
@@ -292,8 +290,7 @@
             
         </h3>
         <div class="post-content-preview">
-            引子
-...
+            引子...
         </div>
     </a>
     
@@ -357,10 +354,7 @@ SSD中的错误非常复杂并且受各种因素的影响，本文是阿里公�
         <div class="post-content-preview">
             ATC 2019，原文链接
 LSM KV
-
-所谓的LSM（log structured-merge tree）是一种日志型结构的树。其中一部分在内存中（写缓存），其余部分在磁盘内。从图中可以看出，从上到下容量不断增加。因此，通过在内存中缓存写请求来提升写性能。
-客户端操作：读、更新或者写；LSM内部的操作：flushing、compaction
-内存中的文件称为memtable；硬盘中的文件......
+所谓的LSM（log structured-merge tree）是一种日志型结构的树。其中一部分在内存中（写缓存），其余部分在磁盘内。从图中可以看出，从上到下容量不断增加。因此，通过在内存中缓存写请求来提升写性能。客户端操作：读、更新或者写；LSM内部的操作：flushing、compaction内存中的文件称为memtable；硬盘中的文件称为S......
         </div>
     </a>
     
@@ -388,17 +382,10 @@ LSM KV
             A Log-Structured File System to Exploit  the Internal Parallelism of Flash Devices
         </h3>
         <div class="post-content-preview">
-            问题：
-当写请求非常密集的时候，闪存内部的并行度并没有很好的利用
-解决下述三方面引起并行冲突的问题：
-
+            问题：当写请求非常密集的时候，闪存内部的并行度并没有很好的利用解决下述三方面引起并行冲突的问题：
 
 冷热数据分离
-
-
-垃圾回收：FS和FTL中的垃圾收集会发生冲突并破坏性能
-随着通道数的增加，F2FS的擦除闪存块数量增加，GC效率降低
-当日志结构文件系统清理FS级别的一个段时，无效的闪存页实际上分散在多个闪存并行单元上。设备拥有的通道越多，无效页面就越多样化。这降低了FTL中的GC效率......
+垃圾回收：FS和FTL中的垃圾收集会发生冲突并破坏性能 随着通道数的增加，F2FS的擦除闪存块数量增加，GC效率降低 当日志结构文件系统清理FS级别的一个段时，无效的闪存页实际上分散在多个闪存并行单元上。设备拥有的通道越多，无效页面就越多样化。这降低了FTL中的GC效率。同时，由......
         </div>
     </a>
     
@@ -427,11 +414,9 @@ LSM KV
         </h3>
         <div class="post-content-preview">
             
-Flash-Level INterference-aware scheduler
-分析Multi-Queue引起的不公平是由于应用之间存在干扰所致，分析干扰来源，提出干扰感知调度器FLIN。在SSD控制器内将事务重新排序，平衡并发应用之间的推进速度，实现fairness，原文链接
+Flash-Level INterference-aware scheduler分析Multi-Queue引起的不公平是由于应用之间存在干扰所致，分析干扰来源，提出干扰感知调度器FLIN。在SSD控制器内将事务重新排序，平衡并发应用之间的推进速度，实现fairness，原文链接
 
-写在文前
-在NVMe SSD中，使用了Multi-Queue，使得SSD可以跨过块设备层直接访问应用层I/O......
+写在文前在NVMe SSD中，使用了Multi-Queue，使得SSD可以跨过块设备层直接访问应用层I/O请求......
         </div>
     </a>
     
@@ -494,8 +479,7 @@ Flash-Level INterference-aware scheduler
             
         </h3>
         <div class="post-content-preview">
-            写在文前
-在学习这篇文章前，先来了解下块设备层中Multi-Queue的概念，Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems，这篇文章于2013年发在SYSTOR，首次提出了multi-queue，从Linux5.0开始就成为块设备层的默认选项，介绍 Linux 内核的块设备层针对现代硬件——高......
+            写在文前在学习这篇文章前，先来了解下块设备层中Multi-Queue的概念，Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems，这篇文章于2013年发在SYSTOR，首次提出了multi-queue，从Linux5.0开始就成为块设备层的默认选项，介绍 Linux 内核的块设备层针对现代硬件——高速......
         </div>
     </a>
     
@@ -527,10 +511,7 @@ Flash-Level INterference-aware scheduler
 4月美国举办的ASPLOS19’上一篇最新的paper，来自Myoungsoo Jung大佬团队
 
 问题引入
-
-1）3D NAND相比于2D NAND具有更高的density，因此同等容量下，3D NAND的chips数量相对就少，降低了chip-level parallelism。这会导致在相同的时间内被处理的请求数量减少，从而导致整个性能的下降。
-
-从图中可以看出，对于read-int......
+1）3D NAND相比于2D NAND具有更高的density，因此同等容量下，3D NAND的chips数量相对就少，降低了chip-level parallelism。这会导致在相同的时间内被处理的请求数量减少，从而导致整个性能的下降。从图中可以看出，对于read-intens......
         </div>
     </a>
     
@@ -601,7 +582,15 @@ Flash-Level INterference-aware scheduler
             
         
             
+            <a href="/lv/tags/#SSD" title="SSD" rel="2">SSD</a>
+            
+        
+            
             <a href="/lv/tags/#Graph Database" title="Graph Database" rel="2">Graph Database</a>
+            
+        
+            
+        
             
         
             
@@ -609,7 +598,9 @@ Flash-Level INterference-aware scheduler
             
         
             
-            <a href="/lv/tags/#SSD" title="SSD" rel="2">SSD</a>
+        
+            
+            <a href="/lv/tags/#Process Variation" title="Process Variation" rel="2">Process Variation</a>
             
         
             
@@ -621,7 +612,7 @@ Flash-Level INterference-aware scheduler
             
         
             
-            <a href="/lv/tags/#Process Variation" title="Process Variation" rel="2">Process Variation</a>
+            <a href="/lv/tags/#Tail Latency" title="Tail Latency" rel="4">Tail Latency</a>
             
         
             
@@ -637,18 +628,6 @@ Flash-Level INterference-aware scheduler
             
         
             
-            <a href="/lv/tags/#Tail Latency" title="Tail Latency" rel="4">Tail Latency</a>
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
         
             
         
@@ -658,6 +637,8 @@ Flash-Level INterference-aware scheduler
         
             
             <a href="/lv/tags/#Parallelism" title="Parallelism" rel="2">Parallelism</a>
+            
+        
             
         
             
