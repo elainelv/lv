@@ -145,10 +145,6 @@
                     
 
                         
-                        <li>
-                            <a href="/lv/recommend/">Recommend</a>
-                        </li>
-                        
                     
 
                         
@@ -165,6 +161,10 @@
                         
                     
 
+                        
+                        <li>
+                            <a href="/lv/recommend/">Recommend</a>
+                        </li>
                         
                     
                     
@@ -219,7 +219,22 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><strong>multi-path I/O</strong>指单个主机和命名空间之间两个或多个完全独立的PCI Express路径，而<strong>Namespace Sharing</strong>是指两个或多个主机使用不同NVM Express控制器访问命名空间<br>可以看出，不管是multi-path I/O还是namespace sharing都要求NVM subsystem包含有两个或者更多的控制器。<br>1.图3显示了一个单功能的NVM子系统，它包含一个NVMe控制器和一个PCIe端口<br><img src="/lv/img/article/读NVMe之Multipathing与Namespace_Sharing/1.png" alt=""><br>注意到，每个namespace都有一个NSID与之对应。命名空间ID不同于命名空间本身，用于在命令中指定特定命名空间的主机和控制器<br>2.图4显示了一个多功能NVM子系统，包含一个PCIe端口、两个控制器，一个控制器与PCI Function0相关联，另一个控制器与 PCI Function1。每个控制器支持单个私有命名空间和共享命名空间的访问。在所有访问NS A的控制器中，NSID应相同。在本例中，两个控制器都使用NSID 2访问共享命名空间NS B。<br><img src="/lv/img/article/读NVMe之Multipathing与Namespace_Sharing/2.png" alt=""><br>每个控制器有唯一的 Identify Controller data structure，每个命名空间有唯一的 Identify Namespace data structure。所有访问同一个共享命名空间的控制器都返回相同的数据结构内容<br>有一个与命名空间相关联的唯一的全局标识符，可用于确定何时有多个路径到达同一个共享命名空间<br>和命名空间相关联的控制器可能会并发地操控命名空间，单个控制器执行的操作对共享命名空间的原子操作。在共享命名空间的控制器之间，写入原子性级别不需要相同。<br>3.图5显示了一个NVM 子系统有两个PCIe端口，每个都关联着一个控制器，两个控制器都映射到相应端口的PCI Function 0。<br>每个PCIe端口之间相互独立，只会影响与其关联的控制器，不会影响别的控制器、共享命名空间或者其他控制器在共享命名空间上的操作。<br><img src="/lv/img/article/读NVMe之Multipathing与Namespace_Sharing/3.png" alt=""><br>上图中两个端口可能连到相同的Root Complex，也可以连接到不同的Root Complex。可以用来实现multi-path I/O和I/O sharing architecture<br>4.图6描述一个支持Single Root I/O Virtualization (SR-IOV) ，并且有一个physical Function和四个virtual Function。NVM Express控制器与每个Function相关联，每个控制器具有私有命名空间和所有控制器共享的命名空间NS F<br><img src="/lv/img/article/读NVMe之Multipathing与Namespace_Sharing/4.png" alt=""></p>
+                <p><strong>multi-path I/O</strong>指单个主机和命名空间之间两个或多个完全独立的PCI Express路径，而<strong>Namespace Sharing</strong>是指两个或多个主机使用不同NVM Express控制器访问命名空间<br>
+可以看出，不管是multi-path I/O还是namespace sharing都要求NVM subsystem包含有两个或者更多的控制器。<br>
+1.图3显示了一个单功能的NVM子系统，它包含一个NVMe控制器和一个PCIe端口<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BMultipathing%E4%B8%8ENamespace_Sharing/1.png" alt=""><br>
+注意到，每个namespace都有一个NSID与之对应。命名空间ID不同于命名空间本身，用于在命令中指定特定命名空间的主机和控制器<br>
+2.图4显示了一个多功能NVM子系统，包含一个PCIe端口、两个控制器，一个控制器与PCI Function0相关联，另一个控制器与 PCI Function1。每个控制器支持单个私有命名空间和共享命名空间的访问。在所有访问NS A的控制器中，NSID应相同。在本例中，两个控制器都使用NSID 2访问共享命名空间NS B。<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BMultipathing%E4%B8%8ENamespace_Sharing/2.png" alt=""><br>
+每个控制器有唯一的 Identify Controller data structure，每个命名空间有唯一的 Identify Namespace data structure。所有访问同一个共享命名空间的控制器都返回相同的数据结构内容<br>
+有一个与命名空间相关联的唯一的全局标识符，可用于确定何时有多个路径到达同一个共享命名空间<br>
+和命名空间相关联的控制器可能会并发地操控命名空间，单个控制器执行的操作对共享命名空间的原子操作。在共享命名空间的控制器之间，写入原子性级别不需要相同。<br>
+3.图5显示了一个NVM 子系统有两个PCIe端口，每个都关联着一个控制器，两个控制器都映射到相应端口的PCI Function 0。<br>
+每个PCIe端口之间相互独立，只会影响与其关联的控制器，不会影响别的控制器、共享命名空间或者其他控制器在共享命名空间上的操作。<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BMultipathing%E4%B8%8ENamespace_Sharing/3.png" alt=""><br>
+上图中两个端口可能连到相同的Root Complex，也可以连接到不同的Root Complex。可以用来实现multi-path I/O和I/O sharing architecture<br>
+4.图6描述一个支持Single Root I/O Virtualization (SR-IOV) ，并且有一个physical Function和四个virtual Function。NVM Express控制器与每个Function相关联，每个控制器具有私有命名空间和所有控制器共享的命名空间NS F<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BMultipathing%E4%B8%8ENamespace_Sharing/4.png" alt=""></p>
 <blockquote>
 <p>上面四个例子，讲述了不同的命名空间结构。根据实际需要选择不同的配置。</p>
 </blockquote>

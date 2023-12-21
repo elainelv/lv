@@ -145,10 +145,6 @@
                     
 
                         
-                        <li>
-                            <a href="/lv/recommend/">Recommend</a>
-                        </li>
-                        
                     
 
                         
@@ -165,6 +161,10 @@
                         
                     
 
+                        
+                        <li>
+                            <a href="/lv/recommend/">Recommend</a>
+                        </li>
                         
                     
                     
@@ -223,18 +223,32 @@
 <blockquote>
 <p>本文发表于HotStorage 22，来自韩国 <a href="https://web.ecs.syr.edu/~bkim01/?_gl=1*1rp5cx5*_ga*MTc5Mzc0OTExMi4xNjU3Nzg5Mjcw*_ga_QT13NN6N9S*MTY1Nzc4OTI2OS4xLjEuMTY1Nzc4OTMxOS4xMA.." target="_blank" rel="noopener">Bryan S. Kim团队</a></p>
 </blockquote>
-<p>【<strong>背景</strong>】由于固态硬盘随着使用磨损等会出现老化现象，从而导致闪存数据错误率增加而影响性能。因此，理解老化现象对闪存研究非常重要。<br>【<strong>问题</strong>】然而现有开发工具(如Amber、FEMU和MQSim)并没有在其设计中考虑老化现象。<br>现有做法是:<br>1.通过预处理进行老化是非常耗时的，因为需要多年的模拟时间才能达到需要的老化状态。<br>2.将初始擦除次数设置为更大的非零值，但这是一种不现实的磨损状态，因为现代SSD甚至不能有效地通过均衡磨损保障闪存块都保持相同的擦除计数 [FAST 22,Operational Characteristics of SSDs in Enterprise Storage Systems: A Large-Scale Field Study]。</p>
+<p>【<strong>背景</strong>】由于固态硬盘随着使用磨损等会出现老化现象，从而导致闪存数据错误率增加而影响性能。因此，理解老化现象对闪存研究非常重要。<br>
+【<strong>问题</strong>】然而现有开发工具(如Amber、FEMU和MQSim)并没有在其设计中考虑老化现象。<br>
+现有做法是:<br>
+1.通过预处理进行老化是非常耗时的，因为需要多年的模拟时间才能达到需要的老化状态。<br>
+2.将初始擦除次数设置为更大的非零值，但这是一种不现实的磨损状态，因为现代SSD甚至不能有效地通过均衡磨损保障闪存块都保持相同的擦除计数 [FAST 22,Operational Characteristics of SSDs in Enterprise Storage Systems: A Large-Scale Field Study]。</p>
 <blockquote>
 <p>如何生成闪存未来的磨损状态呢？</p>
 </blockquote>
-<p>【<strong>方法</strong>】本文提出Fast-Forwardable SSD(FF-SSD)，一种基于机器学习的SSD老化框架，可以产生具有代表性的未来磨损状态。在一个典型的SSD模型中，许多组件执行重复的工作。例如，GC可能会在一段时间内不断地选择几个热块作为victim块。同样，在SSD的生命周期内，定期计算WL的触发条件。因此，可以从过去的执行中学习到SSD内的行为，以预测未来的SSD的内部状态。<br>FF-SSD 已开源：<a href="https://github.com/ZiyangJiao/FF-SSD" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FF-SSD</a>.<br>【<strong>挑战</strong>】使用机器学习方法对 SSD 内部状态进行在线、细粒度推断的挑战是双重的。</p>
+<p>【<strong>方法</strong>】本文提出Fast-Forwardable SSD(FF-SSD)，一种基于机器学习的SSD老化框架，可以产生具有代表性的未来磨损状态。在一个典型的SSD模型中，许多组件执行重复的工作。例如，GC可能会在一段时间内不断地选择几个热块作为victim块。同样，在SSD的生命周期内，定期计算WL的触发条件。因此，可以从过去的执行中学习到SSD内的行为，以预测未来的SSD的内部状态。<br>
+FF-SSD 已开源：<a href="https://github.com/ZiyangJiao/FF-SSD" target="_blank" rel="noopener">https://github.com/ZiyangJiao/FF-SSD</a>.<br>
+【<strong>挑战</strong>】使用机器学习方法对 SSD 内部状态进行在线、细粒度推断的挑战是双重的。</p>
 <ol>
 <li>推理必须准确。现代SSD是复杂的嵌入式系统，通过垃圾回收、磨损均衡、错误处理和数据清理等后台操作来管理所有内部资源。需要学习这些内部复杂性以使推理高度准确。</li>
-<li>相对于模拟时间，推理必须快速有效。否则，它要么带来微不足道的好处，要么甚至延长整个过程。卷积神经网络或循环神经网络等深度学习模型会引入更多复杂性，并可能导致训练和推理性能下降。<br>为了解决这些问题，FF-SSD 逐步为每个块构建轻量级回归模型，以捕捉SSD内部状态的变化，并使用过去执行的信息预测它们的轨迹。</li>
+<li>相对于模拟时间，推理必须快速有效。否则，它要么带来微不足道的好处，要么甚至延长整个过程。卷积神经网络或循环神经网络等深度学习模型会引入更多复杂性，并可能导致训练和推理性能下降。<br>
+为了解决这些问题，FF-SSD 逐步为每个块构建轻量级回归模型，以捕捉SSD内部状态的变化，并使用过去执行的信息预测它们的轨迹。</li>
 </ol>
 <p><img src="/lv/img/article/FF-SSD/FF-SSD-1.png" alt=""></p>
-<p>【<strong>FF-SSD最终效果</strong>】<br>1.通过生成与完整模拟结果匹配高达99%的真实分布；<br>2.通过将模拟加速2倍以达到所需的老化状态来提高效率；<br>3.可以集成到多个平台，实现模块化。 </p>
-<p>【<strong>实验评估</strong>】<br>测试使用跨多个平台的实际工作负载评估FF-SSD，以证明 FF-SSD对SSD老化的有用性。<br>Full Simulation是实际模拟的结果；DEVS和CML是现有工作，但都不是为SSD老化而设计的，并且忽略了现代SSD的复杂性。<br><strong>1.FF-SSD的有效性测试</strong><br>（1）FTLSim</p>
+<p>【<strong>FF-SSD最终效果</strong>】<br>
+1.通过生成与完整模拟结果匹配高达99%的真实分布；<br>
+2.通过将模拟加速2倍以达到所需的老化状态来提高效率；<br>
+3.可以集成到多个平台，实现模块化。</p>
+<p>【<strong>实验评估</strong>】<br>
+测试使用跨多个平台的实际工作负载评估FF-SSD，以证明 FF-SSD对SSD老化的有用性。<br>
+Full Simulation是实际模拟的结果；DEVS和CML是现有工作，但都不是为SSD老化而设计的，并且忽略了现代SSD的复杂性。<br>
+<strong>1.FF-SSD的有效性测试</strong><br>
+（1）FTLSim</p>
 <p><img src="/lv/img/article/FF-SSD/FF-SSD-2.png" alt=""></p>
 <p>（2）Amber</p>
 <p><img src="/lv/img/article/FF-SSD/FF-SSD-3.png" alt=""></p>
@@ -242,7 +256,8 @@
 <p><img src="/lv/img/article/FF-SSD/FF-SSD-4.png" alt=""></p>
 <p><strong>2.有效性和准确性之间的权衡</strong></p>
 <p><img src="/lv/img/article/FF-SSD/FF-SSD-5.png" alt=""></p>
-<p>定量分析不同的加速因子（1.5、2、3和4）如何影响整体准确性，然后提供一个保守的AF来权衡。并生成在FTLSim上运行100次迭代的LM-TBE和MSN-BEFS工作负载的磨损状态。总体而言，AF = 1.5和AF= 2的准确度相似，而当AF大于2 时，准确度明显下降。特别是，对于LM-TBE，准确度范围为56% (AF = 4 ) - 91% (AF = 1.5)。从AF = 1.5到AF = 2，准确度降低了4%，而从AF = 2 到AF = 3 降低了19%。同样，对于RAD-BEFS，准确度为98%(AF = 1.5)和97%(AF = 2)，AF=3的准确率降低了13%，AF=4为20%。<br>根据上述实验结果，当观察到至少一半的工作负载（AF≤2）时，FF-SSD产生了一个准确的分布，而对于AF大于2时，可能会发生更多的错误，导致预测不准确。</p>
+<p>定量分析不同的加速因子（1.5、2、3和4）如何影响整体准确性，然后提供一个保守的AF来权衡。并生成在FTLSim上运行100次迭代的LM-TBE和MSN-BEFS工作负载的磨损状态。总体而言，AF = 1.5和AF= 2的准确度相似，而当AF大于2 时，准确度明显下降。特别是，对于LM-TBE，准确度范围为56% (AF = 4 ) - 91% (AF = 1.5)。从AF = 1.5到AF = 2，准确度降低了4%，而从AF = 2 到AF = 3 降低了19%。同样，对于RAD-BEFS，准确度为98%(AF = 1.5)和97%(AF = 2)，AF=3的准确率降低了13%，AF=4为20%。<br>
+根据上述实验结果，当观察到至少一半的工作负载（AF≤2）时，FF-SSD产生了一个准确的分布，而对于AF大于2时，可能会发生更多的错误，导致预测不准确。</p>
 
                 
 

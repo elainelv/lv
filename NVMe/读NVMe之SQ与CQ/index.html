@@ -145,10 +145,6 @@
                     
 
                         
-                        <li>
-                            <a href="/lv/recommend/">Recommend</a>
-                        </li>
-                        
                     
 
                         
@@ -165,6 +161,10 @@
                         
                     
 
+                        
+                        <li>
+                            <a href="/lv/recommend/">Recommend</a>
+                        </li>
                         
                     
                     
@@ -221,21 +221,37 @@
 
                 <p>对<a href="https://nvmexpress.org/wp-content/uploads/NVM-Express-1_3c-2018.05.24-Ratified.pdf" target="_blank" rel="noopener">NVMe 1.3c</a>的解读，本篇专门讲Submission Queue和Completion Queue，NVMe于2013年提出，是host与SSD之间通信的协议，属于应用层，而与之配合使用的PCIe属于下层，这两者均是为SSD而生的，在之前的HDD时代用的是AHCI和SATA的协议。当然在没有NVMe出现之前，SSD走的也是AHCI和SATA，SATA读取性能最高不会超过600MB/s，太慢了……显然不足以满足目前SSD的高性能要求，SSD需要PCIe，同样需要NVMe！</p>
 <a id="more"></a>
-<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
-<p><a href="https://nvmexpress.org/resources/specifications/" target="_blank" rel="noopener">NVMe specification</a><br>最近一段时间会把上面的文档大致读完，将比较有意思的内容我会连载着写写博文，记录读文档过程中遇到的重要内容和问题，话不多说，一起来揭开 NVMe的神秘面纱哈~</p>
+<h2 id="导语">导语</h2>
+<blockquote>
+<p><a href="https://nvmexpress.org/resources/specifications/" target="_blank" rel="noopener">NVMe specification</a><br>
+最近一段时间会把上面的文档大致读完，将比较有意思的内容我会连载着写写博文，记录读文档过程中遇到的重要内容和问题，话不多说，一起来揭开 NVMe的神秘面纱哈~</p>
 </blockquote>
-<p>NVM Express是主机和非易失性内存子系统间进行通信的interface，此interface针对企业和客户端固态驱动器进行优化，通常作为寄存器级interface附加到PCIExpress接口。<br>先来看两张图，主机和控制器之间进行通信通过SQ和CQ，其中NVMe命令分为<code>Admin Command</code>和<code>I/O Command</code><br><code>Admin Command：</code>用以host管理和控制SSD<br><code>I/O Command：</code>用以host和SSD之间数据的传输<br><img src="/lv/img/article/读NVMe之SQ与CQ/1.png" alt=""></p>
-<p><img src="/lv/img/article/读NVMe之SQ与CQ/2.png" alt=""></p>
+<p>NVM Express是主机和非易失性内存子系统间进行通信的interface，此interface针对企业和客户端固态驱动器进行优化，通常作为寄存器级interface附加到PCIExpress接口。<br>
+先来看两张图，主机和控制器之间进行通信通过SQ和CQ，其中NVMe命令分为<code>Admin Command</code>和<code>I/O Command</code><br>
+<code>Admin Command：</code>用以host管理和控制SSD<br>
+<code>I/O Command：</code>用以host和SSD之间数据的传输<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BSQ%E4%B8%8ECQ/1.png" alt=""></p>
+<p><img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BSQ%E4%B8%8ECQ/2.png" alt=""></p>
 <p>正如上图所示，系统中只有一对Admin SQ/CQ,而I/O SQ/CQ却可以有很多，多达65535(64K减去一个SQ/CQ)。而实际系统中用多少个SQ，取决于系统配置和性能需求，<code>可灵活设置I/O SQ个数</code>。</p>
 <p>作为队列，每个SQ和CQ都有一定的深度。对Admin SQ/CQ来说，其深度可以是2-4096（4k）；对I/O SQ/CQ,深度可以是2-65536(64k)。<code>队列深度也是可以配置的。</code></p>
 <p>SQ/CQ的个数可以自己配置，队列深度也可以自己配置，NVMe也太牛了吧！</p>
 <blockquote>
 <p>下面具体来讲解SQ和CQ以及我在阅读文档的过程中遇到的问题，相信大家看完应该会对两个概念有一定的了解！</p>
 </blockquote>
-<h2 id="submission-queuesq-和-completion-queuecq"><a href="#Submission-Queue（SQ）-和-Completion-Queue（CQ）" class="headerlink" title="Submission Queue（SQ） 和 Completion Queue（CQ）"></a>Submission Queue（SQ） 和 Completion Queue（CQ）</h2><h3 id="sq-and-cq"><a href="#SQ-and-CQ" class="headerlink" title="SQ? and CQ?"></a>SQ? and CQ?</h3><p>先来看一张图（从<a href="http://www.ssdfans.com/" target="_blank" rel="noopener">ssdfans</a>上扣下来的）<br><img src="/lv/img/article/读NVMe之SQ与CQ/3.png" alt=""><br><code>SQ：用来存放命令</code><br><code>CQ：用来存放提交后的命令经SSD处理后的完成信息</code><br>两者均是存放在<code>memory</code>里面，均为<strong>循环队列</strong>（这里关于循环队列具备的一些特性就不详细解释了）<br>注：SQ和CQ是成对出现的；SQ和CQ的关系可以是一对一，也可以是多对一；SQ是在CQ创建之后才创建的</p>
+<h2 id="submission-queuesq-和-completion-queuecq">Submission Queue（SQ） 和 Completion Queue（CQ）</h2>
+<h3 id="sq-and-cq">SQ? and CQ?</h3>
+<p>先来看一张图（从<a href="http://www.ssdfans.com/" target="_blank" rel="noopener">ssdfans</a>上扣下来的）<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BSQ%E4%B8%8ECQ/3.png" alt=""><br>
+<code>SQ：用来存放命令</code><br>
+<code>CQ：用来存放提交后的命令经SSD处理后的完成信息</code><br>
+两者均是存放在<code>memory</code>里面，均为<strong>循环队列</strong>（这里关于循环队列具备的一些特性就不详细解释了）<br>
+注：SQ和CQ是成对出现的；SQ和CQ的关系可以是一对一，也可以是多对一；SQ是在CQ创建之后才创建的</p>
 <p>红圈圈圈起来的是<code>NVMe Subsystem</code>，包括<code>controller</code>、<code>NVM storage</code>、<code>Interface between them</code>。其实就是SSD啦。它通过PCIe和Root Complex(RC)连接，当然SSD是不能直接和CPU通信的。</p>
-<p><code>DB又是用来干嘛的呢？</code><br>host发送命令时，不是直接往SSD中发送命令，而是把准备好的命令放到内存中的SQ，通过写SSD中的DB寄存器来通知SSD。</p>
-<h3 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h3><p>下面着重讲解通过SQ和CQ之间的指令执行过程，如下图所示，分为8步(图片来自P210)：<br><img src="/lv/img/article/读NVMe之SQ与CQ/4.png" alt=""></p>
+<p><code>DB又是用来干嘛的呢？</code><br>
+host发送命令时，不是直接往SSD中发送命令，而是把准备好的命令放到内存中的SQ，通过写SSD中的DB寄存器来通知SSD。</p>
+<h3 id="命令执行过程">命令执行过程</h3>
+<p>下面着重讲解通过SQ和CQ之间的指令执行过程，如下图所示，分为8步(图片来自P210)：<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BSQ%E4%B8%8ECQ/4.png" alt=""></p>
 <ol>
 <li>host将写命令放入SQ的空闲槽中</li>
 <li>SQ的尾指针更新，host通过SQ尾指针来更新DB寄存器的值，这向控制器发送指示说已经提交了一个新命令待处理（host写DB，通知SSD取指令）</li>
@@ -249,20 +265,39 @@
 <blockquote>
 <p>这里值得注意的是，每个SQ中放入的命令无论是Admin还是I/O命令，每个命令大小都是64字节；每个CQ放入的是命令的完成状态，大小为16字节</p>
 </blockquote>
-<h2 id="总结一哈"><a href="#总结一哈" class="headerlink" title="总结一哈"></a>总结一哈</h2><ul>
-<li>SQ用以host发命令，CQ用以SSD回命令表示命令完成，返回的是完成信息</li>
-<li>SQ/CQ可以在host的内存中，也可以在SSD中，但一般在host内存中（上述讲的都是以host中为例的）</li>
-<li>两种类型的SQ和CQ：Admin和I/O，前者发送Admin命令，后者发送I/O命令</li>
-<li>系统中只能有一对Admin和I/O，但可以有很多对I/O SQ/CQ</li>
-<li>I/O SQ与CQ可以是一对一或者一对多的关系</li>
-<li><p>I/O SQ 可以赋予不同的优先级(比如P77一张图)<br><img src="/lv/img/article/读NVMe之SQ与CQ/6.png" alt=""></p>
+<h2 id="总结一哈">总结一哈</h2>
+<ul>
+<li>
+<p>SQ用以host发命令，CQ用以SSD回命令表示命令完成，返回的是完成信息</p>
 </li>
-<li><p>I/O SQ/CQ的广度和深度都可以灵活配置</p>
+<li>
+<p>SQ/CQ可以在host的内存中，也可以在SSD中，但一般在host内存中（上述讲的都是以host中为例的）</p>
 </li>
-<li>每条命令（SQ中）大小64字节，而完成状态的命令（CQ中）16字节</li>
+<li>
+<p>两种类型的SQ和CQ：Admin和I/O，前者发送Admin命令，后者发送I/O命令</p>
+</li>
+<li>
+<p>系统中只能有一对Admin和I/O，但可以有很多对I/O SQ/CQ</p>
+</li>
+<li>
+<p>I/O SQ与CQ可以是一对一或者一对多的关系</p>
+</li>
+<li>
+<p>I/O SQ 可以赋予不同的优先级(比如P77一张图)<br>
+<img src="/lv/img/article/%E8%AF%BBNVMe%E4%B9%8BSQ%E4%B8%8ECQ/6.png" alt=""></p>
+</li>
+<li>
+<p>I/O SQ/CQ的广度和深度都可以灵活配置</p>
+</li>
+<li>
+<p>每条命令（SQ中）大小64字节，而完成状态的命令（CQ中）16字节</p>
+</li>
 </ul>
-<p><strong>参考资料：</strong><br><a href="http://www.ssdfans.com/blog/2017/08/03/%E8%9B%8B%E8%9B%8B%E8%AF%BBnvme%E4%B9%8B%E4%B8%80/" target="_blank" rel="noopener">蛋蛋读NVMe之一</a><br><a href="http://www.ssdfans.com/blog/2017/08/03/%E8%9B%8B%E8%9B%8B%E8%AF%BBnvme%E4%B9%8B%E4%BA%8C/" target="_blank" rel="noopener">蛋蛋读NVMe之二</a></p>
-<h2 id="i-want-to-say"><a href="#“I-Want-To-Say”" class="headerlink" title="“I Want To Say”"></a>“I Want To Say”</h2><p>NVMe整本书浏览了一遍，感觉可以研究一段时间了，尽量每天都写东西吧，感觉有很多可以写的。当然这个协议规范里面很多都是讲内部指令呀，队列呀，内存呀怎么去定义的，还包括各种命令的使用……等等。反正就是很复杂啦~今天就码到这了，明天继续哦！</p>
+<p><strong>参考资料：</strong><br>
+<a href="http://www.ssdfans.com/blog/2017/08/03/%E8%9B%8B%E8%9B%8B%E8%AF%BBnvme%E4%B9%8B%E4%B8%80/" target="_blank" rel="noopener">蛋蛋读NVMe之一</a><br>
+<a href="http://www.ssdfans.com/blog/2017/08/03/%E8%9B%8B%E8%9B%8B%E8%AF%BBnvme%E4%B9%8B%E4%BA%8C/" target="_blank" rel="noopener">蛋蛋读NVMe之二</a></p>
+<h2 id="i-want-to-say">�I Want To Say�</h2>
+<p>NVMe整本书浏览了一遍，感觉可以研究一段时间了，尽量每天都写东西吧，感觉有很多可以写的。当然这个协议规范里面很多都是讲内部指令呀，队列呀，内存呀怎么去定义的，还包括各种命令的使用……等等。反正就是很复杂啦~今天就码到这了，明天继续哦！</p>
 
                 
 
@@ -351,7 +386,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><a href="#&#x5BFC;&#x8BED;" class="headerlink" title="&#x5BFC;&#x8BED;"></a>&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#submission-queuesq-和-completion-queuecq"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><a href="#Submission-Queue&#xFF08;SQ&#xFF09;-&#x548C;-Completion-Queue&#xFF08;CQ&#xFF09;" class="headerlink" title="Submission Queue&#xFF08;SQ&#xFF09; &#x548C; Completion Queue&#xFF08;CQ&#xFF09;"></a>Submission Queue&#xFF08;SQ&#xFF09; &#x548C; Completion Queue&#xFF08;CQ&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#sq-and-cq"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><a href="#SQ-and-CQ" class="headerlink" title="SQ? and CQ?"></a>SQ? and CQ?</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#命令执行过程"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><a href="#&#x547D;&#x4EE4;&#x6267;&#x884C;&#x8FC7;&#x7A0B;" class="headerlink" title="&#x547D;&#x4EE4;&#x6267;&#x884C;&#x8FC7;&#x7A0B;"></a>&#x547D;&#x4EE4;&#x6267;&#x884C;&#x8FC7;&#x7A0B;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结一哈"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><a href="#&#x603B;&#x7ED3;&#x4E00;&#x54C8;" class="headerlink" title="&#x603B;&#x7ED3;&#x4E00;&#x54C8;"></a>&#x603B;&#x7ED3;&#x4E00;&#x54C8;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><a href="#&#x201C;I-Want-To-Say&#x201D;" class="headerlink" title="&#x201C;I Want To Say&#x201D;"></a>&#x201C;I Want To Say&#x201D;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#导语"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x5BFC;&#x8BED;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#submission-queuesq-和-completion-queuecq"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Submission Queue&#xFF08;SQ&#xFF09; &#x548C; Completion Queue&#xFF08;CQ&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#sq-and-cq"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">SQ? and CQ?</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#命令执行过程"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">&#x547D;&#x4EE4;&#x6267;&#x884C;&#x8FC7;&#x7A0B;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结一哈"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x603B;&#x7ED3;&#x4E00;&#x54C8;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#i-want-to-say"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#xFFFD;I Want To Say&#xFFFD;</span></a></li></ol>
         
         </div>
       </aside>
